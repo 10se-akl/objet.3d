@@ -3,17 +3,11 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Objets 3D — Boutique</title>
-<!--
-  Réécriture complète :
-  - panier localStorage
-  - compte utilisateur localStorage (prototype)
-  - PayPal SDK (remplacer YOUR_PAYPAL_CLIENT_ID)
-  - simulation CB (modal)
-  - formulaire / envoi Web3Forms
-  - footer réduit "Contactez-nous"
-  - liste à puces affichée quand l'utilisateur est connecté
--->
+<title>Objets 3D — Axel & Noah</title>
+
+<!-- PayPal SDK : remplacez YOUR_PAYPAL_CLIENT_ID par votre client-id réel -->
+<script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR"></script>
+
 <style>
   :root{
     --accent:#ff6600;
@@ -112,9 +106,10 @@
   #formSection{ display:none; margin-top:18px; }
   form.card-form{ display:flex; flex-direction:column; gap:10px; }
   label{ font-size:13px; color:var(--muted); margin-bottom:6px }
-  input[type="text"], input[type="email"], input[type="number"], select {
+  input[type="text"], input[type="email"], input[type="number"], select, textarea {
     padding:10px; border-radius:8px; border:1px solid #ddd; background:white; font-size:14px;
   }
+  textarea{ min-height:80px; resize:vertical; }
   .btn-primary{ background:var(--accent); color:white; border:none; padding:12px; border-radius:8px; cursor:pointer; font-weight:700 }
   .btn-ghost{ background:#f5f5f5; border:1px solid #eee; padding:10px; border-radius:8px; cursor:pointer }
 
@@ -132,12 +127,20 @@
   .connected-list h4{ margin:0 0 8px 0 }
   .connected-list ul{ margin:0; padding-left:18px; color:var(--muted) }
 
-  /* Modal */
+  /* Modal backdrop + modal content */
   .modal-backdrop{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.5); z-index:3000 }
   .modal{ width:100%; max-width:480px; background:white; padding:18px; border-radius:12px; box-shadow:0 12px 40px rgba(0,0,0,0.25) }
   .modal h3{ margin:0 0 12px 0 }
   .modal .actions{ display:flex; gap:8px; margin-top:12px }
   .muted-note{ font-size:13px; color:var(--muted) }
+
+  /* Ensure inputs in modals are stacked in column */
+  .modal form{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .modal label{ margin-bottom:4px; }
 
   /* Footer reduced */
   footer.site-footer{
@@ -148,15 +151,17 @@
   .footer-left{ font-size:14px }
   .footer-contact{ text-align:right; font-size:13px; color:#aaa }
   .footer-contact ul{ margin:6px 0 0 0; padding-left:18px; color:#ccc }
+
+  .footer-social{ display:flex; gap:8px; align-items:center; }
+  .footer-social a img{ height:36px; width:36px; border-radius:6px; display:block; }
+
   /* Responsive */
   @media (max-width:860px){
     .details-wrap{ flex-direction:column }
     .details-right{ width:100% }
+    footer.site-footer{ flex-direction:column; gap:10px; text-align:center }
   }
 </style>
-
-<!-- PayPal SDK: remplacez YOUR_PAYPAL_CLIENT_ID par votre client-id réel -->
-<script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR"></script>
 </head>
 <body>
 
@@ -280,7 +285,7 @@
   </section>
 
   <!-- FORMULAIRE / COMMANDE -->
-  <section id="formSection" style="margin-top:18px;">
+  <section id="formSection" style="margin-top:18px; display:none;">
     <h3>Commander</h3>
     <div class="card">
       <form id="orderForm" class="card-form">
@@ -317,6 +322,8 @@
           <select id="moyenPaiement" name="moyenPaiement" onchange="onMoyenChange()" required>
             <option value="">-- Choisir un moyen de paiement --</option>
             <option value="paypal">PayPal</option>
+            <option value="paypalme">PayPal.me</option>
+            <option value="virement">Virement bancaire</option>
             <option value="cb_simule">Carte bancaire (simulation)</option>
             <option value="cash">Paiement à la livraison</option>
           </select>
@@ -355,22 +362,32 @@
       <li>Enregistrer vos moyens de paiement</li>
       <li>Recevoir des notifications par e-mail</li>
     </ul>
+
+    <div style="margin-top:8px" class="footer-social">
+      <!-- Instagram -->
+      <a href="https://www.instagram.com/objet_3d_a_et_n/" target="_blank" aria-label="Instagram">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram">
+      </a>
+      <!-- TikTok (remplacez le lien par le vôtre si nécessaire) -->
+      <a href="https://www.tiktok.com/@objet_3d" target="_blank" aria-label="TikTok">
+        <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="TikTok">
+      </a>
+    </div>
   </div>
 </footer>
 
 <script>
 /* ===========================
-   Données produits (exemple)
+   Données produits
    =========================== */
 const produits = {
   objet1: {
     id: 'objet1',
-    titre: 'Objet 3D 1',
-    description: 'Un porte-stylo élégant imprimé en PLA recyclé. Dimensions : 8x8x10 cm.',
+    titre: 'Porte-stylo Éco',
+    description: 'Porte-stylo élégant imprimé en PLA recyclé. Dimensions : 8x8x10 cm.',
     images: [
-      'https://via.placeholder.com/800x600?text=Objet1+1',
-      'https://via.placeholder.com/800x600?text=Objet1+2',
-      'https://via.placeholder.com/800x600?text=Objet1+3'
+      'https://via.placeholder.com/800x600?text=Porte-stylo+1',
+      'https://via.placeholder.com/800x600?text=Porte-stylo+2'
     ],
     fabrication: 'Marcoussis, France',
     prix: 9.90,
@@ -379,11 +396,11 @@ const produits = {
   },
   objet2: {
     id: 'objet2',
-    titre: 'Objet 3D 2',
+    titre: 'Support Smartphone',
     description: 'Support pour smartphone compatible grand format.',
     images: [
-      'https://via.placeholder.com/800x600?text=Objet2+1',
-      'https://via.placeholder.com/800x600?text=Objet2+2'
+      'https://via.placeholder.com/800x600?text=Support+1',
+      'https://via.placeholder.com/800x600?text=Support+2'
     ],
     fabrication: 'Marcoussis, France',
     prix: 12.50,
@@ -392,13 +409,12 @@ const produits = {
   },
   objet3: {
     id: 'objet3',
-    titre: 'Objet 3D 3',
-    description: 'Décoration personnalisable — envoi contre emballage soigné.',
+    titre: 'Décoration Personnalisée',
+    description: 'Décoration personnalisable — envoi avec emballage soigné.',
     images: [
-      'https://via.placeholder.com/800x600?text=Objet3+1',
-      'https://via.placeholder.com/800x600?text=Objet3+2',
-      'https://via.placeholder.com/800x600?text=Objet3+3',
-      'https://via.placeholder.com/800x600?text=Objet3+4'
+      'https://via.placeholder.com/800x600?text=Deco+1',
+      'https://via.placeholder.com/800x600?text=Deco+2',
+      'https://via.placeholder.com/800x600?text=Deco+3'
     ],
     fabrication: 'Marcoussis, France',
     prix: 18.00,
@@ -636,7 +652,9 @@ function ouvrirFormulairePour(idOrPanier){
 /* ===========================
    Gestion moyens de paiement
    - PayPal : bouton SDK render
-   - cb_simule : modal de simulation
+   - PayPal.me : ouvre lien
+   - virement : affiche IBAN
+   - cb_simule : modal simulation
    - cash : pay on delivery
    =========================== */
 function onMoyenChange(){
@@ -645,6 +663,15 @@ function onMoyenChange(){
   if(m === 'paypal'){
     paypalContainer.style.display = 'block';
     renderPaypalButton();
+  } else if(m === 'paypalme'){
+    paypalContainer.style.display = 'none';
+    window.open('https://paypal.me/objet_3d_a_et_n', '_blank');
+  } else if(m === 'virement'){
+    paypalContainer.style.display = 'none';
+    alert('Virement bancaire :\nIBAN: FR76 XXXX XXXX XXXX XXXX XXXX\nBIC: XXXXXXX\nTitulaire: Axel & Noah');
+  } else if(m === 'cb_simule'){
+    paypalContainer.style.display = 'none';
+    ouvrirModal('paymentSimule');
   } else {
     paypalContainer.style.display = 'none';
   }
@@ -661,17 +688,15 @@ function renderPaypalButton(){
   paypal.Buttons({
     style: { layout:'vertical', color:'gold', shape:'rect', label:'paypal' },
     createOrder: function(data, actions){
+      // on calcule total (si formulaire est rempli on utilise total panier)
       const total = calculerTotalPanier();
-      // si panier vide mais objetHidden rempli -> utiliser quantity*prix ??? -> pour prototype on envoie total panier
       return actions.order.create({
         purchase_units: [{ amount: { value: total.toFixed(2) } }]
       });
     },
     onApprove: function(data, actions){
       return actions.order.capture().then(function(details){
-        // marquer paiement
         document.getElementById('paymentStatus').value = 'paid_paypal';
-        // envoyer la commande
         submitOrder({ paymentProvider: 'paypal', paymentDetails: details });
       });
     },
@@ -689,7 +714,6 @@ function calculerTotalPanier(){
 
 /* ===========================
    Gestion envoi formulaire (Web3Forms)
-   - selon moyen de paiement, on déclenche actions
    =========================== */
 const orderForm = document.getElementById('orderForm');
 orderForm.addEventListener('submit', function(e){
@@ -698,7 +722,6 @@ orderForm.addEventListener('submit', function(e){
   const moyen = fd.get('moyenPaiement');
 
   if(moyen === 'paypal'){
-    // attendre le bouton PayPal (il capture l'ordre et appelle submitOrder)
     if(document.getElementById('paymentStatus').value === 'paid_paypal'){
       submitOrder({ paymentProvider: 'paypal' });
     } else {
@@ -706,15 +729,21 @@ orderForm.addEventListener('submit', function(e){
     }
     return;
   } else if(moyen === 'cb_simule'){
-    ouvrirModal('paymentSimule', ()=>{
-      document.getElementById('paymentStatus').value = 'paid_card_simule';
-      submitOrder({ paymentProvider: 'card_simulated' });
-    });
+    // la simulation ouvrira un modal, le callback de la confirmation appellera submitOrder
+    ouvrirModal('paymentSimule');
+    return;
+  } else if(moyen === 'virement'){
+    // pour virement, on considère la commande acceptée (client doit faire virement)
+    document.getElementById('paymentStatus').value = 'pending_bank';
+    submitOrder({ paymentProvider: 'virement' });
+    return;
   } else if(moyen === 'cash'){
     document.getElementById('paymentStatus').value = 'pay_on_delivery';
     submitOrder({ paymentProvider: 'cash' });
+    return;
   } else {
     alert('Veuillez choisir un moyen de paiement.');
+    return;
   }
 });
 
@@ -735,7 +764,7 @@ Moyen de paiement: ${paymentMethod}
 Utilisateur connecté: ${currentUser ? currentUser.email : 'aucun'}`;
 
   const payload = {
-    access_key: "867b9f7b-a375-47c5-a0c0-ec184b69f529", // ta clé existante
+    access_key: "867b9f7b-a375-47c5-a0c0-ec184b69f529",
     subject: `Nouvelle commande : ${objet}`,
     sender_name: fd.get('prenom') + ' ' + fd.get('nom'),
     sender_email: fd.get('email'),
@@ -745,7 +774,6 @@ Utilisateur connecté: ${currentUser ? currentUser.email : 'aucun'}`;
 
   if(extra.paymentDetails) payload.payment_details = extra.paymentDetails;
 
-  // Envoi
   fetch('https://api.web3forms.com/submit', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -777,13 +805,11 @@ Utilisateur connecté: ${currentUser ? currentUser.email : 'aucun'}`;
 }
 
 /* ===========================
-   Auth utilisateur (prototype localStorage)
-   - users stored as [{email, nom, prenom, password}]
-   - currentUser stored as {email}
-   - NOTE: mots de passe stockés en clair = prototype seulement, insecure en production
+   Auth utilisateur (localStorage prototype)
    =========================== */
 function getUsers(){ return JSON.parse(localStorage.getItem('users') || '[]'); }
 function saveUsers(u){ localStorage.setItem('users', JSON.stringify(u)); }
+
 function registerUser(formData){
   const users = getUsers();
   const email = (formData.get('reg_email') || '').toLowerCase();
@@ -801,6 +827,7 @@ function registerUser(formData){
   updateAuthUI();
   return { ok:true };
 }
+
 function loginUser(formData){
   const users = getUsers();
   const email = (formData.get('login_email') || '').toLowerCase();
@@ -811,6 +838,7 @@ function loginUser(formData){
   updateAuthUI();
   return { ok:true };
 }
+
 function getCurrentUser(){
   const cu = localStorage.getItem('currentUser');
   if(!cu) return null;
@@ -818,21 +846,21 @@ function getCurrentUser(){
   const users = getUsers();
   return users.find(u=>u.email === info.email) || null;
 }
+
 function deconnexion(){
   localStorage.removeItem('currentUser');
   updateAuthUI();
   alert('Déconnecté');
 }
 
-/* Mise à jour UI auth */
 function updateAuthUI(){
   const u = getCurrentUser();
   if(u){
     document.getElementById('notLogged').style.display = 'none';
     document.getElementById('logged').style.display = 'flex';
-    document.getElementById('badgeUser').textContent = (u.prenom ? u.prenom : '') + (u.nom ? (' ' + u.nom) : '') || u.email;
+    const nameDisplay = (u.prenom ? u.prenom : '') + (u.nom ? (' ' + u.nom) : '');
+    document.getElementById('badgeUser').textContent = nameDisplay || u.email;
     document.getElementById('userStatus').textContent = u.email;
-    // afficher liste à puces dans footer (déjà présente)
   } else {
     document.getElementById('notLogged').style.display = 'flex';
     document.getElementById('logged').style.display = 'none';
@@ -919,22 +947,27 @@ function ouvrirModal(mode){
     `;
     backdrop.appendChild(modal);
     modalWrapper.appendChild(backdrop);
-    document.getElementById('confirmCard').addEventListener('click', function(){
-      fermerModal();
-      // callback simulate: set paymentStatus and submit
-      document.getElementById('paymentStatus').value = 'paid_card_simule';
-      submitOrder({ paymentProvider: 'card_simulated' });
-    });
+    // Wait for element to exist
+    setTimeout(()=> {
+      const btn = document.getElementById('confirmCard');
+      if(btn) btn.addEventListener('click', function(){
+        fermerModal();
+        document.getElementById('paymentStatus').value = 'paid_card_simule';
+        submitOrder({ paymentProvider: 'card_simulated' });
+      });
+    }, 50);
   } else {
     modal.innerHTML = `<div><p>Mode modal inconnu</p><div class="actions"><button onclick="fermerModal()">Fermer</button></div></div>`;
     backdrop.appendChild(modal);
     modalWrapper.appendChild(backdrop);
   }
 }
+
 function switchModalTo(mode){
   fermerModal();
   ouvrirModal(mode);
 }
+
 function fermerModal(){
   modalWrapper.innerHTML = '';
   modalWrapper.setAttribute('aria-hidden', 'true');
@@ -963,9 +996,11 @@ function updatePanierUI(){
   const totalQte = panier.reduce((s,i)=>s+i.quantite,0);
   document.getElementById('nbPanier').textContent = totalQte;
   document.getElementById('nbPanierLarge').textContent = totalQte;
+  // keep cart shown numbers up-to-date
+  renderPanierTable();
 }
 
-/* expose some functions to global scope for inline handlers */
+/* expose functions for inline handlers */
 window.afficherAccueil = afficherAccueil;
 window.afficherBoutique = afficherBoutique;
 window.afficherPanier = afficherPanier;
