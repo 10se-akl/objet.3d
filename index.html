@@ -195,6 +195,23 @@
 <main>
   <!-- HERO -->
   <section class="hero">
+    <!-- ACCUEIL -->
+<section id="accueilSection" style="margin-top:20px;">
+  <div class="card" style="padding:20px;">
+    <h2>Bienvenue sur notre boutique d’objets 3D</h2>
+    <p style="font-size:15px; color:#444; line-height:1.6;">
+      Nous sommes <strong>Axel et Noah</strong>, deux adolescents de <strong>15 ans</strong> passionnés par la
+      création et l’impression 3D.  
+      Nous avons décidé de lancer notre propre petite entreprise pour montrer que l’<strong>entreprenariat</strong>
+      et la <strong>créativité</strong> ne sont pas réservés aux adultes : les jeunes peuvent aussi innover,
+      entreprendre et bâtir leurs propres projets.
+      <br><br>
+      Pour nous, la <strong>créativité est la clé de la réussite</strong>.  
+      Chaque objet que nous proposons est imaginé, fabriqué et emballé avec soin dans notre atelier local.
+      Merci de soutenir notre aventure !
+    </p>
+  </div>
+</section>
     <div class="left">
       <h2>Objets 3D faits main — Petite boutique</h2>
       <p>Produits imprimés localement, personnalisables. Paiement PayPal / CB (simulation) / à la livraison.</p>
@@ -358,7 +375,7 @@
   <div class="footer-contact">
     <div><strong>Quand vous êtes connecté :</strong></div>
     <ul>
-      <li>Voir l'historique de commandes</li>
+      <li>Voir le panier et commander le panier</li>
       <li>Enregistrer vos moyens de paiement</li>
       <li>Recevoir des notifications par e-mail</li>
     </ul>
@@ -469,20 +486,25 @@ function renderProduits(){
    Navigation affichage
    =========================== */
 function afficherAccueil(){
-  document.getElementById('boutiqueSection').style.display = 'block';
+  document.getElementById('accueilSection').style.display = 'block';
+  document.getElementById('boutiqueSection').style.display = 'none';
   document.getElementById('detailsSection').style.display = 'none';
   document.getElementById('panierSection').style.display = 'none';
   document.getElementById('formSection').style.display = 'none';
   window.scrollTo({top:0, behavior:'smooth'});
 }
+
 function afficherBoutique(){
+  document.getElementById('accueilSection').style.display = 'none';
   document.getElementById('boutiqueSection').style.display = 'block';
   document.getElementById('detailsSection').style.display = 'none';
   document.getElementById('panierSection').style.display = 'none';
   document.getElementById('formSection').style.display = 'none';
   window.scrollTo({top:0, behavior:'smooth'});
 }
+
 function afficherPanier(){
+  document.getElementById('accueilSection').style.display = 'none';
   document.getElementById('boutiqueSection').style.display = 'none';
   document.getElementById('detailsSection').style.display = 'none';
   document.getElementById('panierSection').style.display = 'block';
@@ -493,6 +515,7 @@ function afficherPanier(){
 function afficherDetails(id){
   const p = produits[id];
   if(!p) return;
+  document.getElementById('accueilSection').style.display = 'none';
   document.getElementById('boutiqueSection').style.display = 'none';
   document.getElementById('detailsSection').style.display = 'block';
   document.getElementById('panierSection').style.display = 'none';
