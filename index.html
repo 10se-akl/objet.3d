@@ -85,6 +85,106 @@
     flex-direction:column;
     gap:12px;
   }
+  .product-container {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr;
+  gap: 25px;
+  margin: 40px;
+  align-items: start;
+}
+
+.thumbs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.thumb {
+  width: 70px;
+  height: 70px;
+  background: #f1f1f1;
+  border-radius: 6px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  color:#777;
+  cursor:pointer;
+}
+
+.main-image {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.image-placeholder {
+  width: 450px;
+  height: 450px;
+  background:#e1e1e1;
+  border-radius:10px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#555;
+  font-size:18px;
+}
+
+.product-info h1 {
+  font-size: 28px;
+  font-weight: bold;
+}
+.price-line {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.soldout-badge {
+  background:black;
+  color:white;
+  padding:3px 8px;
+  border-radius:6px;
+  font-size:12px;
+}
+
+.reviews {
+  color: gold;
+  font-weight:bold;
+}
+.slogan {
+  font-size:14px;
+  margin-bottom:10px;
+  color:#333;
+}
+
+.color-selector{
+  display:flex;
+  gap:8px;
+  margin:10px 0;
+}
+
+.color-item{
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  border:2px solid #ccc;
+  cursor:pointer;
+}
+
+.quantity-box {
+  margin:10px 0;
+}
+
+.add-cart-btn {
+  margin-top:10px;
+  padding:10px 15px;
+  background:black;
+  color:white;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:16px;
+}
   .card img{ width:100%; height:140px; object-fit:cover; border-radius:8px; }
   .card h3{ margin:0; font-size:16px; color:var(--dark) }
   .card p{ margin:0; color:var(--muted); font-size:14px; min-height:40px; }
@@ -275,6 +375,55 @@
       </aside>
     </div>
   </section>
+
+  <section id="detailsSection" style="display:none;">
+  <div class="product-container">
+    
+    <!-- MINIATURES -->
+    <div class="thumbs">
+      <div class="thumb">Photo à venir</div>
+      <div class="thumb">Photo à venir</div>
+      <div class="thumb">Photo à venir</div>
+    </div>
+
+    <!-- IMAGE PRINCIPALE -->
+    <div class="main-image">
+      <div class="image-placeholder">Photo à venir</div>
+    </div>
+
+    <!-- INFOS PRODUIT -->
+    <div class="product-info">
+      <h1 id="detailTitre">Nom produit</h1>
+      <div class="price-line">
+        <span id="detailPrix">$00.00</span>
+        <span class="soldout-badge">Sold out</span>
+      </div>
+      <div class="reviews">⭐⭐⭐⭐⭐ 124 reviews</div>
+
+      <p class="slogan">Feel the pulse. Master the flow.</p>
+
+      <hr/>
+
+      <h3>📌 Before You Buy</h3>
+      <p id="detailNotice">Ce que l’utilisateur doit savoir avant achat.</p>
+
+      <h4>Color:</h4>
+      <div class="color-selector">
+        <span class="color-item"></span>
+        <span class="color-item"></span>
+        <span class="color-item"></span>
+      </div>
+
+      <div class="quantity-box">
+        <label>Quantité</label>
+        <input type="number" id="detailQuantite" value="1">
+      </div>
+
+      <button class="add-cart-btn">Ajouter au panier</button>
+    </div>
+
+  </div>
+</section>
 
   <!-- PANIER -->
   <section id="panierSection" style="margin-top:18px; display:none;">
@@ -530,6 +679,19 @@ function afficherDetails(id){
   document.getElementById('detailQty').textContent = "Stock : " + p.stock;
   document.getElementById('detailTech').textContent = p.tech;
   document.getElementById('detailQuantite').value = 1;
+
+function afficherDetails(id){
+  const p = produits[id];
+
+  document.getElementById("detailTitre").textContent = p.titre;
+  document.getElementById("detailPrix").textContent = "€" + p.prix;
+  document.getElementById("detailNotice").textContent = p.notice || "Tout est réalisé artisanalement à Marcoussis.";
+  document.getElementById("detailQuantite").value = 1;
+
+  document.querySelector(".add-cart-btn").onclick = () => ajouterAuPanier(id, parseInt(document.getElementById("detailQuantite").value));
+  
+  document.getElementById("detailsSection").style.display="block";
+}
 
   // miniatures
   const thumbs = document.getElementById('thumbs');
