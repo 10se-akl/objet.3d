@@ -1145,34 +1145,57 @@ function afficherDetailsById(id){ afficherDetails(id); }
    Quick attach of global handlers
    =========================== */
 function attachGlobalHandlers(){
-  // Nav buttons
-  document.getElementById('navAccueil').addEventListener('click', afficherAccueil);
-  document.getElementById('navBoutique').addEventListener('click', function(){ renderProduits(); afficherBoutique(); });
-  document.getElementById('navPanier').addEventListener('click', afficherPanier);
 
-  // grid product actions (delegate)
-  document.getElementById('gridProduits').addEventListener('click', function(e){
-    const btn = e.target.closest('button');
-    if(!btn) return;
-    const action = btn.getAttribute('data-action');
-    const id = btn.getAttribute('data-id');
-    if(action === 'voir') afficherDetails(id);
-    if(action === 'ajouter') ajouterAuPanier(id, 1);
+  // NAVIGATION
+  const navAccueil = document.getElementById('navAccueil');
+  const navBoutique = document.getElementById('navBoutique');
+  const navPanier = document.getElementById('navPanier');
+
+  if(navAccueil) navAccueil.addEventListener('click', afficherAccueil);
+  if(navBoutique) navBoutique.addEventListener('click', () => {
+    renderProduits();
+    afficherBoutique();
   });
+  if(navPanier) navPanier.addEventListener('click', afficherPanier);
 
-  // panier buttons
-  document.getElementById('viderPanierBtn').addEventListener('click', viderPanier);
-  document.getElementById('commanderPanierBtn').addEventListener('click', commanderPanier);
+  // GRID PRODUITS
+  const grid = document.getElementById('gridProduits');
+  if(grid){
+    grid.addEventListener('click', function(e){
+      const btn = e.target.closest('button');
+      if(!btn) return;
+      const action = btn.dataset.action;
+      const id = btn.dataset.id;
+      if(action === 'voir') afficherDetails(id);
+      if(action === 'ajouter') ajouterAuPanier(id, 1);
+    });
+  }
 
-  // order form
-  document.getElementById('orderForm').addEventListener('submit', handleOrderFormSubmit);
-  document.getElementById('btnCancelOrder').addEventListener('click', function(){ afficherBoutique(); });
+  // PANIER
+  const viderBtn = document.getElementById('viderPanierBtn');
+  if(viderBtn) viderBtn.addEventListener('click', viderPanier);
 
-  // auth modals
-  document.getElementById('openLoginBtn').addEventListener('click', function(){ ouvrirModal('login'); });
-  document.getElementById('openRegisterBtn').addEventListener('click', function(){ ouvrirModal('register'); });
-  document.getElementById('logoutBtn').addEventListener('click', deconnexion);
+  const commanderBtn = document.getElementById('commanderPanierBtn');
+  if(commanderBtn) commanderBtn.addEventListener('click', commanderPanier);
 
+  // FORMULAIRE
+  const orderForm = document.getElementById('orderForm');
+  if(orderForm) orderForm.addEventListener('submit', handleOrderFormSubmit);
+
+  const cancelOrder = document.getElementById('btnCancelOrder');
+  if(cancelOrder) cancelOrder.addEventListener('click', afficherBoutique);
+
+  // AUTH
+  const loginBtn = document.getElementById('openLoginBtn');
+  if(loginBtn) loginBtn.addEventListener('click', () => ouvrirModal('login'));
+
+  const registerBtn = document.getElementById('openRegisterBtn');
+  if(registerBtn) registerBtn.addEventListener('click', () => ouvrirModal('register'));
+
+  const logoutBtn = document.getElementById('logoutBtn');
+  if(logoutBtn) logoutBtn.addEventListener('click', deconnexion);
+}
+  
   // expose some functions
   window.afficherAccueil = afficherAccueil;
   window.afficherBoutique = afficherBoutique;
@@ -1192,3 +1215,4 @@ function attachGlobalHandlers(){
 </script>
 </body>
 </html>
+
