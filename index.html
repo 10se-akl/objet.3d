@@ -9,258 +9,104 @@
 <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR" defer></script>
 
 <style>
-  :root{
-    --accent:#ff6600;
-    --bg:#fafafa;
-    --card:#ffffff;
-    --dark:#222;
-    --muted:#666;
-    --maxw:980px;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family:Inter, "Segoe UI", Roboto, Arial, sans-serif;
-    background:var(--bg);
-    color:#111;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-  }
-
-  /* HEADER */
-  header{
-    position:fixed;
-    top:0; left:0; right:0;
-    height:64px;
-    background:linear-gradient(180deg,#111 0%, #1a1a1a 100%);
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 16px;
-    z-index:2000;
-    box-shadow:0 4px 18px rgba(0,0,0,0.25);
-  }
-  .brand{
-    display:flex;
-    gap:12px;
-    align-items:center;
-  }
-  .logo {
-    width:44px; height:44px; border-radius:10px;
-    background:var(--accent); display:flex; align-items:center; justify-content:center;
-    font-weight:700; color:white;
-  }
-  .brand h1{ font-size:18px; margin:0; letter-spacing:0.2px; }
-  nav.main {
-    display:flex; gap:12px; align-items:center;
-  }
-  button.icon-btn{
-    background:transparent; border:none; color:white; cursor:pointer; font-size:16px;
-    padding:8px 10px; border-radius:8px;
-  }
-  button.icon-btn:hover{ background:rgba(255,255,255,0.04) }
-
-  /* Layout */
-  main{ padding-top:84px; max-width:var(--maxw); margin:24px auto; padding-left:16px; padding-right:16px; }
-
-  /* Hero */
-  .hero{ display:flex; gap:20px; align-items:center; justify-content:space-between; background:linear-gradient(90deg,#fff 0%, #fffaf0 100%); padding:24px; border-radius:12px; box-shadow:0 6px 30px rgba(0,0,0,0.05); }
-  .hero .left h2{ margin:0 0 8px 0; color:var(--dark); }
-  .hero .left p{ margin:0; color:var(--muted) }
-
-  /* Grid for boutique */
-  .grid {
-    margin-top:20px;
-    display:grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap:18px;
-  }
-  .card{
-    background:var(--card);
-    border-radius:12px;
-    padding:14px;
-    box-shadow:0 6px 18px rgba(0,0,0,0.06);
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-  }
-  .product-container {
-  display: grid;
-  grid-template-columns: 80px 1fr 1fr;
-  gap: 25px;
-  margin: 40px;
-  align-items: start;
+:root{
+  --accent:#ff6600;
+  --bg:#fafafa;
+  --card:#ffffff;
+  --dark:#222;
+  --muted:#666;
+  --maxw:980px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  background:var(--bg);
+  color:#111;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-.thumbs {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.thumb {
-  width: 70px;
-  height: 70px;
-  background: #f1f1f1;
-  border-radius: 6px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:12px;
-  color:#777;
-  cursor:pointer;
-}
-
-.main-image {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-.image-placeholder {
-  width: 450px;
-  height: 450px;
-  background:#e1e1e1;
-  border-radius:10px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  color:#555;
-  font-size:18px;
-}
-
-.product-info h1 {
-  font-size: 28px;
-  font-weight: bold;
-}
-.price-line {
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.soldout-badge {
-  background:black;
+/* HEADER */
+header{
+  position:fixed;
+  top:0; left:0; right:0;
+  height:64px;
+  background:linear-gradient(180deg,#111 0%, #1a1a1a 100%);
   color:white;
-  padding:3px 8px;
-  border-radius:6px;
-  font-size:12px;
-}
-
-.reviews {
-  color: gold;
-  font-weight:bold;
-}
-.slogan {
-  font-size:14px;
-  margin-bottom:10px;
-  color:#333;
-}
-
-.color-selector{
   display:flex;
-  gap:8px;
-  margin:10px 0;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 16px;
+  z-index:2000;
+  box-shadow:0 4px 18px rgba(0,0,0,0.25);
 }
+.brand{ display:flex; gap:12px; align-items:center; }
+.logo { width:44px; height:44px; border-radius:10px; background:var(--accent); display:flex; align-items:center; justify-content:center; font-weight:700; color:white; }
+.brand h1{ font-size:18px; margin:0; letter-spacing:0.2px; }
+nav.main { display:flex; gap:12px; align-items:center; }
+button.icon-btn{ background:transparent; border:none; color:white; cursor:pointer; font-size:16px; padding:8px 10px; border-radius:8px; }
+button.icon-btn:hover{ background:rgba(255,255,255,0.04) }
 
-.color-item{
-  width:26px;
-  height:26px;
-  border-radius:50%;
-  border:2px solid #ccc;
-  cursor:pointer;
+/* Layout */
+main{ padding-top:84px; max-width:var(--maxw); margin:24px auto; padding-left:16px; padding-right:16px; }
+
+/* Hero */
+.hero{ display:flex; gap:20px; align-items:center; justify-content:space-between; background:linear-gradient(90deg,#fff 0%, #fffaf0 100%); padding:24px; border-radius:12px; box-shadow:0 6px 30px rgba(0,0,0,0.05); }
+.hero .left h2{ margin:0 0 8px 0; color:var(--dark); }
+.hero .left p{ margin:0; color:var(--muted) }
+
+/* Grid for boutique */
+.grid { margin-top:20px; display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:18px; }
+.card{ background:var(--card); border-radius:12px; padding:14px; box-shadow:0 6px 18px rgba(0,0,0,0.06); display:flex; flex-direction:column; gap:12px; }
+.card img{ width:100%; height:140px; object-fit:cover; border-radius:8px; }
+.card h3{ margin:0; font-size:16px; color:var(--dark) }
+.card p{ margin:0; color:var(--muted); font-size:14px; min-height:40px; }
+.card .meta{ display:flex; align-items:center; justify-content:space-between; gap:8px }
+.price{ font-weight:700; color:var(--accent) }
+
+/* Product detail */
+.details-wrap{ display:flex; gap:18px; align-items:flex-start; }
+.details-left{ flex:1; }
+.details-right{ width:320px; background:var(--card); padding:14px; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.06) }
+.carousel-main{ width:100%; height:300px; border-radius:10px; overflow:hidden; background:#eee; display:flex; align-items:center; justify-content:center; }
+.carousel-main img{ width:100%; height:100%; object-fit:cover; }
+.thumbnails{ display:flex; gap:8px; margin-top:8px; }
+.thumbnails img{ height:56px; width:75px; object-fit:cover; border-radius:6px; cursor:pointer; opacity:.75; border:2px solid transparent }
+.thumbnails img.active{ opacity:1; border-color:var(--accent) }
+.color-selector{ display:flex; gap:8px; margin:10px 0; }
+.color-item{ width:26px; height:26px; border-radius:50%; border:2px solid #ccc; cursor:pointer }
+.quantity-box { margin:10px 0; }
+.add-cart-btn { margin-top:10px; padding:10px 15px; background:black; color:white; border:none; border-radius:8px; cursor:pointer; font-size:16px; }
+
+/* Form / Cart */
+table.cart{ width:100%; border-collapse:collapse; background:var(--card); border-radius:12px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,0.06) }
+table.cart th, table.cart td{ padding:12px 14px; text-align:left; border-bottom:1px solid #f0f0f0; font-size:14px }
+table.cart thead{ background:#fafafa }
+.btn-primary{ background:var(--accent); color:white; border:none; padding:12px; border-radius:8px; cursor:pointer; font-weight:700 }
+.btn-ghost{ background:#f5f5f5; border:1px solid #eee; padding:10px; border-radius:8px; cursor:pointer }
+.small-muted{ font-size:13px; color:var(--muted) }
+
+/* Modal */
+.modal-backdrop{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.5); z-index:3000 }
+.modal{ width:100%; max-width:480px; background:white; padding:18px; border-radius:12px; box-shadow:0 12px 40px rgba(0,0,0,0.25) }
+.modal h3{ margin:0 0 12px 0 }
+.modal .actions{ display:flex; gap:8px; margin-top:12px }
+
+/* Footer */
+footer.site-footer{ margin-top:28px; background:#0f0f0f; color:#ddd; padding:12px 16px; border-radius:10px; max-width:var(--maxw); margin-left:auto; margin-right:auto; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.footer-left{ font-size:14px }
+.footer-contact{ text-align:right; font-size:13px; color:#aaa }
+.footer-contact ul{ margin:6px 0 0 0; padding-left:18px; color:#ccc }
+.footer-social{ display:flex; gap:8px; align-items:center; }
+.footer-social a img{ height:36px; width:36px; border-radius:6px; display:block }
+
+/* Responsive */
+@media (max-width:860px){
+  .details-wrap{ flex-direction:column }
+  .details-right{ width:100% }
+  footer.site-footer{ flex-direction:column; gap:10px; text-align:center }
 }
-
-.quantity-box {
-  margin:10px 0;
-}
-
-.add-cart-btn {
-  margin-top:10px;
-  padding:10px 15px;
-  background:black;
-  color:white;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:16px;
-}
-  .card img{ width:100%; height:140px; object-fit:cover; border-radius:8px; }
-  .card h3{ margin:0; font-size:16px; color:var(--dark) }
-  .card p{ margin:0; color:var(--muted); font-size:14px; min-height:40px; }
-  .card .meta{ display:flex; align-items:center; justify-content:space-between; gap:8px }
-  .price{ font-weight:700; color:var(--accent) }
-
-  /* Details View */
-  #detailsSection { display:none; margin-top:18px; }
-  .details-wrap{ display:flex; gap:18px; align-items:flex-start; }
-  .details-left{ flex:1; }
-  .details-right{ width:320px; background:var(--card); padding:14px; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.06) }
-  .carousel-main{ width:100%; height:300px; border-radius:10px; overflow:hidden; background:#eee; display:flex; align-items:center; justify-content:center; }
-  .carousel-main img{ width:100%; height:100%; object-fit:cover; }
-  .thumbnails{ display:flex; gap:8px; margin-top:8px; }
-  .thumbnails img{ height:56px; width:75px; object-fit:cover; border-radius:6px; cursor:pointer; opacity:.75; border:2px solid transparent }
-  .thumbnails img.active{ opacity:1; border-color:var(--accent) }
-
-  /* Formulaire / panier */
-  #formSection{ display:none; margin-top:18px; }
-  form.card-form{ display:flex; flex-direction:column; gap:10px; }
-  label{ font-size:13px; color:var(--muted); margin-bottom:6px }
-  input[type="text"], input[type="email"], input[type="number"], select, textarea {
-    padding:10px; border-radius:8px; border:1px solid #ddd; background:white; font-size:14px;
-  }
-  textarea{ min-height:80px; resize:vertical; }
-  .btn-primary{ background:var(--accent); color:white; border:none; padding:12px; border-radius:8px; cursor:pointer; font-weight:700 }
-  .btn-ghost{ background:#f5f5f5; border:1px solid #eee; padding:10px; border-radius:8px; cursor:pointer }
-
-  /* Panier table */
-  table.cart{ width:100%; border-collapse:collapse; background:var(--card); border-radius:12px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,0.06) }
-  table.cart th, table.cart td{ padding:12px 14px; text-align:left; border-bottom:1px solid #f0f0f0; font-size:14px }
-  table.cart thead{ background:#fafafa }
-  .small-muted{ font-size:13px; color:var(--muted) }
-
-  /* Auth area small badge + list */
-  .auth-badge{ display:flex; gap:8px; align-items:center; background:transparent; color:white }
-  .user-bubble{ background:rgba(255,255,255,0.06); padding:6px 10px; border-radius:8px; font-weight:600; color:#fff }
-
-  .connected-list{ margin-top:10px; padding:12px; background:#fff; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.04) }
-  .connected-list h4{ margin:0 0 8px 0 }
-  .connected-list ul{ margin:0; padding-left:18px; color:var(--muted) }
-
-  /* Modal backdrop + modal content */
-  .modal-backdrop{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.5); z-index:3000 }
-  .modal{ width:100%; max-width:480px; background:white; padding:18px; border-radius:12px; box-shadow:0 12px 40px rgba(0,0,0,0.25) }
-  .modal h3{ margin:0 0 12px 0 }
-  .modal .actions{ display:flex; gap:8px; margin-top:12px }
-  .muted-note{ font-size:13px; color:var(--muted) }
-
-  /* Ensure inputs in modals are stacked in column */
-  .modal form{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-  }
-  .modal label{ margin-bottom:4px; }
-
-  /* Footer reduced */
-  footer.site-footer{
-    margin-top:28px;
-    background:#0f0f0f; color:#ddd; padding:12px 16px; border-radius:10px;
-    max-width:var(--maxw); margin-left:auto; margin-right:auto; display:flex; justify-content:space-between; align-items:center; gap:12px;
-  }
-  .footer-left{ font-size:14px }
-  .footer-contact{ text-align:right; font-size:13px; color:#aaa }
-  .footer-contact ul{ margin:6px 0 0 0; padding-left:18px; color:#ccc }
-
-  .footer-social{ display:flex; gap:8px; align-items:center; }
-  .footer-social a img{ height:36px; width:36px; border-radius:6px; display:block; }
-
-  /* Responsive */
-  @media (max-width:860px){
-    .details-wrap{ flex-direction:column }
-    .details-right{ width:100% }
-    footer.site-footer{ flex-direction:column; gap:10px; text-align:center }
-  }
 </style>
 </head>
 <body>
@@ -269,7 +115,7 @@
   <div class="brand">
     <div class="logo">3D</div>
     <div>
-      <h1 style="margin:0">Objets 3D — Axel & Noah</h1>
+      <h1>Objets 3D — Axel & Noah</h1>
       <div style="font-size:12px;color:#e6e6e6">Impression & Création locale</div>
     </div>
   </div>
@@ -278,7 +124,6 @@
     <button class="icon-btn" id="navAccueil">Accueil</button>
     <button class="icon-btn" id="navBoutique">Boutique</button>
     <button class="icon-btn" id="navPanier">🛒 <span id="nbPanier">0</span></button>
-
     <div id="authArea" style="display:flex; align-items:center; gap:8px">
       <div id="notLogged" style="display:flex; gap:8px">
         <button class="icon-btn" id="openLoginBtn">Connexion</button>
@@ -293,28 +138,19 @@
 </header>
 
 <main>
-  <!-- HERO -->
-  <section class="hero" id="accueilSection" style="margin-top:20px;">
-    <div class="card" style="padding:20px;">
+  <!-- Hero Section -->
+  <section class="hero" id="accueilSection">
+    <div class="card">
       <h2>Bienvenue sur notre boutique d’objets 3D</h2>
-      <p style="font-size:15px; color:#444; line-height:1.6;">
-        Nous sommes <strong>Axel et Noah</strong>, deux adolescents de <strong>15 ans</strong> passionnés par la
-        création et l’impression 3D.  
-        Nous avons décidé de lancer notre propre petite entreprise pour montrer que l’<strong>entreprenariat</strong>
-        et la <strong>créativité</strong> ne sont pas réservés aux adultes : les jeunes peuvent aussi innover,
-        entreprendre et bâtir leurs propres projets.
-        <br><br>
-        Pour nous, la <strong>créativité est la clé de la réussite</strong>.  
-        Chaque objet que nous proposons est imaginé, fabriqué et emballé avec soin dans notre atelier local.
-        Merci de soutenir notre aventure !
-      </p>
-    </div>
+      <p>Nous sommes Axel et Noah, deux adolescents de 15 ans passionnés par la création et l’impression 3D. Nous avons décidé de lancer notre propre petite entreprise pour montrer que l’entreprenariat et la créativité ne sont pas réservés aux adultes : les jeunes peuvent aussi innover, entreprendre et bâtir leurs propres projets.
 
+Pour nous, la créativité est la clé de la réussite. Chaque objet que nous proposons est imaginé, fabriqué et emballé avec soin dans notre atelier local. Merci de soutenir notre aventure !
+</p>
+    </div>
     <div class="left">
       <h2>Objets 3D faits main — Petite boutique</h2>
       <p>Produits imprimés localement, personnalisables. Paiement PayPal / CB (simulation) / à la livraison.</p>
     </div>
-
     <div style="display:flex; gap:12px; align-items:center">
       <div style="text-align:right;">
         <div style="font-size:12px;color:var(--muted)">Connecté en tant que :</div>
@@ -327,46 +163,39 @@
     </div>
   </section>
 
-  <!-- BOUTIQUE -->
-  <section id="boutiqueSection" style="margin-top:18px; display:none;">
+  <!-- Boutique Section -->
+  <section id="boutiqueSection" style="display:none;">
     <h3>Nos produits</h3>
-    <div class="grid" id="gridProduits">
-      <!-- cartes remplies par JS -->
-    </div>
+    <div class="grid" id="gridProduits"></div>
   </section>
 
-  <!-- DETAILS (unique) -->
-  <section id="detailsSection">
+  <!-- Details Section -->
+  <section id="detailsSection" style="display:none;">
     <div class="details-wrap">
       <div class="details-left">
         <div class="card">
           <div class="carousel-main" id="mainImageContainer"><img id="mainImage" src="" alt="image objet" /></div>
           <div class="thumbnails" id="thumbs"></div>
         </div>
-
-        <div class="card" style="margin-top:12px">
+        <div class="card">
           <h3 id="detailTitre">Titre</h3>
           <p id="detailDescription" class="small-muted">Description...</p>
           <p class="small-muted" id="detailFab">Fabriqué à ...</p>
         </div>
       </div>
-
       <aside class="details-right">
         <div style="display:flex; justify-content:space-between; align-items:center">
           <div style="font-weight:700" id="detailPrix">€0.00</div>
           <div style="color:var(--muted); font-size:13px" id="detailQty">Stock : —</div>
         </div>
-
         <div style="margin-top:12px">
           <label for="detailQuantiteInput">Quantité</label>
           <input type="number" id="detailQuantiteInput" min="1" value="1" />
         </div>
-
         <div style="margin-top:12px; display:flex; gap:8px">
           <button class="btn-primary" id="btnAddToCart">Ajouter au panier</button>
           <button class="btn-ghost" id="btnOrderSingle">Commander</button>
         </div>
-
         <div style="margin-top:16px; font-size:13px; color:var(--muted)">
           <strong>Détails techniques</strong>
           <div id="detailTech" style="margin-top:8px">PLA recyclé • Impression FDM</div>
@@ -375,844 +204,317 @@
     </div>
   </section>
 
-  <!-- PANIER -->
-  <section id="panierSection" style="margin-top:18px; display:none;">
+  <!-- Panier Section -->
+  <section id="panierSection" style="display:none;">
     <h3>Panier</h3>
     <div style="overflow:auto;">
       <table class="cart" aria-live="polite">
-        <thead>
-          <tr><th>Produit</th><th>Quantité</th><th>Prix</th><th>Actions</th></tr>
-        </thead>
+        <thead><tr><th>Produit</th><th>Quantité</th><th>Prix</th><th>Actions</th></tr></thead>
         <tbody id="panierTable"></tbody>
       </table>
     </div>
     <div style="display:flex; justify-content:space-between; margin-top:12px; align-items:center">
-      <div>
-        <button class="btn-ghost" id="viderPanierBtn">Vider le panier</button>
-      </div>
+      <button class="btn-ghost" id="viderPanierBtn">Vider le panier</button>
       <div style="text-align:right">
         <div class="small-muted">Total :</div>
         <div style="font-weight:700; font-size:18px" id="totalPanier">€0.00</div>
-        <div style="margin-top:8px">
-          <button class="btn-primary" id="commanderPanierBtn">Commander le panier</button>
-        </div>
+        <button class="btn-primary" id="commanderPanierBtn" style="margin-top:8px">Commander le panier</button>
       </div>
     </div>
   </section>
 
-  <!-- FORMULAIRE / COMMANDE -->
-  <section id="formSection" style="margin-top:18px; display:none;">
+  <!-- Form Section -->
+  <section id="formSection" style="display:none;">
     <h3>Commander</h3>
     <div class="card">
       <form id="orderForm" class="card-form">
-        <div>
-          <label for="nom">Nom</label>
-          <input id="nom" name="nom" type="text" required />
-        </div>
-        <div>
-          <label for="prenom">Prénom</label>
-          <input id="prenom" name="prenom" type="text" required />
-        </div>
-        <div>
-          <label for="adresse">Adresse</label>
-          <input id="adresse" name="adresse" type="text" required />
-        </div>
+        <label>Nom</label><input id="nom" name="nom" type="text" required />
+        <label>Prénom</label><input id="prenom" name="prenom" type="text" required />
+        <label>Adresse</label><input id="adresse" name="adresse" type="text" required />
         <div style="display:flex; gap:8px">
-          <div style="flex:1">
-            <label for="codepostal">Code postal</label>
-            <input id="codepostal" name="codepostal" type="text" pattern="[0-9]{5}" />
-          </div>
-          <div style="flex:1">
-            <label for="email">Email</label>
-            <input id="emailField" name="email" type="email" required />
-          </div>
+          <input id="codepostal" name="codepostal" type="text" placeholder="Code postal" style="flex:1" pattern="[0-9]{5}" />
+          <input id="emailField" name="email" type="email" placeholder="Email" style="flex:1" required />
         </div>
-
-        <div>
-          <label for="quantite">Quantité totale</label>
-          <input id="quantite" name="quantite" type="number" min="1" value="1" />
-        </div>
-
-        <div>
-          <label for="moyenPaiement">Moyen de paiement</label>
-          <select id="moyenPaiement" name="moyenPaiement" onchange="onMoyenChange()" required>
-            <option value="">-- Choisir un moyen de paiement --</option>
-            <option value="paypal">PayPal</option>
-            <option value="paypalme">PayPal.me</option>
-            <option value="virement">Virement bancaire</option>
-            <option value="cb_simule">Carte bancaire (simulation)</option>
-            <option value="cash">Paiement à la livraison</option>
-          </select>
-        </div>
-
+        <label>Quantité totale</label><input id="quantite" name="quantite" type="number" min="1" value="1" />
+        <label>Moyen de paiement</label>
+        <select id="moyenPaiement" name="moyenPaiement" required>
+          <option value="">-- Choisir un moyen de paiement --</option>
+          <option value="paypal">PayPal</option>
+          <option value="paypalme">PayPal.me</option>
+          <option value="virement">Virement bancaire</option>
+          <option value="cb_simule">Carte bancaire (simulation)</option>
+          <option value="cash">Paiement à la livraison</option>
+        </select>
         <div id="paypal-button-container" style="margin-top:8px; display:none"></div>
-
-        <!-- hidden: détail des objets -->
         <input type="hidden" id="objetHidden" name="objet" />
         <input type="hidden" id="paymentStatus" name="payment_status" value="pending" />
-
         <div style="display:flex; gap:8px; margin-top:8px">
           <button class="btn-primary" type="submit" id="btnSubmit">Envoyer la commande</button>
           <button type="button" class="btn-ghost" id="btnCancelOrder">Annuler</button>
         </div>
-        <p class="muted-note">Remarque : la CB est simulée ici. Pour paiements réels, intégrer Stripe (backend requis).</p>
+        <p class="muted-note">Remarque : la CB est simulée ici. Pour paiements réels, intégrer Stripe.</p>
       </form>
     </div>
   </section>
 
-  <!-- Modals placeholder -->
   <div id="modalWrapper" aria-hidden="true"></div>
-
 </main>
 
-<!-- FOOTER réduit -->
 <footer class="site-footer" role="contentinfo">
-  <div class="footer-left">
-    <strong>Contact rapide</strong><br>
-    <span class="small-muted">objet.3d.axel.et.noah@gmail.com</span>
-  </div>
+  <div class="footer-left"><strong>Contact rapide</strong><br><span class="small-muted">objet.3d.axel.et.noah@gmail.com</span></div>
   <div class="footer-contact">
-    <div><strong>Quand vous êtes connecté :</strong></div>
+    <div><strong>Quand connecté :</strong></div>
     <ul>
-      <li>Voir le panier et commander le panier</li>
+      <li>Voir le panier et commander</li>
       <li>Enregistrer vos moyens de paiement</li>
-      <li>Recevoir des notifications par e-mail</li>
+      <li>Recevoir notifications par e-mail</li>
     </ul>
-
-    <div style="margin-top:8px" class="footer-social">
-      <!-- Instagram -->
-      <a href="https://www.instagram.com/objet_3d_a_et_n/" target="_blank" aria-label="Instagram">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram">
-      </a>
-      <!-- TikTok (remplacez le lien par le vôtre si nécessaire) -->
-      <a href="https://www.tiktok.com/@objet_3d" target="_blank" aria-label="TikTok">
-        <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="TikTok">
-      </a>
+    <div class="footer-social" style="margin-top:8px">
+      <a href="https://www.instagram.com/objet_3d_a_et_n/" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram"></a>
+      <a href="https://www.tiktok.com/@objet_3d" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="TikTok"></a>
     </div>
   </div>
 </footer>
 
 <script>
-/* ===========================
-   Données produits
-   =========================== */
+// ====================
+// DATA PRODUITS
+// ====================
 const produits = {
-  objet1: {
-    id: 'objet1',
-    titre: 'Porte-stylo Éco',
-    description: 'Porte-stylo élégant imprimé en PLA recyclé. Dimensions : 8x8x10 cm.',
-    images: [
-      'https://via.placeholder.com/800x600?text=Porte-stylo+1',
-      'https://via.placeholder.com/800x600?text=Porte-stylo+2'
-    ],
-    fabrication: 'Marcoussis, France',
-    prix: 9.90,
-    stock: 12,
-    tech: 'PLA recyclé • 0.2mm layer'
-  },
-  objet2: {
-    id: 'objet2',
-    titre: 'Support Smartphone',
-    description: 'Support pour smartphone compatible grand format.',
-    images: [
-      'https://via.placeholder.com/800x600?text=Support+1',
-      'https://via.placeholder.com/800x600?text=Support+2'
-    ],
-    fabrication: 'Marcoussis, France',
-    prix: 12.50,
-    stock: 6,
-    tech: 'PLA+ • 0.16mm layer'
-  },
-  objet3: {
-    id: 'objet3',
-    titre: 'Décoration Personnalisée',
-    description: 'Décoration personnalisable — envoi avec emballage soigné.',
-    images: [
-      'https://via.placeholder.com/800x600?text=Deco+1',
-      'https://via.placeholder.com/800x600?text=Deco+2',
-      'https://via.placeholder.com/800x600?text=Deco+3'
-    ],
-    fabrication: 'Marcoussis, France',
-    prix: 18.00,
-    stock: 4,
-    tech: 'PLA + finitions peinture'
-  }
+  objet1:{id:'objet1',titre:'Porte-stylo Éco',description:'Porte-stylo élégant imprimé en PLA recyclé. Dimensions : 8x8x10 cm.',images:['https://via.placeholder.com/800x600?text=Porte-stylo+1','https://via.placeholder.com/800x600?text=Porte-stylo+2'],fabrication
+: 'Atelier local, PLA recyclé',prix:12.99,stock:15,tech:'PLA recyclé • Impression FDM'},
+  objet2:{id:'objet2',titre:'Figurine Dragon',description:'Figurine de dragon détaillée, imprimée en résine durable.',images:['https://via.placeholder.com/800x600?text=Dragon+1','https://via.placeholder.com/800x600?text=Dragon+2'],fabrication:'Résine haute qualité',prix:24.50,stock:8,tech:'Résine SLA • Détails fins'},
+  objet3:{id:'objet3',titre:'Vase Géométrique',description:'Vase moderne aux formes géométriques, idéal pour décoration.',images:['https://via.placeholder.com/800x600?text=Vase+1','https://via.placeholder.com/800x600?text=Vase+2'],fabrication:'PLA • Impression FDM',prix:18.75,stock:12,tech:'PLA • Impression FDM'},
 };
 
-/* ===========================
-   State global
-   =========================== */
-let panier = JSON.parse(localStorage.getItem('panier_v2')) || []; // [{id, titre, prix, quantite}]
-let paypalRendered = false;
+// ====================
+// PANIER
+// ====================
+let panier = [];
+const nbPanierEl = document.getElementById('nbPanier');
+const nbPanierLarge = document.getElementById('nbPanierLarge');
+const panierTable = document.getElementById('panierTable');
+const totalPanierEl = document.getElementById('totalPanier');
 
-/* ===========================
-   Helpers
-   =========================== */
-function escapeHtml(s){
-  if(!s) return '';
-  return String(s).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; });
-}
+function updatePanierUI() {
+  nbPanierEl.textContent = panier.reduce((acc,p)=>acc+p.quantite,0);
+  nbPanierLarge.textContent = nbPanierEl.textContent;
 
-function sauvegarderPanier(){ localStorage.setItem('panier_v2', JSON.stringify(panier)); }
-function calculerTotalPanier(){ return panier.reduce((s,i) => s + (i.prix || 0) * i.quantite, 0); }
-
-/* ===========================
-   Initialisation affichage
-   =========================== */
-function init(){
-  renderProduits();
-  updatePanierUI();
-  afficherAccueil();
-  updateAuthUI();
-  attachGlobalHandlers();
-}
-window.addEventListener('load', init);
-
-/* ===========================
-   Rendu produits
-   =========================== */
-function renderProduits(){
-  const grid = document.getElementById('gridProduits');
-  grid.innerHTML = '';
-  Object.values(produits).forEach(p => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <img src="${escapeHtml(p.images[0])}" alt="${escapeHtml(p.titre)}" />
-      <h3>${escapeHtml(p.titre)}</h3>
-      <p>${escapeHtml(p.description)}</p>
-      <div class="meta">
-        <div class="price">€${p.prix.toFixed(2)}</div>
-        <div>
-          <button class="btn-ghost" data-action="voir" data-id="${p.id}">Voir</button>
-          <button class="btn-primary" data-action="ajouter" data-id="${p.id}">Ajouter</button>
-        </div>
-      </div>
+  panierTable.innerHTML = '';
+  let total = 0;
+  panier.forEach(item=>{
+    const row = document.createElement('tr');
+    const produit = produits[item.id];
+    const prixTotal = produit.prix*item.quantite;
+    total += prixTotal;
+    row.innerHTML = `
+      <td>${produit.titre}</td>
+      <td><input type="number" min="1" value="${item.quantite}" data-id="${item.id}" class="qtyInput" /></td>
+      <td>€${prixTotal.toFixed(2)}</td>
+      <td><button class="btn-ghost removeBtn" data-id="${item.id}">Supprimer</button></td>
     `;
-    grid.appendChild(card);
+    panierTable.appendChild(row);
+  });
+  totalPanierEl.textContent = `€${total.toFixed(2)}`;
+
+  // Écouteurs des inputs et boutons dynamiques
+  document.querySelectorAll('.qtyInput').forEach(input=>{
+    input.addEventListener('change', e=>{
+      const id = e.target.dataset.id;
+      const val = parseInt(e.target.value) || 1;
+      const p = panier.find(x=>x.id===id);
+      if(p) p.quantite = val;
+      updatePanierUI();
+    });
+  });
+  document.querySelectorAll('.removeBtn').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      const id = e.target.dataset.id;
+      panier = panier.filter(x=>x.id!==id);
+      updatePanierUI();
+    });
   });
 }
 
-/* ===========================
-   Navigation affichage
-   =========================== */
-function afficherAccueil(){
-  document.getElementById('accueilSection').style.display = 'block';
-  document.getElementById('boutiqueSection').style.display = 'none';
-  document.getElementById('detailsSection').style.display = 'none';
-  document.getElementById('panierSection').style.display = 'none';
-  document.getElementById('formSection').style.display = 'none';
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-
-function afficherBoutique(){
-  document.getElementById('accueilSection').style.display = 'none';
-  document.getElementById('boutiqueSection').style.display = 'block';
-  document.getElementById('detailsSection').style.display = 'none';
-  document.getElementById('panierSection').style.display = 'none';
-  document.getElementById('formSection').style.display = 'none';
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-
-function afficherPanier(){
-  document.getElementById('accueilSection').style.display = 'none';
-  document.getElementById('boutiqueSection').style.display = 'none';
-  document.getElementById('detailsSection').style.display = 'none';
-  document.getElementById('panierSection').style.display = 'block';
-  document.getElementById('formSection').style.display = 'none';
-  renderPanierTable();
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-
-/* ===========================
-   Afficher détails produit
-   =========================== */
-function afficherDetails(id){
-  const p = produits[id];
-  if(!p) return alert('Produit introuvable.');
-  document.getElementById('accueilSection').style.display = 'none';
-  document.getElementById('boutiqueSection').style.display = 'none';
-  document.getElementById('detailsSection').style.display = 'block';
-  document.getElementById('panierSection').style.display = 'none';
-  document.getElementById('formSection').style.display = 'none';
-
-  // remplir détails
-  document.getElementById('mainImage').src = p.images[0];
-  document.getElementById('detailTitre').textContent = p.titre;
-  document.getElementById('detailDescription').textContent = p.description;
-  document.getElementById('detailFab').textContent = p.fabrication;
-  document.getElementById('detailPrix').textContent = "€" + p.prix.toFixed(2);
-  document.getElementById('detailQty').textContent = "Stock : " + p.stock;
-  document.getElementById('detailTech').textContent = p.tech;
-  document.getElementById('detailQuantiteInput').value = 1;
-
-  // miniatures
-  const thumbs = document.getElementById('thumbs');
-  thumbs.innerHTML = '';
-  p.images.forEach((src, i) => {
-    const img = document.createElement('img');
-    img.src = src;
-    img.style.cursor = 'pointer';
-    if(i===0) img.classList.add('active');
-    img.onclick = () => {
-      document.querySelectorAll('#thumbs img').forEach(x=>x.classList.remove('active'));
-      img.classList.add('active');
-      document.getElementById('mainImage').src = src;
-    };
-    thumbs.appendChild(img);
-  });
-
-  // attacher le bouton ajouter
-  const btnAdd = document.getElementById('btnAddToCart');
-  btnAdd.onclick = () => {
-    const q = parseInt(document.getElementById('detailQuantiteInput').value || 1, 10);
-    ajouterAuPanier(id, q);
-  };
-  // bouton commander (ouvre form pour single)
-  const commanderBtn = document.getElementById('btnOrderSingle');
-  commanderBtn.onclick = () => ouvrirFormulairePour(id);
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-
-/* ===========================
-   Panier : fonctions
-   =========================== */
-function ajouterAuPanier(id, quantite=1){
-  const p = produits[id];
-  if(!p) return alert('Produit introuvable');
-  quantite = Number(quantite) || 1;
-  if(quantite < 1) return alert('Quantité invalide');
-  // vérification stock : somme des quantités déjà dans le panier + nouvelle <= stock
-  const existing = panier.find(x=>x.id===id);
-  const currentInCart = existing ? existing.quantite : 0;
-  if(currentInCart + quantite > p.stock) return alert('Quantité demandée supérieure au stock disponible.');
-
-  if(existing) existing.quantite += quantite;
-  else panier.push({ id:p.id, titre:p.titre, prix:p.prix, quantite:quantite });
-  sauvegarderPanier();
-  updatePanierUI();
-  alert(p.titre + ' ajouté au panier');
-}
-
-function ajouterPanierParBtn(id){
-  ajouterAuPanier(id, 1);
-}
-
-function updatePanierUI(){
-  const totalQte = panier.reduce((s,i)=>s + i.quantite, 0);
-  // sécuriser éléments présents
-  const nb = document.getElementById('nbPanier');
-  const nbLarge = document.getElementById('nbPanierLarge');
-  if(nb) nb.textContent = totalQte;
-  if(nbLarge) nbLarge.textContent = totalQte;
-  renderPanierTable();
-}
-
-function renderPanierTable(){
-  const tbody = document.getElementById('panierTable');
-  tbody.innerHTML = '';
-  if(!panier || panier.length===0){
-    const tr = document.createElement('tr');
-    tr.innerHTML = '<td colspan="4">Votre panier est vide.</td>';
-    tbody.appendChild(tr);
-    const totalEl = document.getElementById('totalPanier');
-    if(totalEl) totalEl.textContent = '€0.00';
-    updatePanierUI();
-    return;
-  }
-  panier.forEach((it, idx) => {
-    const tr = document.createElement('tr');
-    const totalPrice = (it.prix * it.quantite).toFixed(2);
-    tr.innerHTML = `
-      <td>${escapeHtml(it.titre)}</td>
-      <td>${it.quantite}</td>
-      <td>€${totalPrice}</td>
-      <td>
-        <button class="btn-ghost" data-action="dec" data-idx="${idx}">-</button>
-        <button class="btn-ghost" data-action="inc" data-idx="${idx}">+</button>
-        <button class="btn-ghost" data-action="rm" data-idx="${idx}">Supprimer</button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-  const total = calculerTotalPanier();
-  document.getElementById('totalPanier').textContent = '€' + total.toFixed(2);
-}
-
-/* modifier quantité & suppression via écouteur délégué */
-document.addEventListener('click', function(e){
-  const b = e.target.closest('button[data-action]');
-  if(!b) return;
-  const action = b.getAttribute('data-action');
-  const idx = parseInt(b.getAttribute('data-idx'), 10);
-  if(action === 'dec') modifierQuantite(idx, -1);
-  if(action === 'inc') modifierQuantite(idx, 1);
-  if(action === 'rm') supprimerArticle(idx);
+// ====================
+// AFFICHAGE PRODUITS
+// ====================
+const gridProduits = document.getElementById('gridProduits');
+Object.values(produits).forEach(prod=>{
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <img src="${prod.images[0]}" alt="${prod.titre}" />
+    <h3>${prod.titre}</h3>
+    <p>${prod.description}</p>
+    <div class="meta">
+      <div class="price">€${prod.prix.toFixed(2)}</div>
+      <button class="btn-ghost voirBtn" data-id="${prod.id}">Voir</button>
+    </div>
+  `;
+  gridProduits.appendChild(card);
 });
 
-function modifierQuantite(index, delta){
-  if(!panier[index]) return;
-  panier[index].quantite += delta;
-  if(panier[index].quantite <= 0) panier.splice(index,1);
-  sauvegarderPanier();
-  renderPanierTable();
+// ====================
+// NAVIGATION / VUES
+// ====================
+const sections = {
+  accueil: document.getElementById('accueilSection'),
+  boutique: document.getElementById('boutiqueSection'),
+  details: document.getElementById('detailsSection'),
+  panier: document.getElementById('panierSection'),
+  form: document.getElementById('formSection')
+};
+
+function showSection(sec){
+  Object.values(sections).forEach(s=>s.style.display='none');
+  sec.style.display='block';
 }
 
-function supprimerArticle(index){
-  if(!panier[index]) return;
-  if(confirm('Supprimer ' + panier[index].titre + ' du panier ?')) {
-    panier.splice(index,1);
-    sauvegarderPanier();
-    renderPanierTable();
-  }
+// Boutons nav
+document.getElementById('navAccueil').addEventListener('click',()=>showSection(sections.accueil));
+document.getElementById('navBoutique').addEventListener('click',()=>showSection(sections.boutique));
+document.getElementById('navPanier').addEventListener('click',()=>{
+  updatePanierUI();
+  showSection(sections.panier);
+});
+
+// ====================
+// DETAILS PRODUIT
+// ====================
+let currentDetailId = null;
+const mainImage = document.getElementById('mainImage');
+const thumbs = document.getElementById('thumbs');
+const detailTitre = document.getElementById('detailTitre');
+const detailDescription = document.getElementById('detailDescription');
+const detailFab = document.getElementById('detailFab');
+const detailPrix = document.getElementById('detailPrix');
+const detailQty = document.getElementById('detailQty');
+const detailTech = document.getElementById('detailTech');
+const detailQuantiteInput = document.getElementById('detailQuantiteInput');
+
+function showDetails(id){
+  const prod = produits[id];
+  currentDetailId = id;
+  mainImage.src = prod.images[0];
+  thumbs.innerHTML = '';
+  prod.images.forEach((img,i)=>{
+    const t = document.createElement('img');
+    t.src=img;
+    if(i===0) t.classList.add('active');
+    t.addEventListener('click',()=> {
+      mainImage.src=img;
+      thumbs.querySelectorAll('img').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+    });
+    thumbs.appendChild(t);
+  });
+  detailTitre.textContent = prod.titre;
+  detailDescription.textContent = prod.description;
+  detailFab.textContent = prod.fabrication;
+  detailPrix.textContent = `€${prod.prix.toFixed(2)}`;
+  detailQty.textContent = `Stock : ${prod.stock}`;
+  detailTech.textContent = prod.tech;
+  detailQuantiteInput.value = 1;
+  showSection(sections.details);
 }
 
-function viderPanier(){
-  if(!confirm('Vider complètement le panier ?')) return;
-  panier = [];
-  sauvegarderPanier();
-  renderPanierTable();
-}
+// Boutons "Voir"
+document.querySelectorAll('.voirBtn').forEach(btn=>{
+  btn.addEventListener('click',()=>showDetails(btn.dataset.id));
+});
 
-/* ===========================
-   Commander le panier -> ouvrir formulaire
-   =========================== */
-function commanderPanier(){
-  if(!panier || panier.length===0) return alert('Votre panier est vide.');
-  const textePanier = panier.map(p => `${p.titre} x ${p.quantite}`).join(' ; ');
-  ouvrirFormulairePour('panier');
-  document.getElementById('objetHidden').value = textePanier;
-  const totalQte = panier.reduce((s,i)=>s+i.quantite, 0);
-  document.getElementById('quantite').value = totalQte;
-}
+// ====================
+// AJOUT AU PANIER
+// ====================
+document.getElementById('btnAddToCart').addEventListener('click',()=>{
+  if(!currentDetailId) return;
+  const quantite = parseInt(detailQuantiteInput.value)||1;
+  const exist = panier.find(p=>p.id===currentDetailId);
+  if(exist) exist.quantite += quantite;
+  else panier.push({id:currentDetailId,quantite});
+  updatePanierUI();
+  alert('Produit ajouté au panier !');
+});
 
-/* Ouvrir formulaire pour single product or panier */
-function ouvrirFormulairePour(idOrPanier){
-  // préremplir formulaire si utilisateur connecté
-  const user = getCurrentUser();
-  if(user){
-    document.getElementById('nom').value = user.nom || '';
-    document.getElementById('prenom').value = user.prenom || '';
-    document.getElementById('emailField').value = user.email || '';
-  }
-  if(idOrPanier === 'panier' || idOrPanier === 'panierAll'){
-    const textePanier = panier.map(p => `${p.titre} x ${p.quantite}`).join(' ; ');
-    document.getElementById('objetHidden').value = textePanier;
-    const totalQte = panier.reduce((s,i)=>s+i.quantite, 0);
-    document.getElementById('quantite').value = totalQte;
-  } else {
-    // produit unique
-    const p = produits[idOrPanier];
-    if(!p) return;
-    document.getElementById('objetHidden').value = p.titre;
-    document.getElementById('quantite').value = document.getElementById('detailQuantiteInput').value || 1;
-  }
-  // afficher la section commande
-  document.getElementById('boutiqueSection').style.display = 'none';
-  document.getElementById('detailsSection').style.display = 'none';
-  document.getElementById('panierSection').style.display = 'none';
-  document.getElementById('formSection').style.display = 'block';
-  window.scrollTo({top:0, behavior:'smooth'});
-}
+// ====================
+// FORMULAIRE COMMANDE
+// ====================
+const orderForm = document.getElementById('orderForm');
+const moyenPaiement = document.getElementById('moyenPaiement');
+const paypalContainer = document.getElementById('paypal-button-container');
+const objetHidden = document.getElementById('objetHidden');
 
-/* ===========================
-   Gestion moyens de paiement
-   =========================== */
-function onMoyenChange(){
-  const m = document.getElementById('moyenPaiement').value;
-  const paypalContainer = document.getElementById('paypal-button-container');
-  if(m === 'paypal'){
-    paypalContainer.style.display = 'block';
-    renderPaypalButton();
-  } else if(m === 'paypalme'){
-    paypalContainer.style.display = 'none';
-    // on n'ouvre pas automatiquement pour ne pas surprendre l'utilisateur
-  } else if(m === 'virement'){
-    paypalContainer.style.display = 'none';
-    alert('Virement bancaire :\nIBAN: FR76 XXXX XXXX XXXX XXXX XXXX\nBIC: XXXXXXX\nTitulaire: Axel & Noah');
-  } else if(m === 'cb_simule'){
-    paypalContainer.style.display = 'none';
-    // modal opened on submit
-  } else {
-    paypalContainer.style.display = 'none';
-  }
-}
-
-/* Render PayPal button once */
-function renderPaypalButton(){
-  if(typeof paypal === 'undefined'){
-    console.warn('PayPal SDK non chargé (vérifiez client id).');
-    return;
-  }
-  if(paypalRendered) return;
-  paypalRendered = true;
-  paypal.Buttons({
-    style: { layout:'vertical', color:'gold', shape:'rect', label:'paypal' },
-    createOrder: function(data, actions){
-      const total = calculerTotalPanier();
-      return actions.order.create({
-        purchase_units: [{ amount: { value: total.toFixed(2) } }]
-      });
-    },
-    onApprove: function(data, actions){
-      return actions.order.capture().then(function(details){
-        document.getElementById('paymentStatus').value = 'paid_paypal';
-        submitOrder({ paymentProvider: 'paypal', paymentDetails: details });
-      });
-    },
-    onError: function(err){
-      alert('Erreur PayPal : ' + (err && err.message ? err.message : 'Erreur'));
-    }
-  }).render('#paypal-button-container');
-}
-
-/* ===========================
-   Gestion envoi formulaire (Web3Forms)
-   =========================== */
-function handleOrderFormSubmit(e){
+orderForm.addEventListener('submit', e=>{
   e.preventDefault();
-  const fd = new FormData(document.getElementById('orderForm'));
-  const moyen = fd.get('moyenPaiement');
+  alert('Commande envoyée ! (simulation)');
+  panier = [];
+  updatePanierUI();
+  showSection(sections.accueil);
+});
 
-  if(!moyen){
-    alert('Veuillez choisir un moyen de paiement.');
-    return;
+// Affichage PayPal (simulation)
+moyenPaiement.addEventListener('change', e=>{
+  paypalContainer.style.display = (e.target.value==='paypal')?'block':'none';
+});
+
+// ====================
+// PANIER ACTIONS
+// ====================
+document.getElementById('viderPanierBtn').addEventListener('click',()=>{
+  if(confirm('Vider le panier ?')){
+    panier=[];
+    updatePanierUI();
   }
+});
+document.getElementById('commanderPanierBtn').addEventListener('click',()=>{
+  if(panier.length===0){ alert('Panier vide !'); return; }
+  showSection(sections.form);
+});
 
-  if(moyen === 'paypal'){
-    if(document.getElementById('paymentStatus').value === 'paid_paypal'){
-      submitOrder({ paymentProvider: 'paypal' });
-    } else {
-      alert('Veuillez finaliser le paiement PayPal via le bouton PayPal.');
-    }
-    return;
-  } else if(moyen === 'paypalme'){
-    // ouvrir paypal.me et considérer la commande en pending
-    window.open('https://paypal.me/objet_3d_a_et_n', '_blank');
-    document.getElementById('paymentStatus').value = 'pending_paypalme';
-    submitOrder({ paymentProvider: 'paypalme' });
-    return;
-  } else if(moyen === 'virement'){
-    document.getElementById('paymentStatus').value = 'pending_bank';
-    submitOrder({ paymentProvider: 'virement' });
-    return;
-  } else if(moyen === 'cb_simule'){
-    // ouvrir modal de simulation, la confirmation appellera submitOrder()
-    ouvrirModal('paymentSimule');
-    return;
-  } else if(moyen === 'cash'){
-    document.getElementById('paymentStatus').value = 'pay_on_delivery';
-    submitOrder({ paymentProvider: 'cash' });
-    return;
+// ====================
+// UTILISATEUR (simulation)
+// ====================
+let logged = false;
+const badgeUser = document.getElementById('badgeUser');
+const userStatus = document.getElementById('userStatus');
+const notLogged = document.getElementById('notLogged');
+const loggedDiv = document.getElementById('logged');
+
+function updateUserUI(){
+  if(logged){
+    notLogged.style.display='none';
+    loggedDiv.style.display='flex';
+    badgeUser.textContent='Axel';
+    userStatus.textContent='Axel';
   } else {
-    alert('Moyen de paiement inconnu.');
-    return;
+    notLogged.style.display='flex';
+    loggedDiv.style.display='none';
+    userStatus.textContent='Invité';
   }
 }
+document.getElementById('openLoginBtn').addEventListener('click',()=>{
+  logged=true; updateUserUI();
+});
+document.getElementById('logoutBtn').addEventListener('click',()=>{
+  logged=false; updateUserUI();
+});
+updateUserUI();
 
-function submitOrder(extra = {}){
-  const form = document.getElementById('orderForm');
-  const fd = new FormData(form);
-  const objet = fd.get('objet') || 'Aucun objet indiqué';
-  const paymentMethod = fd.get('moyenPaiement') || extra.paymentProvider || 'inconnu';
-  const currentUser = getCurrentUser();
+// ====================
+// DETAIL: COMMANDE UNIQUE
+// ====================
+document.getElementById('btnOrderSingle').addEventListener('click',()=>{
+  if(!currentDetailId) return;
+  objetHidden.value = currentDetailId;
+  showSection(sections.form);
+});
 
-  const message = `Commande: ${objet}
-Nom: ${fd.get('nom')}
-Prénom: ${fd.get('prenom')}
-Adresse: ${fd.get('adresse')}
-Code Postal: ${fd.get('codepostal')}
-Email: ${fd.get('email')}
-Quantité: ${fd.get('quantite')}
-Moyen de paiement: ${paymentMethod}
-Utilisateur connecté: ${currentUser ? currentUser.email : 'aucun'}`;
+// Annuler commande
+document.getElementById('btnCancelOrder').addEventListener('click',()=>{
+  showSection(sections.accueil);
+});
 
-  const payload = {
-    access_key: "867b9f7b-a375-47c5-a0c0-ec184b69f529",
-    subject: `Nouvelle commande : ${objet}`,
-    sender_name: fd.get('prenom') + ' ' + fd.get('nom'),
-    sender_email: fd.get('email'),
-    message: message,
-    data: Object.fromEntries(fd.entries())
-  };
-
-  if(extra.paymentDetails) payload.payment_details = extra.paymentDetails;
-
-  fetch('https://api.web3forms.com/submit', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  })
-  .then(res => res.json())
-  .then(json => {
-    if(json && json.success){
-      alert('Commande reçue — merci !');
-      // vider panier si commande basée sur panier
-      const objField = objet || '';
-      if(objField.includes(' x ') || objField.includes(';') || objField.toLowerCase().includes('panier')){
-        panier = [];
-        sauvegarderPanier();
-      }
-      form.reset();
-      document.getElementById('paymentStatus').value = 'pending';
-      updatePanierUI();
-      afficherAccueil();
-    } else {
-      alert('Erreur lors de l\'envoi de la commande. Réessayez.');
-      console.error('web3forms error', json);
-    }
-  })
-  .catch(err => {
-    console.error(err);
-    alert('Erreur réseau lors de l\'envoi de la commande.');
-  });
-}
-
-/* ===========================
-   Auth utilisateur (localStorage prototype)
-   =========================== */
-function getUsers(){ return JSON.parse(localStorage.getItem('users_v2') || '[]'); }
-function saveUsers(u){ localStorage.setItem('users_v2', JSON.stringify(u)); }
-
-function registerUser(formData){
-  const users = getUsers();
-  const email = (formData.get('reg_email') || '').toLowerCase();
-  if(!email) return { ok:false, msg:'Email requis' };
-  if(users.find(u=>u.email === email)) return { ok:false, msg:'Email déjà utilisé' };
-  const newUser = {
-    email: email,
-    nom: formData.get('reg_nom') || '',
-    prenom: formData.get('reg_prenom') || '',
-    password: formData.get('reg_password') || ''
-  };
-  users.push(newUser);
-  saveUsers(users);
-  localStorage.setItem('currentUser_v2', JSON.stringify({ email: email }));
-  updateAuthUI();
-  return { ok:true };
-}
-
-function loginUser(formData){
-  const users = getUsers();
-  const email = (formData.get('login_email') || '').toLowerCase();
-  const pwd = formData.get('login_password') || '';
-  const u = users.find(x=> x.email === email && x.password === pwd);
-  if(!u) return { ok:false, msg:'Email ou mot de passe incorrect' };
-  localStorage.setItem('currentUser_v2', JSON.stringify({ email: email }));
-  updateAuthUI();
-  return { ok:true };
-}
-
-function getCurrentUser(){
-  const cu = localStorage.getItem('currentUser_v2');
-  if(!cu) return null;
-  const info = JSON.parse(cu);
-  const users = getUsers();
-  return users.find(u=>u.email === info.email) || null;
-}
-
-function deconnexion(){
-  localStorage.removeItem('currentUser_v2');
-  updateAuthUI();
-  alert('Déconnecté');
-}
-
-function updateAuthUI(){
-  const u = getCurrentUser();
-  if(u){
-    document.getElementById('notLogged').style.display = 'none';
-    document.getElementById('logged').style.display = 'flex';
-    const nameDisplay = (u.prenom ? u.prenom : '') + (u.nom ? (' ' + u.nom) : '');
-    document.getElementById('badgeUser').textContent = nameDisplay || u.email;
-    document.getElementById('userStatus').textContent = u.email;
-  } else {
-    document.getElementById('notLogged').style.display = 'flex';
-    document.getElementById('logged').style.display = 'none';
-    document.getElementById('badgeUser').textContent = 'Invité';
-    document.getElementById('userStatus').textContent = 'Invité';
-  }
-}
-
-/* ===========================
-   Modal management (login / register / payment simule)
-   =========================== */
-const modalWrapper = document.getElementById('modalWrapper');
-
-function ouvrirModal(mode){
-  modalWrapper.innerHTML = '';
-  modalWrapper.setAttribute('aria-hidden', 'false');
-  const backdrop = document.createElement('div');
-  backdrop.className = 'modal-backdrop';
-  const modal = document.createElement('div');
-  modal.className = 'modal';
-
-  if(mode === 'login'){
-    modal.innerHTML = `
-      <h3>Connexion</h3>
-      <form id="loginForm">
-        <label>Email</label><input name="login_email" type="email" required />
-        <label>Mot de passe</label><input name="login_password" type="password" required />
-        <div class="actions">
-          <button class="btn-primary" type="submit">Se connecter</button>
-          <button type="button" class="btn-ghost" id="cancelLoginModal">Annuler</button>
-        </div>
-        <p class="muted-note">Pas de compte ? <a href="#" id="switchToRegister">Inscrivez-vous</a></p>
-      </form>
-    `;
-    backdrop.appendChild(modal);
-    modalWrapper.appendChild(backdrop);
-    document.getElementById('cancelLoginModal').addEventListener('click', fermerModal);
-    document.getElementById('switchToRegister').addEventListener('click', function(e){ e.preventDefault(); fermerModal(); ouvrirModal('register'); });
-    document.getElementById('loginForm').addEventListener('submit', function(e){
-      e.preventDefault();
-      const fd = new FormData(e.target);
-      const res = loginUser(fd);
-      if(!res.ok) alert(res.msg);
-      else { alert('Connecté'); fermerModal(); }
-    });
-  } else if(mode === 'register'){
-    modal.innerHTML = `
-      <h3>Inscription</h3>
-      <form id="regForm">
-        <label>Prénom</label><input name="reg_prenom" type="text" required />
-        <label>Nom</label><input name="reg_nom" type="text" required />
-        <label>Email</label><input name="reg_email" type="email" required />
-        <label>Mot de passe</label><input name="reg_password" type="password" required />
-        <div class="actions">
-          <button class="btn-primary" type="submit">S'inscrire</button>
-          <button type="button" class="btn-ghost" id="cancelRegModal">Annuler</button>
-        </div>
-      </form>
-    `;
-    backdrop.appendChild(modal);
-    modalWrapper.appendChild(backdrop);
-    document.getElementById('cancelRegModal').addEventListener('click', fermerModal);
-    document.getElementById('regForm').addEventListener('submit', function(e){
-      e.preventDefault();
-      const fd = new FormData(e.target);
-      const res = registerUser(fd);
-      if(!res.ok) alert(res.msg);
-      else { alert('Inscription réussie'); fermerModal(); }
-    });
-  } else if(mode === 'paymentSimule'){
-    modal.innerHTML = `
-      <h3>Paiement par carte — Simulation</h3>
-      <p class="muted-note">Ceci est une simulation. En production, intégrez Stripe ou un PSP sécurisé.</p>
-      <label>Numéro de carte</label><input id="sim_card_number" name="sim_card_number" type="text" placeholder="4242 4242 4242 4242" />
-      <div style="display:flex; gap:8px">
-        <div style="flex:1">
-          <label>MM/AA</label><input id="sim_card_date" name="sim_card_date" type="text" placeholder="12/34" />
-        </div>
-        <div style="width:120px">
-          <label>CVV</label><input id="sim_card_cvv" name="sim_card_cvv" type="text" placeholder="123" />
-        </div>
-      </div>
-      <div class="actions">
-        <button class="btn-primary" id="confirmCard">Payer (simulé)</button>
-        <button type="button" class="btn-ghost" id="cancelCard">Annuler</button>
-      </div>
-    `;
-    backdrop.appendChild(modal);
-    modalWrapper.appendChild(backdrop);
-    setTimeout(()=> {
-      const btn = document.getElementById('confirmCard');
-      if(btn) btn.addEventListener('click', function(){
-        fermerModal();
-        document.getElementById('paymentStatus').value = 'paid_card_simule';
-        submitOrder({ paymentProvider: 'card_simulated' });
-      });
-      const cancel = document.getElementById('cancelCard');
-      if(cancel) cancel.addEventListener('click', fermerModal);
-    }, 30);
-  } else {
-    modal.innerHTML = `<div><p>Mode modal inconnu</p><div class="actions"><button onclick="fermerModal()">Fermer</button></div></div>`;
-    backdrop.appendChild(modal);
-    modalWrapper.appendChild(backdrop);
-  }
-}
-
-function fermerModal(){
-  modalWrapper.innerHTML = '';
-  modalWrapper.setAttribute('aria-hidden', 'true');
-}
-
-/* ===========================
-   Quick access & helpers
-   =========================== */
-function afficherDetailsById(id){ afficherDetails(id); }
-
-/* ===========================
-   Quick attach of global handlers
-   =========================== */
-function attachGlobalHandlers(){
-
-  // NAVIGATION
-  const navAccueil = document.getElementById('navAccueil');
-  const navBoutique = document.getElementById('navBoutique');
-  const navPanier = document.getElementById('navPanier');
-
-  if(navAccueil) navAccueil.addEventListener('click', afficherAccueil);
-  if(navBoutique) navBoutique.addEventListener('click', () => {
-    renderProduits();
-    afficherBoutique();
-  });
-  if(navPanier) navPanier.addEventListener('click', afficherPanier);
-
-  // GRID PRODUITS
-  const grid = document.getElementById('gridProduits');
-  if(grid){
-    grid.addEventListener('click', function(e){
-      const btn = e.target.closest('button');
-      if(!btn) return;
-      const action = btn.dataset.action;
-      const id = btn.dataset.id;
-      if(action === 'voir') afficherDetails(id);
-      if(action === 'ajouter') ajouterAuPanier(id, 1);
-    });
-  }
-
-  // PANIER
-  const viderBtn = document.getElementById('viderPanierBtn');
-  if(viderBtn) viderBtn.addEventListener('click', viderPanier);
-
-  const commanderBtn = document.getElementById('commanderPanierBtn');
-  if(commanderBtn) commanderBtn.addEventListener('click', commanderPanier);
-
-  // FORMULAIRE
-  const orderForm = document.getElementById('orderForm');
-  if(orderForm) orderForm.addEventListener('submit', handleOrderFormSubmit);
-
-  const cancelOrder = document.getElementById('btnCancelOrder');
-  if(cancelOrder) cancelOrder.addEventListener('click', afficherBoutique);
-
-  // AUTH
-  const loginBtn = document.getElementById('openLoginBtn');
-  if(loginBtn) loginBtn.addEventListener('click', () => ouvrirModal('login'));
-
-  const registerBtn = document.getElementById('openRegisterBtn');
-  if(registerBtn) registerBtn.addEventListener('click', () => ouvrirModal('register'));
-
-  const logoutBtn = document.getElementById('logoutBtn');
-  if(logoutBtn) logoutBtn.addEventListener('click', deconnexion);
-}
-  
-  // expose some functions
-  window.afficherAccueil = afficherAccueil;
-  window.afficherBoutique = afficherBoutique;
-  window.afficherPanier = afficherPanier;
-  window.afficherDetails = afficherDetailsById;
-  window.ouvrirModal = ouvrirModal;
-  window.fermerModal = fermerModal;
-  window.viderPanier = viderPanier;
-  window.ajouterPanierParBtn = ajouterPanierParBtn;
-  window.ajouterAuPanier = ajouterAuPanier;
-  window.commanderPanier = commanderPanier;
-  window.ouvrirFormulairePour = ouvrirFormulairePour;
-  window.deconnexion = deconnexion;
-}
-
-/* End of script */
 </script>
 </body>
 </html>
-
