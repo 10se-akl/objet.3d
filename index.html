@@ -27,6 +27,23 @@ body{
   -moz-osx-font-smoothing:grayscale;
 }
 
+.back-btn{
+  position:fixed;
+  top:76px;
+  left:16px;
+  z-index:2500;
+  background:black;
+  color:white;
+  border:none;
+  border-radius:50%;
+  width:42px;
+  height:42px;
+  font-size:20px;
+  cursor:pointer;
+  display:none;
+}
+.back-btn:hover{opacity:.85}
+
 /* HEADER */
 header{
   position:fixed;
@@ -108,9 +125,12 @@ footer.site-footer{ margin-top:28px; background:#0f0f0f; color:#ddd; padding:12p
   .details-right{ width:100% }
   footer.site-footer{ flex-direction:column; gap:10px; text-align:center }
 }
+
 </style>
 </head>
 <body>
+
+<button class="back-btn" id="backBtn">←</button>
 
 <header>
   <div class="brand">
@@ -492,8 +512,8 @@ function updateUserUI(){
   if(logged){
     notLogged.style.display='none';
     loggedDiv.style.display='flex';
-    badgeUser.textContent='Axel';
-    userStatus.textContent='Axel';
+    badgeUser.textContent = currentUserName;
+   userStatus.textContent = currentUserName;
   } else {
     notLogged.style.display='flex';
     loggedDiv.style.display='none';
@@ -528,6 +548,7 @@ function openModal(type){
 
   document.getElementById(`${type}Form`).addEventListener('submit', e=>{
     e.preventDefault();
+    currentUserName = e.target.prenom.value;
     logged = true;
     updateUserUI();
     modalWrapper.innerHTML='';
@@ -551,6 +572,36 @@ document.getElementById('btnOrderSingle').addEventListener('click',()=>{
 
 // Annuler commande
 document.getElementById('btnCancelOrder').addEventListener('click',()=>showSection(sections.accueil));
+
+// ====================
+// FLÈCHE RETOUR (PATCH)
+// ====================
+const backBtn = document.getElementById('backBtn');
+let sectionHistory = [];
+
+// on garde ta fonction existante
+const originalShowSection = showSection;
+
+// on la surcharge proprement
+showSection = function(sec){
+  if(sectionHistory[sectionHistory.length - 1] !== sec){
+    sectionHistory.push(sec);
+  }
+  Object.values(sections).forEach(s => s.style.display = 'none');
+  sec.style.display = 'block';
+  backBtn.style.display = sectionHistory.length > 1 ? 'block' : 'none';
+};
+
+backBtn.addEventListener('click', () => {
+  if(sectionHistory.length > 1){
+    sectionHistory.pop();
+    const prev = sectionHistory[sectionHistory.length - 1];
+    Object.values(sections).forEach(s => s.style.display = 'none');
+    prev.style.display = 'block';
+  }
+  backBtn.style.display = sectionHistory.length > 1 ? 'block' : 'none';
+});
+
 </script>
 </body>
 </html>
