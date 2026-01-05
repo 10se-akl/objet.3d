@@ -95,12 +95,15 @@ main{ padding-top:84px; max-width:var(--maxw); margin:24px auto; padding-left:16
 .color-item{ width:26px; height:26px; border-radius:50%; border:2px solid #ccc; cursor:pointer }
 .quantity-box { margin:10px 0; }
 .add-cart-btn { margin-top:10px; padding:10px 15px; background:black; color:white; border:none; border-radius:8px; cursor:pointer; font-size:16px }
+.error-msg { color: #d32f2f; font-size: 13px; margin-top: 4px; }
+.success-msg { color: #388e3c; font-size: 13px; margin-top: 4px; }
 
 /* Form / Cart */
 table.cart{ width:100%; border-collapse:collapse; background:var(--card); border-radius:12px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,0.06) }
 table.cart th, table.cart td{ padding:12px 14px; text-align:left; border-bottom:1px solid #f0f0f0; font-size:14px }
 table.cart thead{ background:#fafafa }
 .btn-primary{ background:var(--accent); color:white; border:none; padding:12px; border-radius:8px; cursor:pointer; font-weight:700 }
+.btn-primary:disabled{ opacity: 0.5; cursor: not-allowed; }
 .btn-ghost{ background:#f5f5f5; border:1px solid #eee; padding:10px; border-radius:8px; cursor:pointer }
 .small-muted{ font-size:13px; color:var(--muted) }
 
@@ -162,8 +165,8 @@ footer.site-footer{ margin-top:28px; background:#0f0f0f; color:#ddd; padding:12p
   <!-- Hero Section -->
   <section class="hero" id="accueilSection">
     <div class="card">
-      <h2>Bienvenue sur notre boutique d’objets 3D</h2>
-      <p>Nous sommes Axel et Noah, deux adolescents de 15 ans passionnés par la création et l’impression 3D. Nous avons décidé de lancer notre propre petite entreprise pour montrer que l’entreprenariat et la créativité ne sont pas réservés aux adultes : les jeunes peuvent aussi innover, entreprendre et bâtir leurs propres projets.
+      <h2>Bienvenue sur notre boutique d'objets 3D</h2>
+      <p>Nous sommes Axel et Noah, deux adolescents de 15 ans passionnés par la création et l'impression 3D. Nous avons décidé de lancer notre propre petite entreprise pour montrer que l'entreprenariat et la créativité ne sont pas réservés aux adultes : les jeunes peuvent aussi innover, entreprendre et bâtir leurs propres projets.
 
 Pour nous, la créativité est la clé de la réussite. Chaque objet que nous proposons est imaginé, fabriqué et emballé avec soin dans notre atelier local. Merci de soutenir notre aventure !</p>
     </div>
@@ -211,6 +214,7 @@ Pour nous, la créativité est la clé de la réussite. Chaque objet que nous pr
         <div style="margin-top:12px">
           <label for="detailQuantiteInput">Quantité</label>
           <input type="number" id="detailQuantiteInput" min="1" value="1" />
+          <div id="stockError" class="error-msg"></div>
         </div>
         <div style="margin-top:12px; display:flex; gap:8px; flex-direction:column;">
           <button class="btn-primary" id="btnAddToCart">Ajouter au panier</button>
@@ -336,7 +340,7 @@ function updatePanierUI() {
     total += prixTotal;
     row.innerHTML = `
       <td>${produit.titre}</td>
-      <td><input type="number" min="1" value="${item.quantite}" data-id="${item.id}" class="qtyInput" /></td>
+      <td><input type="number" min="1" max="${produit.stock}" value="${item.quantite}" data-id="${item.id}" class="qtyInput" /></td>
       <td>€${prixTotal.toFixed(2)}</td>
       <td><button class="btn-ghost removeBtn" data-id="${item.id}">Supprimer</button></td>
     `;
@@ -348,7 +352,8 @@ function updatePanierUI() {
   document.querySelectorAll('.qtyInput').forEach(input=>{
     input.addEventListener('change', e=>{
       const id = e.target.dataset.id;
-      const val = parseInt(e.target.value) || 1;
+      const val = Math.max(1, Math.min(parseInt(e.target.value) || 1, produits[id].stock));
+      e.target.value = val;
       const p = panier.find(x=>x.id===id);
       if(p) p.quantite = val;
       updatePanierUI();
@@ -419,6 +424,7 @@ const detailPrix = document.getElementById('detailPrix');
 const detailQty = document.getElementById('detailQty');
 const detailTech = document.getElementById('detailTech');
 const detailQuantiteInput = document.getElementById('detailQuantiteInput');
+const stockError = document.getElementById('stockError');
 
 function showDetails(id){
   const prod = produits[id];
@@ -443,8 +449,26 @@ function showDetails(id){
   detailQty.textContent = `Stock : ${prod.stock}`;
   detailTech.textContent = prod.tech;
   detailQuantiteInput.value = 1;
+  detailQuantiteInput.max = prod.stock;
+  stockError.textContent = '';
   showSection(sections.details);
 }
+
+// Validation quantité lors de la saisie
+detailQuantiteInput.addEventListener('input', ()=>{
+  const prod = produits[currentDetailId];
+  const val = parseInt(detailQuantiteInput.value) || 1;
+  
+  if(val > prod.stock){
+    stockError.textContent = `⚠️ Stock limité à ${prod.stock} articles`;
+    detailQuantiteInput.value = prod.stock;
+  } else if(val < 1){
+    detailQuantiteInput.value = 1;
+    stockError.textContent = '';
+  } else {
+    stockError.textContent = '';
+  }
+});
 
 // Boutons "Voir"
 document.querySelectorAll('.voirBtn').forEach(btn=>{
@@ -456,12 +480,32 @@ document.querySelectorAll('.voirBtn').forEach(btn=>{
 // ====================
 document.getElementById('btnAddToCart').addEventListener('click',()=>{
   if(!currentDetailId) return;
-  const quantite = parseInt(detailQuantiteInput.value)||1;
+  const prod = produits[currentDetailId];
+  let quantite = parseInt(detailQuantiteInput.value)||1;
+  
+  // Vérifier le stock
+  if(quantite > prod.stock){
+    stockError.textContent = `❌ Plus de stock ! Limité à ${prod.stock}`;
+    detailQuantiteInput.value = prod.stock;
+    quantite = prod.stock;
+    return;
+  }
+  
   const exist = panier.find(p=>p.id===currentDetailId);
+  
+  // Vérifier la quantité totale au panier
+  const qtyEnPanier = exist ? exist.quantite : 0;
+  if(qtyEnPanier + quantite > prod.stock){
+    stockError.textContent = `❌ Seulement ${prod.stock - qtyEnPanier} articles restants (${qtyEnPanier} déjà au panier)`;
+    return;
+  }
+  
   if(exist) exist.quantite += quantite;
   else panier.push({id:currentDetailId,quantite});
+  
+  stockError.textContent = '✅ Produit ajouté au panier !';
   updatePanierUI();
-  alert('Produit ajouté au panier !');
+  setTimeout(()=>{ stockError.textContent = ''; }, 2000);
 });
 
 // ====================
