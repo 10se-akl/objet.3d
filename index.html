@@ -1,1 +1,234 @@
-<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Saint-Valentin - Trouve ta Moitié</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}.container{background:white;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-width:600px;width:100%;padding:40px;animation:slideIn 0.5s ease;position:relative}.container h1{text-align:center;color:#764ba2;margin-bottom:10px;font-size:2.5em}@keyframes slideIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.subtitle{text-align:center;color:#666;margin-bottom:30px;font-size:0.95em}.form-group{margin-bottom:20px}.form-group label{display:block;color:#333;font-weight:600;margin-bottom:8px;font-size:0.95em}.form-group label .optional{color:#999;font-weight:400;font-size:0.85em}.form-group input{width:100%;padding:12px;border:2px solid #ddd;border-radius:10px;font-size:1em;transition:all 0.3s;font-family:inherit}.form-group input:focus{outline:none;border-color:#667eea;box-shadow:0 0 0 3px rgba(102, 126, 234, 0.1)}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:15px}@media(max-width:500px){.form-row{grid-template-columns:1fr}}.btn{background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;border:none;padding:14px 30px;border-radius:10px;font-size:1.1em;font-weight:600;cursor:pointer;width:100%;transition:all 0.3s;margin-top:10px}.btn:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(102, 126, 234, 0.4)}.btn:active{transform:translateY(0)}.btn:disabled{opacity:0.6;cursor:not-allowed}.success-message{background:#4caf50;color:white;padding:15px;border-radius:10px;text-align:center;margin-top:20px;display:none;animation:slideIn 0.3s ease}.match-message{background:#2196F3;color:white;padding:20px;border-radius:10px;text-align:center;margin-top:20px;display:none;animation:slideIn 0.3s ease;font-weight:600;font-size:1.1em;line-height:1.6}.error-message{background:#f44336;color:white;padding:15px;border-radius:10px;text-align:center;margin-top:20px;display:none}.info-box{background:#f0f0f0;padding:15px;border-radius:10px;margin-bottom:25px;text-align:center;color:#555;font-size:0.95em;border-left:4px solid #667eea}.footer{text-align:center;color:#999;margin-top:30px;font-size:0.85em;padding-top:20px;border-top:1px solid #eee}.donation-btn{position:fixed;top:20px;left:20px;background:#FFD700;color:#333;border:none;padding:0;border-radius:50%;width:50px;height:50px;cursor:pointer;font-size:24px;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:all 0.3s;z-index:1000;display:flex;align-items:center;justify-content:center}.donation-btn:hover{transform:scale(1.1);box-shadow:0 6px 16px rgba(0,0,0,0.3)}.donation-btn:active{transform:scale(0.95)}</style></head><body><button class="donation-btn" onclick="document.querySelector('.donation-form').submit()">💝</button><form class="donation-form" action="https://www.paypal.com/donate" method="post" target="_top" style="display:none"><input type="hidden" name="hosted_button_id" value="65CGQXCZJQP4N" /><input type="hidden" name="item_name" value="Aider moi a acheter un cadeau pour ma copine !" /></form><div class="container"><h1>💕 Saint-Valentin 💕</h1><p class="subtitle">Trouve ta moitié !</p><div class="info-box">Rentre tes coordonnées avec ton numéro de cœur. Quand ton duo aura rentré les siennes, tu verras ses infos !</div><form id="form"><div class="form-row"><div class="form-group"><label for="nom">Nom</label><input type="text" id="nom" name="nom" required></div><div class="form-group"><label for="prenom">Prénom</label><input type="text" id="prenom" name="prenom" required></div></div><div class="form-row"><div class="form-group"><label for="classe">Classe</label><input type="text" id="classe" name="classe" placeholder="Ex: Seconde 9" required></div><div class="form-group"><label for="coeur">Numéro de Cœur</label><input type="number" id="coeur" name="coeur" min="1" required></div></div><div class="form-group"><label for="telephone">Numéro de Téléphone <span class="optional">(facultatif)</span></label><input type="tel" id="telephone" name="telephone" pattern="[0-9\s\-\+\(\)]+" placeholder="06 XX XX XX XX"></div><div class="form-group"><label for="email">Adresse Email <span class="optional">(facultatif)</span></label><input type="email" id="email" name="email" placeholder="exemple@mail.com"></div><div class="form-group"><label for="snap">Snapchat <span class="optional">(facultatif)</span></label><input type="text" id="snap" name="snap" placeholder="Ton pseudo Snap"></div><div class="form-group"><label for="insta">Instagram <span class="optional">(facultatif)</span></label><input type="text" id="insta" name="insta" placeholder="Ton @insta"></div><button type="submit" class="btn" id="submitBtn">Envoyer mes coordonnées 📬</button><div class="success-message" id="successMsg">✅ Tes coordonnées ont été enregistrées ! Ton duo t'appellera quand il se sera connecté.</div><div class="match-message" id="matchMsg"></div><div class="error-message" id="errorMsg"></div></form><div class="footer">Développeur: Axel.T Seconde 9</div></div><script>const bannedWords=['adolf','hitler','staline','chibre','trou','ducul','caillou','baton'];function isBanned(text){const lower=text.toLowerCase().trim();return bannedWords.some(word=>lower.includes(word))}function getAllParticipants(){const data=localStorage.getItem('valentine_participants');return data?JSON.parse(data):[]}function saveParticipant(participant){const participants=getAllParticipants();participants.push(participant);localStorage.setItem('valentine_participants',JSON.stringify(participants))}function findMatches(coeur){const participants=getAllParticipants();return participants.filter(p=>p.coeur===coeur)}async function sendToWeb3Forms(participant){const formData=new FormData();formData.append('access_key','867b9f7b-a375-47c5-a0c0-ec184b69f529');formData.append('Nom',participant.nom);formData.append('Prénom',participant.prenom);formData.append('Classe',participant.classe);formData.append('Numéro de Cœur',participant.coeur);if(participant.telephone){formData.append('Téléphone',participant.telephone)}if(participant.email){formData.append('Email',participant.email)}if(participant.snap){formData.append('Snapchat',participant.snap)}if(participant.insta){formData.append('Instagram',participant.insta)}formData.append('subject',`Nouvelle inscription Valentine - ${participant.prenom} ${participant.nom} - Cœur ${participant.coeur}`);try{await fetch('https://api.web3forms.com/submit',{method:'POST',body:formData})}catch(error){console.error('Erreur Web3Forms:',error)}}document.getElementById('form').addEventListener('submit',async function(e){e.preventDefault();const nom=document.getElementById('nom').value;const prenom=document.getElementById('prenom').value;if(isBanned(nom)||isBanned(prenom)){document.getElementById('errorMsg').textContent='❌ Ce nom ou prénom n\'est pas autorisé.';document.getElementById('errorMsg').style.display='block';return}const telephone=document.getElementById('telephone').value;const email=document.getElementById('email').value;const snap=document.getElementById('snap').value;const insta=document.getElementById('insta').value;if(!telephone&&!email&&!snap&&!insta){document.getElementById('errorMsg').textContent='❌ Tu dois remplir au moins un moyen de contact (téléphone, email, Snap ou Instagram) !';document.getElementById('errorMsg').style.display='block';return}const submitBtn=document.getElementById('submitBtn');submitBtn.disabled=true;submitBtn.textContent='Envoi en cours...';const participant={nom:nom,prenom:prenom,classe:document.getElementById('classe').value,coeur:parseInt(document.getElementById('coeur').value),telephone:telephone||'',email:email||'',snap:snap||'',insta:insta||'',timestamp:new Date().toLocaleString('fr-FR')};await sendToWeb3Forms(participant);saveParticipant(participant);const allMatches=findMatches(participant.coeur);if(allMatches.length>1){let matchText=`🎉 <strong>Félicitations !</strong><br>Ton duo a été trouvé !<br><br>`;allMatches.forEach((m,index)=>{if(m.telephone!==participant.telephone||m.email!==participant.email){matchText+=`<strong>${m.prenom} ${m.nom}</strong><br>Classe: ${m.classe}`;if(m.telephone){matchText+=`<br>📱 Téléphone: <strong>${m.telephone}</strong>`}if(m.email){matchText+=`<br>📧 Email: ${m.email}`}if(m.snap){matchText+=`<br>👻 Snap: ${m.snap}`}if(m.insta){matchText+=`<br>📷 Insta: ${m.insta}`}if(index<allMatches.length-1){matchText+=`<br><br>--- Autre possibilité ---<br><br>`}}});matchText+=`<br><br>Appelez-vous maintenant ! 💕`;document.getElementById('matchMsg').innerHTML=matchText;document.getElementById('matchMsg').style.display='block';document.getElementById('successMsg').style.display='none'}else{document.getElementById('successMsg').style.display='block';document.getElementById('matchMsg').style.display='none'}document.getElementById('errorMsg').style.display='none';submitBtn.disabled=false;submitBtn.textContent='Envoyer mes coordonnées 📬';document.getElementById('form').reset()});</script></body></html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saint-Valentin - Trouve ta Moitié</title>
+<style>
+* {margin:0;padding:0;box-sizing:border-box}
+body {font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+.container {background:white;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-width:600px;width:100%;padding:40px;animation:slideIn 0.5s ease}
+.container h1 {text-align:center;color:#764ba2;margin-bottom:10px;font-size:2.5em}
+@keyframes slideIn {from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+.subtitle {text-align:center;color:#666;margin-bottom:30px;font-size:0.95em}
+.form-group {margin-bottom:20px}
+.form-group label {display:block;color:#333;font-weight:600;margin-bottom:8px;font-size:0.95em}
+.form-group label .optional {color:#999;font-weight:400;font-size:0.85em}
+.form-group input {width:100%;padding:12px;border:2px solid #ddd;border-radius:10px;font-size:1em;transition:all 0.3s;font-family:inherit}
+.form-group input:focus {outline:none;border-color:#667eea;box-shadow:0 0 0 3px rgba(102, 126, 234, 0.1)}
+.form-row {display:grid;grid-template-columns:1fr 1fr;gap:15px}
+@media(max-width:500px) {.form-row {grid-template-columns:1fr}}
+.search-box {display:flex;gap:10px;margin-bottom:20px}
+.search-box input {flex:1;padding:12px;border:2px solid #667eea;border-radius:10px;font-size:1em;font-family:inherit}
+.search-box button {background:#667eea;color:white;border:none;padding:12px 20px;border-radius:10px;cursor:pointer;font-weight:600;transition:all 0.3s}
+.search-box button:hover {background:#764ba2;transform:translateY(-2px);box-shadow:0 4px 12px rgba(102,126,234,0.4)}
+.btn {background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;border:none;padding:14px 30px;border-radius:10px;font-size:1.1em;font-weight:600;cursor:pointer;width:100%;transition:all 0.3s;margin-top:10px}
+.btn:hover {transform:translateY(-2px);box-shadow:0 10px 25px rgba(102, 126, 234, 0.4)}
+.btn:disabled {opacity:0.6;cursor:not-allowed}
+.success-message {background:#4caf50;color:white;padding:15px;border-radius:10px;text-align:center;margin-top:20px;display:none;animation:slideIn 0.3s ease}
+.match-message {background:#2196F3;color:white;padding:20px;border-radius:10px;text-align:center;margin-top:20px;display:none;animation:slideIn 0.3s ease;font-weight:600;font-size:1.1em;line-height:1.6}
+.error-message {background:#f44336;color:white;padding:15px;border-radius:10px;text-align:center;margin-top:20px;display:none}
+.info-box {background:#f0f0f0;padding:15px;border-radius:10px;margin-bottom:25px;text-align:center;color:#555;font-size:0.95em;border-left:4px solid #667eea}
+.footer {text-align:center;color:#999;margin-top:30px;font-size:0.85em;padding-top:20px;border-top:1px solid #eee}
+.donation-btn {position:fixed;top:20px;left:20px;background:#FFD700;color:#333;border:none;padding:0;border-radius:50%;width:50px;height:50px;cursor:pointer;font-size:24px;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:all 0.3s;z-index:1000;display:flex;align-items:center;justify-content:center}
+.donation-btn:hover {transform:scale(1.1);box-shadow:0 6px 16px rgba(0,0,0,0.3)}
+.modal {display:none;position:fixed;z-index:2000;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.5)}
+.modal-content {background-color:white;margin:10% auto;padding:30px;border-radius:15px;width:90%;max-width:600px;box-shadow:0 10px 40px rgba(0,0,0,0.3);max-height:70vh;overflow-y:auto}
+.modal-close {color:#aaa;float:right;font-size:28px;font-weight:bold;cursor:pointer}
+.result-item {background:#f5f5f5;padding:15px;border-radius:10px;margin-bottom:15px;border-left:4px solid #667eea}
+</style>
+</head>
+<body>
+<button class="donation-btn" onclick="document.querySelector('.donation-form').submit()">💝</button>
+<form class="donation-form" action="https://www.paypal.com/donate" method="post" target="_top" style="display:none">
+<input type="hidden" name="hosted_button_id" value="65CGQXCZJQP4N" />
+<input type="hidden" name="item_name" value="Aider moi a acheter un cadeau pour ma copine !" />
+</form>
+<div class="container">
+<h1>💕 Saint-Valentin 💕</h1>
+<p class="subtitle">Trouve ta moitié !</p>
+<div class="info-box">Rentre tes coordonnées avec ton numéro de cœur. Quand ton duo aura rentré les siennes, tu verras ses infos !</div>
+<div class="search-box">
+<input type="number" id="searchCoeur" placeholder="Cherche un numéro de cœur..." min="1">
+<button onclick="searchCoeur()">🔍 Chercher</button>
+</div>
+<form id="form">
+<div class="form-row">
+<div class="form-group"><label for="nom">Nom</label><input type="text" id="nom" name="nom" required></div>
+<div class="form-group"><label for="prenom">Prénom</label><input type="text" id="prenom" name="prenom" required></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label for="classe">Classe</label><input type="text" id="classe" name="classe" placeholder="Ex: Seconde 9" required></div>
+<div class="form-group"><label for="coeur">Numéro de Cœur</label><input type="number" id="coeur" name="coeur" min="1" required></div>
+</div>
+<div class="form-group"><label for="telephone">Numéro de Téléphone <span class="optional">(facultatif)</span></label><input type="tel" id="telephone" name="telephone" pattern="[0-9\s\-\+\(\)]+" placeholder="06 XX XX XX XX"></div>
+<div class="form-group"><label for="email">Adresse Email <span class="optional">(facultatif)</span></label><input type="email" id="email" name="email" placeholder="exemple@mail.com"></div>
+<div class="form-group"><label for="snap">Snapchat <span class="optional">(facultatif)</span></label><input type="text" id="snap" name="snap" placeholder="Ton pseudo Snap"></div>
+<div class="form-group"><label for="insta">Instagram <span class="optional">(facultatif)</span></label><input type="text" id="insta" name="insta" placeholder="Ton @insta"></div>
+<button type="submit" class="btn" id="submitBtn">Envoyer mes coordonnées 📬</button>
+<div class="success-message" id="successMsg">✅ Tes coordonnées ont été enregistrées ! Ton duo t'appellera quand il se sera connecté.</div>
+<div class="match-message" id="matchMsg"></div>
+<div class="error-message" id="errorMsg"></div>
+</form>
+<div class="footer">Développeur: Axel.T Seconde 9</div>
+</div>
+<div id="searchModal" class="modal">
+<div class="modal-content">
+<span class="modal-close" onclick="closeSearchModal()">&times;</span>
+<h2 id="searchTitle" style="color:#667eea;margin-bottom:20px">Résultats de recherche</h2>
+<div id="searchResults"></div>
+</div>
+</div>
+<script>
+const bannedWords = ['adolf', 'hitler', 'staline', 'chibre', 'trou', 'ducul', 'caillou', 'baton'];
+
+function isBanned(text) {
+  const lower = text.toLowerCase().trim();
+  return bannedWords.some(word => lower.includes(word));
+}
+
+function getAllParticipants() {
+  const data = localStorage.getItem('valentine_participants');
+  return data ? JSON.parse(data) : [];
+}
+
+function saveParticipant(participant) {
+  const participants = getAllParticipants();
+  participants.push(participant);
+  localStorage.setItem('valentine_participants', JSON.stringify(participants));
+}
+
+function findMatches(coeur) {
+  const participants = getAllParticipants();
+  return participants.filter(p => p.coeur === coeur);
+}
+
+function searchCoeur() {
+  const coeur = parseInt(document.getElementById('searchCoeur').value);
+  if (!coeur || coeur < 1) {
+    alert('Rentre un numéro de cœur valide !');
+    return;
+  }
+  const matches = findMatches(coeur);
+  const modal = document.getElementById('searchModal');
+  const results = document.getElementById('searchResults');
+  const title = document.getElementById('searchTitle');
+  
+  if (matches.length === 0) {
+    title.textContent = `Aucune personne avec le cœur ${coeur}`;
+    results.innerHTML = '<p style="text-align:center;color:#999">Personne ne s\'est encore inscrit avec ce numéro. Sois le premier ! 💕</p>';
+  } else {
+    title.textContent = `${matches.length} personne(s) avec le cœur ${coeur}`;
+    results.innerHTML = '';
+    matches.forEach(m => {
+      let html = `<div class="result-item"><strong>${m.prenom} ${m.nom}</strong><br>Classe: ${m.classe}`;
+      if (m.telephone) html += `<br>📱 <strong>${m.telephone}</strong>`;
+      if (m.email) html += `<br>📧 ${m.email}`;
+      if (m.snap) html += `<br>👻 ${m.snap}`;
+      if (m.insta) html += `<br>📷 ${m.insta}`;
+      html += `</div>`;
+      results.innerHTML += html;
+    });
+  }
+  modal.style.display = 'block';
+}
+
+function closeSearchModal() {
+  document.getElementById('searchModal').style.display = 'none';
+}
+
+window.onclick = function(event) {
+  const modal = document.getElementById('searchModal');
+  if (event.target == modal) {
+    modal.style.display = 'none';
+  }
+}
+
+function sendToWeb3Forms(participant) {
+  const formData = new FormData();
+  formData.append('access_key', '867b9f7b-a375-47c5-a0c0-ec184b69f529');
+  formData.append('Nom', participant.nom);
+  formData.append('Prénom', participant.prenom);
+  formData.append('Classe', participant.classe);
+  formData.append('Numéro de Cœur', participant.coeur);
+  if (participant.telephone) formData.append('Téléphone', participant.telephone);
+  if (participant.email) formData.append('Email', participant.email);
+  if (participant.snap) formData.append('Snapchat', participant.snap);
+  if (participant.insta) formData.append('Instagram', participant.insta);
+  formData.append('subject', `Nouvelle inscription Valentine - ${participant.prenom} ${participant.nom} - Cœur ${participant.coeur}`);
+  
+  fetch('https://api.web3forms.com/submit', {method: 'POST', body: formData})
+    .catch(error => console.error('Erreur:', error));
+}
+
+document.getElementById('form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const nom = document.getElementById('nom').value;
+  const prenom = document.getElementById('prenom').value;
+  
+  if (isBanned(nom) || isBanned(prenom)) {
+    document.getElementById('errorMsg').textContent = '❌ Ce nom ou prénom n\'est pas autorisé.';
+    document.getElementById('errorMsg').style.display = 'block';
+    return;
+  }
+  
+  const telephone = document.getElementById('telephone').value;
+  const email = document.getElementById('email').value;
+  const snap = document.getElementById('snap').value;
+  const insta = document.getElementById('insta').value;
+  
+  if (!telephone && !email && !snap && !insta) {
+    document.getElementById('errorMsg').textContent = '❌ Tu dois remplir au moins un moyen de contact (téléphone, email, Snap ou Instagram) !';
+    document.getElementById('errorMsg').style.display = 'block';
+    return;
+  }
+  
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Envoi en cours...';
+  
+  const participant = {
+    nom: nom,
+    prenom: prenom,
+    classe: document.getElementById('classe').value,
+    coeur: parseInt(document.getElementById('coeur').value),
+    telephone: telephone || '',
+    email: email || '',
+    snap: snap || '',
+    insta: insta || '',
+    timestamp: new Date().toLocaleString('fr-FR')
+  };
+  
+  sendToWeb3Forms(participant);
+  saveParticipant(participant);
+  const allMatches = findMatches(participant.coeur);
+  
+  if (allMatches.length > 1) {
+    let matchText = `🎉 <strong>Félicitations !</strong><br>Ton duo a été trouvé !<br><br>`;
+    allMatches.forEach((m, index) => {
+      if (m.telephone !== participant.telephone || m.email !== participant.email) {
+        matchText += `<strong>${m.prenom} ${m.nom}</strong><br>Classe: ${m.classe}`;
+        if (m.telephone) matchText += `<br>📱 Téléphone: <strong>${m.telephone}</strong>`;
+        if (m.email) matchText += `<br>📧 Email: ${m.email}`;
+        if (m.snap) matchText += `<br>👻 Snap: ${m.snap}`;
+        if (m.insta) matchText += `<br>📷 Insta: ${m.insta}`;
+        if (index < allMatches.length - 1) matchText += `<br><br>--- Autre possibilité ---<br><br>`;
+      }
+    });
+    matchText += `<br><br>Appelez-vous maintenant ! 💕`;
+    document.getElementById('matchMsg').innerHTML = matchText;
+    document.getElementById('matchMsg').style.display = 'block';
+    document.getElementById('successMsg').style.display = 'none';
+  } else {
+    document.getElementById('successMsg').style.display = 'block';
+    document.getElementById('matchMsg').style.display = 'none';
+  }
+  
+  document.getElementById('errorMsg').style.display = 'none';
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Envoyer mes coordonnées 📬';
+  document.getElementById('form').reset();
+});
+</script>
+</body>
+</html>
