@@ -32,6 +32,7 @@ body {font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:lin
 .footer {text-align:center;color:#999;margin-top:30px;font-size:0.85em;padding-top:20px;border-top:1px solid #eee}
 .donation-btn {position:fixed;top:20px;left:20px;background:#FFD700;color:#333;border:none;padding:0;border-radius:50%;width:50px;height:50px;cursor:pointer;font-size:24px;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:all 0.3s;z-index:1000;display:flex;align-items:center;justify-content:center}
 .donation-btn:hover {transform:scale(1.1);box-shadow:0 6px 16px rgba(0,0,0,0.3)}
+.donation-label {position:fixed;top:80px;left:20px;font-size:0.85em;color:#333;font-weight:600;text-align:center;width:50px;z-index:1000}
 .modal {display:none;position:fixed;z-index:2000;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.5)}
 .modal-content {background-color:white;margin:10% auto;padding:30px;border-radius:15px;width:90%;max-width:600px;box-shadow:0 10px 40px rgba(0,0,0,0.3);max-height:70vh;overflow-y:auto}
 .modal-close {color:#aaa;float:right;font-size:28px;font-weight:bold;cursor:pointer}
@@ -40,14 +41,15 @@ body {font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:lin
 </head>
 <body>
 <button class="donation-btn" onclick="document.querySelector('.donation-form').submit()">💝</button>
+<div class="donation-label">Donation</div>
 <form class="donation-form" action="https://www.paypal.com/donate" method="post" target="_top" style="display:none">
 <input type="hidden" name="hosted_button_id" value="65CGQXCZJQP4N" />
-<input type="hidden" name="item_name" value="Aider moi a acheter un cadeau pour ma copine !" />
+<input type="hidden" name="item_name" value="Aider-moi à acheter un cadeau pour ma copine !" />
 </form>
 <div class="container">
 <h1>💕 Saint-Valentin 💕</h1>
 <p class="subtitle">Trouve ta moitié !</p>
-<div class="info-box">Rentre tes coordonnées avec ton numéro de cœur. Quand ton duo aura rentré les siennes, tu verras ses infos !</div>
+<div class="info-box">Rentre tes coordonnées avec ton numéro de cœur. Quand ton duo aura rentré les siennes, tu verras ses infos ! Et faites tourner le site entre vous plus il y a de gens connectés plus il y a  de chances de trouver sa moitié.</div>
 <div class="search-box">
 <input type="number" id="searchCoeur" placeholder="Cherche un numéro de cœur..." min="1">
 <button onclick="searchCoeur()">🔍 Chercher</button>
@@ -116,7 +118,7 @@ function searchCoeur() {
   
   if (matches.length === 0) {
     title.textContent = `Aucune personne avec le cœur ${coeur}`;
-    results.innerHTML = '<p style="text-align:center;color:#999">Personne ne s\'est encore inscrit avec ce numéro. Sois le premier ! 💕</p>';
+    results.innerHTML = '<p style="text-align:center;color:#999">Personne ne s\'est encore inscrit avec ce numéro. Sois le premier ! Et faites tourner le site entre vous pour avoir plus de chances de trouver votre moitié.💕</p>';
   } else {
     title.textContent = `${matches.length} personne(s) avec le cœur ${coeur}`;
     results.innerHTML = '';
