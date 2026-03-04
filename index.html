@@ -1,947 +1,793 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Objets 3D — Axel & Noah</title>
-  <meta name="description" content="Petite boutique locale d'objets imprimés en 3D — faits main, personnalisables, paiement simple." />
-
-  <!-- Google Fonts -->
-  https://fonts.googleapis.com
-  https://fonts.gstatic.com
-  https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap
-
-  <!-- PayPal SDK (optionnel, simulation) -->
-  <!-- https://www.paypal.com/sdk/js?client-id=7HSHKVRHRLSDJ&currency=EUR</script> -->
-
-  <style>
-    :root{
-      --accent:#ff6600;
-      --bg:#fafafa;
-      --card:#ffffff;
-      --dark:#222;
-      --muted:#666;
-      --maxw:980px;
-      --error:#d32f2f;
-      --success:#2e7d32;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif;
-      background:var(--bg);
-      color:#111;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-    }
-    a{color:inherit;text-decoration:none}
-    button{font-family:inherit}
-
-    /* HEADER */
-    header{
-      position:fixed; top:0; left:0; right:0;
-      height:64px;
-      background:linear-gradient(180deg,#111 0%, #1a1a1a 100%);
-      color:#fff;
-      display:flex; align-items:center; justify-content:space-between;
-      padding:0 12px; gap:8px;
-      z-index:2000; box-shadow:0 4px 18px rgba(0,0,0,.25);
-    }
-    .brand{display:flex;gap:10px;align-items:center;min-width:0}
-    .logo{width:44px;height:44px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
-    .brand h1{margin:0;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    nav.main{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .icon-btn{background:transparent;border:none;color:#fff;cursor:pointer;font-size:14px;padding:8px 10px;border-radius:8px}
-    .icon-btn:hover{background:rgba(255,255,255,.08)}
-
-    /* Bouton retour */
-    .back-btn{
-      position:fixed; top:76px; left:16px; z-index:2500;
-      background:#000; color:#fff; border:none; border-radius:50%;
-      width:42px; height:42px; font-size:20px; cursor:pointer; display:none;
-    }
-    .back-btn:hover{opacity:.85}
-
-    /* MAIN */
-    main{padding-top:84px;max-width:var(--maxw);margin:24px auto;padding-left:16px;padding-right:16px}
-
-    /* HERO */
-    .hero{
-      display:flex; flex-wrap:wrap; gap:16px;
-      background:linear-gradient(90deg,#fff 0%, #fffaf0 100%);
-      padding:20px; border-radius:12px; box-shadow:0 6px 30px rgba(0,0,0,.05);
-    }
-    .hero .card{flex:1 1 100%}
-    .hero .left{flex:1 1 100%}
-    .hero .stats{flex:1 1 100%;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-    .hero .stats .box{background:#fff;padding:8px 12px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.06);min-width:120px}
-
-    /* GRID PRODUITS */
-    .grid{margin-top:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:18px}
-    .card{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:10px}
-    .card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
-    .card h3{margin:0;font-size:16px;color:var(--dark)}
-    .card p{margin:0;color:var(--muted);font-size:14px;min-height:40px}
-    .card .meta{display:flex;align-items:center;justify-content:space-between;gap:8px}
-    .price{font-weight:700;color:var(--accent)}
-    .stock-status{font-size:13px;color:var(--error);font-weight:700}
-
-    /* DETAILS */
-    .details-wrap{display:flex;gap:18px;align-items:flex-start}
-    .details-left{flex:1;min-width:0}
-    .details-right{width:320px;background:var(--card);padding:14px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.06)}
-    .carousel-main{width:100%;height:300px;border-radius:10px;overflow:hidden;background:#eee;display:flex;align-items:center;justify-content:center}
-    .carousel-main img{width:100%;height:100%;object-fit:cover}
-    .thumbnails{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-    .thumbnails img{height:56px;width:75px;object-fit:cover;border-radius:6px;cursor:pointer;opacity:.75;border:2px solid transparent}
-    .thumbnails img.active{opacity:1;border-color:var(--accent)}
-    .error-msg{color:var(--error);font-size:13px;margin-top:4px}
-    .success-msg{color:var(--success);font-size:13px;margin-top:4px}
-
-    /* PANIER */
-    table.cart{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.06)}
-    table.cart th,table.cart td{padding:12px 14px;text-align:left;border-bottom:1px solid #f0f0f0;font-size:14px}
-    table.cart thead{background:#fafafa}
-    .btn-primary{background:var(--accent);color:#fff;border:none;padding:12px;border-radius:8px;cursor:pointer;font-weight:700}
-    .btn-primary:disabled{opacity:.5;cursor:not-allowed}
-    .btn-ghost{background:#f5f5f5;border:1px solid #eee;padding:10px;border-radius:8px;cursor:pointer}
-    .small-muted{font-size:13px;color:var(--muted)}
-
-    /* MODAL */
-    .modal-backdrop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.5);z-index:3000;display:none;padding:16px}
-    .modal-backdrop.active{display:flex}
-    .modal{width:100%;max-width:520px;background:#fff;padding:18px;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.25)}
-    .modal h3{margin:0 0 12px 0;color:var(--accent)}
-    .modal label{font-weight:600;margin-top:8px;display:block}
-    .modal input,.modal select{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;margin-top:4px;font-size:14px}
-    .modal-toggle{text-align:center;margin-top:12px;font-size:13px}
-    .modal-toggle a{color:var(--accent);cursor:pointer;text-decoration:underline}
-    .modal-actions{display:flex;gap:8px;margin-top:12px}
-    .modal-actions button{flex:1}
-
-    /* FOOTER */
-    footer.site-footer{
-      margin-top:28px;background:#0f0f0f;color:#ddd;padding:16px;border-radius:10px;
-      max-width:var(--maxw);margin-left:auto;margin-right:auto;
-      display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;
-    }
-    .footer-left{font-size:14px}
-    .footer-contact{font-size:13px;color:#aaa}
-    .footer-contact ul{margin:6px 0 0 18px;color:#ccc}
-    .footer-social{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .footer-social a{display:inline-flex;align-items:center;gap:8px;background:#161616;border:1px solid #222;padding:6px 10px;border-radius:8px;color:#eee}
-    .footer-social a img{height:18px;width:18px;border-radius:4px;display:block}
-
-    /* RESPONSIVE */
-    @media (max-width:860px){
-      header{height:auto;padding:10px;gap:8px}
-      nav.main{width:100%;justify-content:space-between}
-      .details-wrap{flex-direction:column}
-      .details-right{width:100%}
-      .hero{padding:16px}
-      footer.site-footer{flex-direction:column;gap:10px;text-align:center;align-items:center}
-      .footer-contact{text-align:center}
-    }
-    @media (max-width:600px){
-      .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
-      .card img{height:120px}
-      .carousel-main{height:240px}
-    }
-    @media (max-width:480px){
-      .grid{grid-template-columns:repeat(2,1fr);gap:12px}
-      .thumbnails img{width:56px;height:40px}
-      .brand h1{font-size:16px}
-    }
-  </style>
-</head>
-<body>
-
-  <button class="back-btn" id="backBtn" aria-label="Retour">←</button>
-
-  <header role="banner">
-    <div class="brand">
-      <div class="logo" aria-hidden="true">3D</div>
-      <div>
-        <h1>Objets 3D — Axel &amp; Noah</h1>
-        <div style="font-size:12px;color:#e6e6e6">Impression &amp; Création locale</div>
-      </div>
-    </div>
-
-    <nav class="main" aria-label="Navigation principale">
-      <button class="icon-btn" id="navAccueil" aria-controls="accueilSection">Accueil</button>
-      <button class="icon-btn" id="navBoutique" aria-controls="boutiqueSection">Boutique</button>
-      <button class="icon-btn" id="navPanier" aria-controls="panierSection">🛒 <span id="nbPanier">0</span></button>
-      <div id="authArea" style="display:flex; align-items:center; gap:8px">
-        <div id="notLogged" style="display:flex; gap:8px;">
-          <button class="icon-btn" id="openLoginBtn">Connexion</button>
-          <button class="icon-btn" id="openRegisterBtn">Inscription</button>
-        </div>
-        <div id="logged" style="display:none; align-items:center; gap:8px">
-          <div class="user-bubble" id="badgeUser" style="color:white;font-size:14px;">Utilisateur</div>
-          <button class="icon-btn" id="logoutBtn">Déconnexion</button>
-        </div>
-      </div>
-    </nav>
-  </header>
-
-  <main>
-    <!-- HERO -->
-    <section class="hero" id="accueilSection" aria-label="Accueil">
-      <div class="card">
-        <h2>Bienvenue sur notre boutique d'objets 3D</h2>
-        <p>
-          Nous sommes Axel et Noah, deux adolescents passionnés par la création et l'impression 3D.
-          Nous avons lancé cette petite boutique locale pour montrer que la créativité et l’entrepreneuriat
-          sont accessibles à tous. Chaque objet est imaginé, fabriqué et emballé avec soin dans notre atelier.
-          Merci de soutenir notre aventure !
-        </p>
-      </div>
-
-      <div class="left">
-        <h2>Objets 3D faits main — Petite boutique</h2>
-        <p>Produits imprimés localement, personnalisables. Paiement PayPal / CB (simulation) / à la livraison.</p>
-      </div>
-
-      <div class="stats">
-        <div style="text-align:right;">
-          <div style="font-size:12px;color:var(--muted)">Connecté en tant que :</div>
-          <div id="userStatus" style="font-weight:700;color:var(--accent)">Invité</div>
-        </div>
-        <div class="box">
-          <div style="font-size:13px; color:var(--muted)">Panier</div>
-          <div style="font-weight:700; font-size:18px" id="nbPanierLarge">0</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- BOUTIQUE -->
-    <section id="boutiqueSection" style="display:none;" aria-label="Boutique">
-      <h3>Nos produits</h3>
-      <div class="grid" id="gridProduits" aria-live="polite"></div>
-    </section>
-
-    <!-- DETAILS -->
-    <section id="detailsSection" style="display:none;" aria-label="Détails du produit">
-      <div class="details-wrap">
-        <div class="details-left">
-          <div class="card">
-            <div class="carousel-main" id="mainImageContainer">
-              <img id="mainImage" src="" alt="Image du produit" />
-            </div>
-            <div class="thumbnails" id="thumbs" aria-label="Vignettes"></div>
-          </div>
-          <div class="card">
-            <h3 id="detailTitre">Titre</h3>
-            <p id="detailDescription" class="small-muted">Description...</p>
-            <p class="small-muted" id="detailFab">Fabriqué à ...</p>
-          </div>
-        </div>
-
-        <aside class="details-right" aria-label="Options et achat">
-          <div style="display:flex; justify-content:space-between; align-items:center">
-            <div style="font-weight:700" id="detailPrix">€0.00</div>
-            <div style="color:var(--muted); font-size:13px" id="detailQty">Stock : —</div>
-          </div>
-          <div style="margin-top:12px">
-            <label for="detailQuantiteInput">Quantité</label>
-            <input type="number" id="detailQuantiteInput" min="1" value="1" />
-            <div id="stockError" class="error-msg" role="alert" aria-live="polite"></div>
-          </div>
-          <div style="margin-top:12px; display:flex; gap:8px; flex-direction:column;">
-            <button class="btn-primary" id="btnAddToCart">Ajouter au panier</button>
-            <button class="btn-ghost" id="btnOrderSingle">Commander</button>
-          </div>
-          <div style="margin-top:16px; font-size:13px; color:var(--muted)">
-            <strong>Détails techniques</strong>
-            <div id="detailTech" style="margin-top:8px">PLA recyclé • Impression FDM</div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <!-- PANIER -->
-    <section id="panierSection" style="display:none;" aria-label="Panier">
-      <h3>Panier</h3>
-      <div style="overflow:auto;">
-        <table class="cart" aria-live="polite">
-          <thead><tr><th>Produit</th><th>Quantité</th><th>Prix</th><th>Actions</th></tr></thead>
-          <tbody id="panierTable"></tbody>
-        </table>
-      </div>
-      <div style="display:flex; justify-content:space-between; margin-top:12px; align-items:center; gap:12px; flex-wrap:wrap;">
-        <button class="btn-ghost" id="viderPanierBtn">Vider le panier</button>
-        <div style="text-align:right">
-          <div class="small-muted">Total :</div>
-          <div style="font-weight:700; font-size:18px" id="totalPanier">€0.00</div>
-          <button class="btn-primary" id="commanderPanierBtn" style="margin-top:8px">Commander le panier</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- FORM COMMANDE -->
-    <section id="formSection" style="display:none;" aria-label="Formulaire de commande">
-      <h3>Commander</h3>
-      <div class="card">
-        <form id="orderForm" novalidate>
-          <!-- Clé Web3Forms -->
-          <input type="hidden" name="access_key" value="867b9f7b-a375-47c5-a0c0-ec184b69f529" />
-          <!-- Email destinataire propriétaire -->
-          <input type="hidden" name="email_to" value="objet.3d.axel.et.noah@gmail.com" />
-          <!-- Honeypot anti-bot -->
-          <input type="text" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" />
-
-          <label for="prenom">Prénom</label>
-          <input id="prenom" name="prenom" type="text" required />
-          <label for="nom">Nom</label>
-          <input id="nom" name="nom" type="text" required />
-          <label for="adresse">Adresse</label>
-          <input id="adresse" name="adresse" type="text" required />
-          <label for="codepostal">Code postal</label>
-          <input id="codepostal" name="codepostal" type="text" pattern="[0-9]{5}" required />
-          <label for="emailField">Email</label>
-          <input id="emailField" name="email" type="email" required />
-
-          <label for="quantite">Quantité totale</label>
-          <input id="quantite" name="quantite" type="number" min="1" value="1" readonly />
-
-          <label for="moyenPaiement">Moyen de paiement</label>
-          <select id="moyenPaiement" name="moyenPaiement" required>
-            <option value="">-- Choisir un moyen de paiement --</option>
-            <option value="paypal">PayPal</option>
-            <option value="paypalme">PayPal.me</option>
-            <option value="virement">Virement bancaire</option>
-            <option value="cb_simule">Carte bancaire (simulation)</option>
-            <option value="cash">Paiement à la livraison</option>
-          </select>
-
-          <div id="formStatus" class="small-muted" style="margin-top:8px;" aria-live="polite"></div>
-
-          <div style="display:flex; gap:8px; margin-top:8px">
-            <button class="btn-primary" type="submit" id="btnSubmit">Envoyer la commande</button>
-            <button type="button" class="btn-ghost" id="btnCancelOrder">Annuler</button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- MODAL AUTH -->
-    <div class="modal-backdrop" id="authModalOverlay" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-      <div class="modal">
-        <h3 id="authTitle">Connexion</h3>
-
-        <div id="loginForm">
-          <label for="loginEmail">Email</label>
-          <input type="email" id="loginEmail" autocomplete="email" required />
-          <label for="loginPassword">Mot de passe</label>
-          <input type="password" id="loginPassword" autocomplete="current-password" required />
-          <div class="modal-actions">
-            <button type="button" class="btn-primary" id="loginBtn">Se connecter</button>
-            <button type="button" class="btn-ghost" onclick="fermerAuth()">Fermer</button>
-          </div>
-          <div class="modal-toggle">
-            Pas encore inscrit ? <a onclick="changerForm('register')">S'inscrire</a>
-          </div>
-        </div>
-
-        <div id="registerForm" style="display:none;">
-          <label for="regPrenom">Prénom</label>
-          <input type="text" id="regPrenom" required />
-          <label for="regNom">Nom</label>
-          <input type="text" id="regNom" required />
-          <label for="regAdresse">Adresse</label>
-          <input type="text" id="regAdresse" required />
-          <label for="regCodepostal">Code Postal</label>
-          <input type="text" id="regCodepostal" pattern="[0-9]{5}" required />
-          <label for="regEmail">Email</label>
-          <input type="email" id="regEmail" autocomplete="email" required />
-          <label for="regEmailConfirm">Confirmer l'Email</label>
-          <input type="email" id="regEmailConfirm" autocomplete="email" required />
-          <label for="regPassword">Mot de passe</label>
-          <input type="password" id="regPassword" autocomplete="new-password" required />
-          <div class="small-muted">⚙️ Min. 8 caractères, dont 1 lettre et 1 chiffre.</div>
-          <div class="modal-actions">
-            <button type="button" class="btn-primary" id="registerBtn">S'inscrire</button>
-            <button type="button" class="btn-ghost" onclick="fermerAuth()">Fermer</button>
-          </div>
-          <div class="modal-toggle">
-            Déjà inscrit ? <a onclick="changerForm('login')">Se connecter</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <footer class="site-footer" role="contentinfo">
-    <div class="footer-left">
-      <strong>Contact rapide</strong><br />
-      mailto:objet.3d.axel.et.noah@gmail.comobjet.3d.axel.et.noah@gmail.com</a>
-    </div>
-    <div class="footer-contact">
-      <div><strong>Quand connecté :</strong></div>
-      <ul>
-        <li>Voir le panier et commander</li>
-        <li>Enregistrer vos moyens de paiement</li>
-        <li>Recevoir des notifications par e-mail</li>
-      </ul>
-      <div class="footer-social" style="margin-top:8px">
-        <a href="https://www.instagram.com/objet_3d_a_et_n/
-          https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg">
-          <span>Instagram</span>
-        </a>
-        <a href="https://www.tiktok.com/@objet_3d
-          https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg">
-          <span>TikTok</span>
-        </a>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    /* ====================
-       PRODUITS (neutres)
-       ==================== */
-    const produits = {
-      objet1:{
-        id:'objet1',
-        titre:'Porte-stylo — bientôt dispo',
-        description:'Porte-stylo élégant imprimé en PLA recyclé. Dimensions : 8×8×10 cm.',
-        images:[
-          'https://via.placeholder.com/800x600?text=Porte-stylo+1',
-          'https://via.placeholder.com/800x600?text=Porte-stylo+2'
-        ],
-        fabrication:'Atelier local, PLA recyclé',
-        prix:12.99,
-        stock:15,
-        tech:'PLA recyclé • Impression FDM'
-      },
-      objet2:{
-        id:'objet2',
-        titre:'Figurine résine — bientôt dispo',
-        description:'Figurine détaillée, imprimée en résine durable.',
-        images:[
-          'https://via.placeholder.com/800x600?text=Figurine+1',
-          'https://via.placeholder.com/800x600?text=Figurine+2'
-        ],
-        fabrication:'Résine haute qualité',
-        prix:24.50,
-        stock:8,
-        tech:'Résine SLA • Détails fins'
-      },
-      objet3:{
-        id:'objet3',
-        titre:'Vase géométrique — preview',
-        description:'Vase aux formes géométriques, idéal pour la déco.',
-        images:[
-          'https://via.placeholder.com/800x600?text=Vase+1',
-          'https://via.placeholder.com/800x600?text=Vase+2'
-        ],
-        fabrication:'PLA • Impression FDM',
-        prix:18.75,
-        stock:12,
-        tech:'PLA • Impression FDM'
-      },
-    };
-
-    /* ====================
-       ÉTAT
-       ==================== */
-    let panier = [];
-    let logged = false;
-    let currentUserName = '';
-    let currentDetailId = null;
-
-    /* ====================
-       DOM
-       ==================== */
-    const nbPanierEl = document.getElementById('nbPanier');
-    const nbPanierLarge = document.getElementById('nbPanierLarge');
-    const panierTable = document.getElementById('panierTable');
-    const totalPanierEl = document.getElementById('totalPanier');
-    const orderForm = document.getElementById('orderForm');
-    const formStatus = document.getElementById('formStatus');
-    const btnSubmit = document.getElementById('btnSubmit');
-
-    const sections = {
-      accueil: document.getElementById('accueilSection'),
-      boutique: document.getElementById('boutiqueSection'),
-      details: document.getElementById('detailsSection'),
-      panier: document.getElementById('panierSection'),
-      form: document.getElementById('formSection')
-    };
-
-    function showSection(sec){
-      Object.values(sections).forEach(s=>s.style.display='none');
-      sec.style.display='block';
-    }
-
-    /* ====================
-       NAVIGATION
-       ==================== */
-    document.getElementById('navAccueil').addEventListener('click',()=>showSection(sections.accueil));
-    document.getElementById('navBoutique').addEventListener('click',()=>afficherBoutique());
-    document.getElementById('navPanier').addEventListener('click',()=>{
-      updatePanierUI();
-      showSection(sections.panier);
-    });
-
-    function afficherBoutique(){
-      showSection(sections.boutique);
-      const grid = document.getElementById('gridProduits');
-      grid.innerHTML = '';
-      Object.values(produits).forEach(prod=>{
-        const card = document.createElement('div');
-        card.className = 'card';
-        const isRupture = prod.stock === 0;
-        card.innerHTML = `
-          ${prod.images[0]}
-          <h3>${prod.titre}</h3>
-          <p>${prod.description}</p>
-          <div class="meta">
-            ${isRupture ? '<div class="stock-status">AUCUN STOCK (pour le moment)</div>' : `<div class="price">€${prod.prix.toFixed(2)}</div>`}
-            <button class="btn-ghost voirBtn" data-id="${prod.id}" ${isRupture ? 'disabled' : ''}>Voir</button>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-      document.querySelectorAll('.voirBtn').forEach(btn=>{
-        btn.addEventListener('click',()=>showDetails(btn.dataset.id));
-      });
-    }
-
-    function showDetails(id){
-      const prod = produits[id];
-      if(!prod || prod.stock === 0) return;
-      currentDetailId = id;
-
-      document.getElementById('mainImage').src = prod.images[0];
-      document.getElementById('mainImage').alt = `Image du produit : ${prod.titre}`;
-      document.getElementById('detailTitre').textContent = prod.titre;
-      document.getElementById('detailDescription').textContent = prod.description;
-      document.getElementById('detailFab').textContent = prod.fabrication;
-      document.getElementById('detailPrix').textContent = `€${prod.prix.toFixed(2)}`;
-      document.getElementById('detailQty').textContent = prod.stock === 0 ? 'AUCUN STOCK (pour le moment)' : `Stock : ${prod.stock}`;
-      document.getElementById('detailTech').textContent = prod.tech;
-      document.getElementById('detailQuantiteInput').value = 1;
-      document.getElementById('detailQuantiteInput').max = prod.stock;
-      const msg = document.getElementById('stockError');
-      msg.className = 'error-msg';
-      msg.textContent = '';
-
-      const thumbs = document.getElementById('thumbs');
-      thumbs.innerHTML = '';
-      prod.images.forEach((img,i)=>{
-        const t = document.createElement('img');
-        t.src = img;
-        t.alt = `Vignette ${i+1} du produit`;
-        if(i===0) t.classList.add('active');
-        t.addEventListener('click',()=>{
-          document.getElementById('mainImage').src = img;
-          thumbs.querySelectorAll('img').forEach(x=>x.classList.remove('active'));
-          t.classList.add('active');
-        });
-        thumbs.appendChild(t);
-      });
-
-      showSection(sections.details);
-    }
-
-    document.getElementById('detailQuantiteInput').addEventListener('input',()=>{
-      const prod = produits[currentDetailId];
-      if(!prod) return;
-      const input = document.getElementById('detailQuantiteInput');
-      let val = parseInt(input.value) || 1;
-      const error = document.getElementById('stockError');
-      if(val > prod.stock){
-        val = prod.stock;
-        error.textContent = `⚠️ Stock limité à ${prod.stock} articles`;
-      } else if (val < 1) {
-        val = 1;
-        error.textContent = '';
-      } else {
-        error.textContent = '';
-      }
-      input.value = val;
-    });
-
-    document.getElementById('btnAddToCart').addEventListener('click',()=>{
-      if(!currentDetailId) return;
-      const prod = produits[currentDetailId];
-      let quantite = parseInt(document.getElementById('detailQuantiteInput').value)||1;
-
-      if(quantite > prod.stock){
-        document.getElementById('stockError').textContent = `❌ Plus de stock ! Limité à ${prod.stock}`;
-        return;
-      }
-
-      const exist = panier.find(p=>p.id===currentDetailId);
-      const qtyEnPanier = exist ? exist.quantite : 0;
-      if(qtyEnPanier + quantite > prod.stock){
-        document.getElementById('stockError').textContent = `❌ Seulement ${prod.stock - qtyEnPanier} articles restants`;
-        return;
-      }
-
-      if(exist) exist.quantite += quantite;
-      else panier.push({id:currentDetailId,quantite});
-
-      const msg = document.getElementById('stockError');
-      msg.className = 'success-msg';
-      msg.textContent = '✅ Produit ajouté au panier !';
-      updatePanierUI();
-      setTimeout(()=>{ msg.className='error-msg'; msg.textContent=''; }, 2000);
-    });
-
-    function setOrderTotalQuantityField(){
-      const totalQty = panier.reduce((acc,p)=>acc + p.quantite, 0);
-      const qtyField = document.getElementById('quantite');
-      if(qtyField){
-        qtyField.value = Math.max(1, totalQty || 1); // empêche la valeur “1” forcée si panier vide lors de tests
-      }
-    }
-
-    function updatePanierUI(){
-      const total = panier.reduce((acc,p)=>acc+p.quantite,0);
-      nbPanierEl.textContent = total;
-      nbPanierLarge.textContent = total;
-
-      // maj champ quantité totale
-      setOrderTotalQuantityField();
-
-      panierTable.innerHTML = '';
-      let montant = 0;
-      panier.forEach(item=>{
-        const prod = produits[item.id];
-        const prixTotal = prod.prix * item.quantite;
-        montant += prixTotal;
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${prod.titre}</td>
-          <td><input type="number" min="1" max="${prod.stock}" value="${item.quantite}" data-id="${item.id}" class="qtyInput" /></td>
-          <td>€${prixTotal.toFixed(2)}</td>
-          <td><button class="btn-ghost removeBtn" data-id="${item.id}">Supprimer</button></td>
-        `;
-        panierTable.appendChild(row);
-      });
-      totalPanierEl.textContent = `€${montant.toFixed(2)}`;
-
-      document.querySelectorAll('.qtyInput').forEach(input=>{
-        input.addEventListener('change',e=>{
-          const id = e.target.dataset.id;
-          const val = Math.max(1, Math.min(parseInt(e.target.value) || 1, produits[id].stock));
-          e.target.value = val;
-          const p = panier.find(x=>x.id===id);
-          if(p) p.quantite = val;
-          updatePanierUI();
-        });
-      });
-      document.querySelectorAll('.removeBtn').forEach(btn=>{
-        btn.addEventListener('click',e=>{
-          panier = panier.filter(x=>x.id!==e.target.dataset.id);
-          updatePanierUI();
-        });
-      });
-
-      // Désactiver "Commander le panier" si non connecté ou panier vide
-      const commanderBtn = document.getElementById('commanderPanierBtn');
-      commanderBtn.disabled = !logged || panier.length===0;
-    }
-
-    document.getElementById('viderPanierBtn').addEventListener('click',()=>{
-      if(confirm('Vider le panier ?')){
-        panier=[];
-        updatePanierUI();
-      }
-    });
-
-    document.getElementById('commanderPanierBtn').addEventListener('click',()=>{
-      if(!logged){
-        alert('Vous devez être connecté pour commander !');
-        ouvrirAuth('login');
-        return;
-      }
-      if(panier.length===0){ alert('Panier vide !'); return; }
-      setOrderTotalQuantityField(); // force la bonne valeur juste avant l’affichage
-      showSection(sections.form);
-    });
-
-    document.getElementById('btnOrderSingle').addEventListener('click',()=>{
-      if(!logged){
-        alert('Vous devez être connecté pour commander !');
-        ouvrirAuth('login');
-        return;
-      }
-      if(!currentDetailId) return;
-      if(!panier.find(p=>p.id===currentDetailId)){
-        panier.push({id:currentDetailId, quantite: parseInt(document.getElementById('detailQuantiteInput').value)||1});
-        updatePanierUI();
-      }
-      setOrderTotalQuantityField();
-      showSection(sections.form);
-    });
-
-    document.getElementById('btnCancelOrder').addEventListener('click',()=>showSection(sections.accueil));
-
-    /* ===========================
-       COMMANDE → WEB3FORMS
-       =========================== */
-    orderForm.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-
-      // champs requis
-      const prenom = document.getElementById('prenom').value.trim();
-      const nom = document.getElementById('nom').value.trim();
-      const email = document.getElementById('emailField').value.trim();
-      const codepostal = document.getElementById('codepostal').value.trim();
-      if(!prenom || !nom || !email){
-        alert('Veuillez remplir au minimum prénom, nom et email.');
-        return;
-      }
-      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-        alert('Adresse e-mail invalide.');
-        return;
-      }
-      if(!/^[0-9]{5}$/.test(codepostal)){
-        alert('Code postal invalide (5 chiffres).');
-        return;
-      }
-
-      // Récap panier
-      const items = panier.map(item=>{
-        const prod = produits[item.id];
-        return {
-          id: item.id,
-          titre: prod.titre,
-          quantite: item.quantite,
-          prix_unitaire: prod.prix,
-          prix_total: +(prod.prix * item.quantite).toFixed(2)
-        };
-      });
-      const totalPanier = items.reduce((acc, it)=>acc + it.prix_total, 0).toFixed(2);
-
-      // Met à jour la quantité totale (fix principal)
-      const totalQty = panier.reduce((acc,p)=>acc + p.quantite, 0);
-      document.getElementById('quantite').value = Math.max(1, totalQty || 1);
-
-      const data = new FormData(orderForm);
-      data.append('subject', `Nouvelle commande — ${prenom} ${nom}`);
-      data.append('from_name', `${prenom} ${nom}`);
-      data.append('cart_total_eur', `€${totalPanier}`);
-      data.append('cart_items_json', JSON.stringify(items));
-      data.append('logged_user', currentUserName || 'Invité');
-      data.append('site', 'Objets 3D — Axel & Noah');
-
-      btnSubmit.disabled = true;
-      formStatus.textContent = '⏳ Envoi en cours...';
-
-      try {
-        const res = await fetch('https://api.web3forms.com/submit', { method:'POST', body:data });
-        const result = await res.json();
-        if(result.success){
-          formStatus.textContent = '✅ Commande envoyée ! Merci 🙏';
-          alert('Commande envoyée ! Un e-mail de confirmation vous sera envoyé.');
-          panier = [];
-          updatePanierUI();
-          orderForm.reset();
-          showSection(sections.accueil);
-        }else{
-          console.error('Web3Forms error:', result);
-          formStatus.textContent = '❌ Erreur lors de l’envoi. Réessaie plus tard.';
-          alert('Une erreur est survenue : ' + (result.message || 'Envoi impossible'));
+import React, { useState, useEffect } from 'react';
+import { Map as MapIcon, Home, BarChart3, Users, Leaf, Zap } from 'lucide-react';
+
+const TinyProgressV3 = () => {
+  const [gameState, setGameState] = useState('menu'); // menu, playing, prestige, map
+  const [points, setPoints] = useState(0);
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [phase, setPhase] = useState(0); // 0-8 (9 phases totales)
+  const [prestigeLevel, setPrestigeLevel] = useState(0);
+  const [essenceOfLife, setEssenceOfLife] = useState(0);
+  
+  // STATS RÉELLES - Avec distribution correcte sur la carte
+  const [population, setPopulation] = useState(5);
+  const [happiness, setHappiness] = useState(75);
+  const [health, setHealth] = useState(70);
+  const [environment, setEnvironment] = useState(85);
+  const [food, setFood] = useState(150);
+  
+  // Map avec vraie distribution de population
+  const [mapTiles, setMapTiles] = useState([]);
+  const [selectedTile, setSelectedTile] = useState(null);
+
+  // Upgrades - BEAUCOUP PLUS!
+  const [upgrades, setUpgrades] = useState({
+    clickPower: 0,
+    passiveRate: 0,
+    crit: 0,
+    bees: 0,
+    photosynthesis: 0,
+    biodiversity: 0,
+    animals: 0,
+    mushrooms: 0,
+    villagers: 0,
+    hospitals: 0,
+    schools: 0,
+    farms: 0,
+    houses: 0,
+    windmills: 0,
+    temples: 0,
+    libraries: 0,
+    markets: 0,
+    monuments: 0,
+    laboratories: 0,
+    watchtowers: 0,
+  });
+
+  // Temps et météo
+  const [time, setTime] = useState(0);
+  const [weather, setWeather] = useState('sunny');
+  const [boostActive, setBoostActive] = useState(null);
+
+  // Feedback
+  const [floatingTexts, setFloatingTexts] = useState([]);
+  const [particles, setParticles] = useState([]);
+  const [currentEvent, setCurrentEvent] = useState(null);
+
+  // Phases
+  const phases = [
+    { name: 'Graine', emoji: '🌱', color: 'from-green-100 to-green-200', minPoints: 0 },
+    { name: 'Pousse', emoji: '🌿', color: 'from-green-200 to-lime-200', minPoints: 500 },
+    { name: 'Herbe', emoji: '🌾', color: 'from-lime-200 to-yellow-200', minPoints: 2500 },
+    { name: 'Plante', emoji: '🌳', color: 'from-yellow-200 to-green-300', minPoints: 10000 },
+    { name: 'Arbre', emoji: '🌲', color: 'from-green-300 to-emerald-300', minPoints: 50000 },
+    { name: 'Forêt', emoji: '🌲', color: 'from-emerald-300 to-teal-200', minPoints: 150000 },
+    { name: 'Jungle', emoji: '🌴', color: 'from-teal-200 to-cyan-200', minPoints: 400000 },
+    { name: 'Continent', emoji: '🏞️', color: 'from-cyan-200 to-blue-200', minPoints: 1000000 },
+    { name: 'Monde', emoji: '🌍', color: 'from-blue-200 to-purple-200', minPoints: 2500000 },
+  ];
+
+  // Données des upgrades avec descriptions détaillées
+  const upgradeData = {
+    clickPower: { base: 10, name: '👆', desc: 'Clic', icon: '💪', category: 'basique' },
+    passiveRate: { base: 30, name: '☀️', desc: 'Soleil', icon: '⭐', category: 'basique' },
+    crit: { base: 50, name: '💥', desc: 'Critique', icon: '⚡', category: 'basique' },
+    bees: { base: 200, name: '🐝', desc: 'Abeilles', icon: '🍯', category: 'nature' },
+    photosynthesis: { base: 300, name: '🍃', desc: 'Photosynthèse', icon: '🌞', category: 'nature' },
+    biodiversity: { base: 1000, name: '🌾', desc: 'Biodiversité', icon: '🦋', category: 'nature' },
+    animals: { base: 1500, name: '🦌', desc: 'Animaux', icon: '🐾', category: 'nature' },
+    mushrooms: { base: 1200, name: '🍄', desc: 'Champignons', icon: '🏗️', category: 'nature' },
+    villagers: { base: 5000, name: '👨', desc: 'Villagers', icon: '🏘️', category: 'population' },
+    hospitals: { base: 2000, name: '🏥', desc: 'Hôpitaux', icon: '💊', category: 'infra' },
+    schools: { base: 1800, name: '🏫', desc: 'Écoles', icon: '📚', category: 'infra' },
+    farms: { base: 1500, name: '🚜', desc: 'Fermes', icon: '🌽', category: 'infra' },
+    houses: { base: 800, name: '🏠', desc: 'Maisons', icon: '🏡', category: 'infra' },
+    windmills: { base: 3000, name: '💨', desc: 'Moulins', icon: '⚙️', category: 'infra' },
+    temples: { base: 4000, name: '⛩️', desc: 'Temples', icon: '🙏', category: 'culture' },
+    libraries: { base: 3500, name: '📖', desc: 'Bibliothèques', icon: '🔬', category: 'culture' },
+    markets: { base: 2500, name: '🛒', desc: 'Marchés', icon: '💰', category: 'commerce' },
+    monuments: { base: 5000, name: '🗿', desc: 'Monuments', icon: '✨', category: 'culture' },
+    laboratories: { base: 6000, name: '🔬', desc: 'Labos', icon: '🧪', category: 'tech' },
+    watchtowers: { base: 3500, name: '🗼', desc: 'Tours', icon: '👁️', category: 'défense' },
+  };
+
+  // Initialiser la map (10x8)
+  useEffect(() => {
+    if (mapTiles.length === 0) {
+      const tiles = [];
+      for (let y = 0; y < 8; y++) {
+        for (let x = 0; x < 10; x++) {
+          const noise = Math.sin(x * 0.3) + Math.cos(y * 0.3);
+          let type = 'grass';
+          
+          if (noise > 0.8) type = 'forest';
+          else if (noise < -0.5) type = 'water';
+          else if (noise > 0.3) type = 'hill';
+          
+          tiles.push({
+            x,
+            y,
+            type,
+            population: 0,
+            buildings: [],
+            happiness: 75,
+            id: `${x}-${y}`,
+          });
         }
-      } catch(err){
-        console.error('Network error:', err);
-        formStatus.textContent = '❌ Erreur réseau. Vérifie ta connexion.';
-        alert('Erreur réseau pendant l’envoi. Réessaie.');
-      } finally {
-        btnSubmit.disabled = false;
-        setTimeout(()=>{ formStatus.textContent=''; }, 3500);
       }
+      
+      // Ajouter population initiale au centre
+      const centerTile = tiles.find(t => t.x === 5 && t.y === 4);
+      if (centerTile) {
+        centerTile.population = 5;
+      }
+      
+      setMapTiles(tiles);
+      setSelectedTile(centerTile);
+    }
+  }, []);
+
+  // Déterminer la phase
+  useEffect(() => {
+    for (let i = phases.length - 1; i >= 0; i--) {
+      if (totalPoints >= phases[i].minPoints) {
+        setPhase(i);
+        break;
+      }
+    }
+  }, [totalPoints]);
+
+  // DISTRIBUTION DE POPULATION SUR LA MAP - LE VRAI SYSTÈME
+  useEffect(() => {
+    const distributionInterval = setInterval(() => {
+      setMapTiles(prevTiles => {
+        let newTiles = [...prevTiles];
+        let totalMapPop = newTiles.reduce((sum, t) => sum + t.population, 0);
+        
+        // Croissance basée sur les stats globales
+        const growthRate = (happiness / 100) * (health / 100) * 0.3;
+        const newPop = Math.min(population, totalMapPop + growthRate);
+        
+        // Distribuer la population parmi les tuiles
+        // Les tuiles avec plus de bâtiments attirent plus de gens
+        newTiles.forEach(tile => {
+          const buildingBonus = tile.buildings.length * 5;
+          const terrainBonus = tile.type === 'grass' ? 10 : tile.type === 'hill' ? 5 : 0;
+          const attractiveness = buildingBonus + terrainBonus;
+          
+          // Croissance locale
+          tile.population += growthRate * (attractiveness / 100 || 0.1);
+          
+          // Bonheur local affecté par environnement
+          tile.happiness = Math.min(100, tile.happiness + (environment / 500) - (population / 1000));
+        });
+        
+        // Normaliser pour match la population totale
+        const totalNewPop = newTiles.reduce((sum, t) => sum + t.population, 0);
+        if (totalNewPop > 0) {
+          newTiles = newTiles.map(t => ({
+            ...t,
+            population: (t.population / totalNewPop) * Math.max(0, population)
+          }));
+        }
+        
+        return newTiles;
+      });
+
+      // Mettre à jour les stats globales
+      setHappiness(prev => {
+        let h = prev;
+        h += (upgrades.schools * 0.3);
+        h -= (population / 50);
+        h += (environment / 300);
+        return Math.max(10, Math.min(100, h));
+      });
+
+      setHealth(prev => {
+        let h = prev;
+        h += (upgrades.hospitals * 0.3);
+        h -= (environment < 50 ? 0.5 : 0);
+        h += (food / 300);
+        return Math.max(10, Math.min(100, h));
+      });
+
+      setEnvironment(prev => {
+        let e = prev;
+        e += (upgrades.biodiversity * 0.2) + (upgrades.animals * 0.1);
+        e -= (upgrades.villagers / 200);
+        e -= (population / 1000);
+        return Math.max(10, Math.min(100, e));
+      });
+
+      setFood(prev => {
+        let f = prev;
+        f += (upgrades.farms * 3);
+        f -= (population * 0.08);
+        return Math.max(0, Math.min(300, f));
+      });
+    }, 1000);
+
+    return () => clearInterval(distributionInterval);
+  }, [upgrades, happiness, health, environment, population, food, essenceOfLife]);
+
+  // Croissance principale de population
+  useEffect(() => {
+    const popGrowthInterval = setInterval(() => {
+      setPopulation(prev => {
+        let newPop = prev;
+        
+        // Croissance basée sur villagers
+        newPop += upgrades.villagers * 0.5;
+        
+        // Croissance naturelle
+        const growthRate = (happiness / 100) * (health / 100) * 0.2;
+        newPop += growthRate;
+        
+        // Capacité de logement
+        const maxPop = 5 + (upgrades.houses * 15);
+        
+        // Famine
+        if (food < 30) {
+          newPop -= Math.max(0, (30 - food) * 0.15);
+        }
+        
+        return Math.max(1, Math.min(maxPop, newPop));
+      });
+    }, 2000); // Chaque 2 secondes pour mieux voir les changements
+
+    return () => clearInterval(popGrowthInterval);
+  }, [upgrades, happiness, health, food]);
+
+  // Croissance passive des points
+  const baseClickPower = 1 + (upgrades.clickPower * 0.5);
+  const baseCritChance = upgrades.crit * 5;
+  const passiveRate = (0.5 
+    + (upgrades.passiveRate * 0.5)
+    + (upgrades.bees * 2)
+    + (upgrades.photosynthesis * 1.5)
+    + (upgrades.biodiversity * 2)
+    + (upgrades.animals * 2.5)
+    + (upgrades.villagers * 2)
+    + (upgrades.windmills * 1.5)
+    + (upgrades.laboratories * 3)
+  ) * (1 + essenceOfLife * 0.15);
+
+  const weatherMultiplier = weather === 'rain' ? 1.5 : weather === 'rainbow' ? 3 : 1;
+  const boostMultiplier = boostActive ? boostActive.multiplier : 1;
+  const totalPassive = passiveRate * weatherMultiplier * boostMultiplier * (1 + prestigeLevel * 0.15);
+
+  useEffect(() => {
+    const pointsInterval = setInterval(() => {
+      setPoints(prev => prev + totalPassive / 10);
+    }, 100);
+    return () => clearInterval(pointsInterval);
+  }, [totalPassive]);
+
+  useEffect(() => {
+    if (points >= 1) {
+      const harvested = Math.floor(points);
+      setTotalPoints(prev => prev + harvested);
+      setPoints(prev => prev - harvested);
+    }
+  }, [points]);
+
+  // Météo & événements
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(prev => {
+        const newTime = prev + 1;
+        if (newTime % 30 === 0) {
+          const rand = Math.random();
+          if (rand < 0.2) setWeather('rain');
+          else if (rand < 0.05) setWeather('rainbow');
+          else setWeather('sunny');
+        }
+        if (newTime % 45 === 0 && Math.random() > 0.7) {
+          triggerRandomEvent();
+        }
+        return newTime;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (!boostActive) return;
+    const interval = setInterval(() => {
+      setBoostActive(prev => {
+        if (prev.duration <= 1) return null;
+        return { ...prev, duration: prev.duration - 1 };
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [boostActive]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setParticles(prev =>
+        prev
+          .map(p => ({
+            ...p,
+            x: p.x + p.vx,
+            y: p.y + p.vy,
+            vy: p.vy + 0.3,
+            life: p.life - 0.05,
+          }))
+          .filter(p => p.life > 0)
+      );
+    }, 30);
+    return () => clearInterval(interval);
+  }, []);
+
+  const randomEvents = [
+    { name: '🌈 Arc-en-ciel magique!', multiplier: 3, duration: 30 },
+    { name: '🦌 Migration animale!', multiplier: 2, duration: 20 },
+    { name: '✨ Saison magique!', multiplier: 2.5, duration: 25 },
+    { name: '🌻 Super floraison!', multiplier: 2, duration: 15 },
+    { name: '🌙 Clair de lune!', multiplier: 1.5, duration: 40 },
+  ];
+
+  const triggerRandomEvent = () => {
+    const event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
+    setCurrentEvent(event.name);
+    setBoostActive({ multiplier: event.multiplier, duration: event.duration });
+    addFloatingText('✨', 400, 300);
+    setTimeout(() => setCurrentEvent(null), 3000);
+  };
+
+  const handleClick = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    let gain = baseClickPower;
+    if (Math.random() < baseCritChance / 100) {
+      gain *= 2;
+      createParticles(x, y, 10);
+      addFloatingText('💥 CRIT!', x, y);
+    } else {
+      createParticles(x, y, 3);
+      addFloatingText(`+${Math.floor(gain)}`, x, y);
+    }
+
+    setPoints(prev => prev + gain);
+    if (navigator.vibrate) navigator.vibrate(10);
+  };
+
+  const calculateCost = (basePrice, level) => {
+    return Math.floor(basePrice * Math.pow(1.15, level));
+  };
+
+  const buyUpgrade = (key) => {
+    const data = upgradeData[key];
+    const cost = calculateCost(data.base, upgrades[key]);
+
+    if (totalPoints >= cost) {
+      setTotalPoints(prev => prev - cost);
+      setUpgrades(prev => ({ ...prev, [key]: prev[key] + 1 }));
+      
+      // Ajouter bâtiment à une tuile aléatoire
+      if (selectedTile && Math.random() > 0.5) {
+        setMapTiles(prev => prev.map(t => 
+          t.id === selectedTile.id 
+            ? { ...t, buildings: [...t.buildings, key] }
+            : t
+        ));
+      }
+
+      addFloatingText('✨ Upgrade!', 400, 400);
+      createParticles(400, 400, 5);
+    }
+  };
+
+  const addFloatingText = (text, x, y) => {
+    const id = Math.random();
+    setFloatingTexts(prev => [...prev, { id, text, x, y }]);
+    setTimeout(() => {
+      setFloatingTexts(prev => prev.filter(t => t.id !== id));
+    }, 1000);
+  };
+
+  const createParticles = (x, y, count) => {
+    const newParticles = Array.from({ length: count }).map(() => ({
+      id: Math.random(),
+      x,
+      y,
+      vx: (Math.random() - 0.5) * 6,
+      vy: (Math.random() - 0.5) * 6,
+      life: 1,
+    }));
+    setParticles(prev => [...prev, ...newParticles]);
+  };
+
+  const doPrestige = () => {
+    const essenceGain = Math.floor(Math.sqrt(totalPoints / 1000));
+    setEssenceOfLife(prev => prev + essenceGain);
+    setPrestigeLevel(prev => prev + 1);
+    
+    setPoints(0);
+    setTotalPoints(0);
+    setPopulation(5);
+    setHappiness(75);
+    setHealth(70);
+    setEnvironment(85);
+    setFood(150);
+    setUpgrades({
+      clickPower: 0, passiveRate: 0, crit: 0, bees: 0, photosynthesis: 0,
+      biodiversity: 0, animals: 0, mushrooms: 0, villagers: 0, hospitals: 0,
+      schools: 0, farms: 0, houses: 0, windmills: 0, temples: 0,
+      libraries: 0, markets: 0, monuments: 0, laboratories: 0, watchtowers: 0,
     });
+    setGameState('playing');
+  };
 
-    /* ====================
-       AUTH / EMAIL HELPERS
-       ==================== */
-    function ouvrirAuth(type){
-      document.getElementById('authModalOverlay').classList.add('active');
-      changerForm(type);
-    }
-    function fermerAuth(){
-      document.getElementById('authModalOverlay').classList.remove('active');
-    }
-    function changerForm(type){
-      const loginForm = document.getElementById('loginForm');
-      const registerForm = document.getElementById('registerForm');
-      const title = document.getElementById('authTitle');
-      if(type === 'login'){
-        loginForm.style.display = 'block';
-        registerForm.style.display = 'none';
-        title.textContent = 'Connexion';
-      } else {
-        loginForm.style.display = 'none';
-        registerForm.style.display = 'block';
-        title.textContent = 'Inscription';
-      }
-    }
+  const currentPhase = phases[phase];
 
-    // stockage utilisateurs (local)
-    function loadUsers(){
-      try{ const raw = localStorage.getItem('users'); return raw ? JSON.parse(raw) : {}; }
-      catch(e){ return {}; }
-    }
-    function saveUsers(users){ localStorage.setItem('users', JSON.stringify(users)); }
-    let users = loadUsers();
+  // MENU
+  if (gameState === 'menu') {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-green-100 to-emerald-100 flex flex-col items-center justify-center p-4">
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@700&family=Fredoka:wght@600;700&display=swap');
+          .title { font-family: 'Fredoka', sans-serif; }
+        `}</style>
 
-    async function hashPassword(pass){
-      const enc = new TextEncoder().encode(pass);
-      const buf = await crypto.subtle.digest('SHA-256', enc);
-      const arr = Array.from(new Uint8Array(buf));
-      return arr.map(b=>b.toString(16).padStart(2,'0')).join('');
-    }
-    function isStrongPassword(pwd){ return typeof pwd==='string' && pwd.length>=8 && /[A-Za-z]/.test(pwd) && /[0-9]/.test(pwd); }
+        <div className="text-center">
+          <div className="text-9xl mb-4 animate-bounce" style={{ animationDuration: '2s' }}>🌍</div>
+          <h1 className="title text-5xl font-black text-green-700 mb-2">Tiny Progress v3</h1>
+          <p className="text-green-600 mb-8">Bâtis un monde entier 🌱→🌍</p>
 
-    function isValidEmailFormat(email){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
-    const bannedWords = ['example','test','no-reply','noreply'];
-    function containsBannedWords(email){ const lower=email.toLowerCase(); return bannedWords.some(w=>lower.includes(w)); }
+          <button
+            onClick={() => setGameState('playing')}
+            className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-white font-bold rounded-2xl transition-all transform hover:scale-105 shadow-lg mb-4"
+          >
+            ▶ Commencer
+          </button>
 
-    document.getElementById('openLoginBtn').addEventListener('click',()=>ouvrirAuth('login'));
-    document.getElementById('openRegisterBtn').addEventListener('click',()=>ouvrirAuth('register'));
+          {essenceOfLife > 0 && (
+            <div className="mt-6 bg-white/60 rounded-2xl p-4">
+              <p className="text-sm text-gray-700">Essence de Vie</p>
+              <p className="title text-3xl text-purple-600">✨ {essenceOfLife}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
-    document.getElementById('logoutBtn').addEventListener('click',()=>{
-      logged=false; currentUserName=''; updateUserUI(); updatePanierUI();
-    });
+  // PRESTIGE
+  if (gameState === 'prestige') {
+    const essenceGain = Math.floor(Math.sqrt(totalPoints / 1000));
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-purple-200 to-pink-200 flex flex-col items-center justify-center p-4">
+        <div className="text-center bg-white/80 rounded-3xl p-8 max-w-md">
+          <div className="text-7xl mb-4 animate-pulse">✨</div>
+          <h1 className="title text-4xl font-black text-purple-700 mb-4">Renaissance!</h1>
+          <p className="title text-3xl text-purple-600 mb-6">+{essenceGain} Essence</p>
+          <button
+            onClick={doPrestige}
+            className="w-full px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-2xl mb-4"
+          >
+            🔄 Renaître
+          </button>
+          <button
+            onClick={() => setGameState('playing')}
+            className="w-full px-6 py-2 bg-gray-300 text-gray-800 font-bold rounded-2xl"
+          >
+            Continuer
+          </button>
+        </div>
+      </div>
+    );
+  }
 
-    document.getElementById('loginBtn').addEventListener('click', async ()=>{
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPassword').value;
+  // MAP SCREEN
+  if (gameState === 'map') {
+    return (
+      <div className={`min-h-screen bg-gradient-to-b ${currentPhase.color} overflow-y-auto`}>
+        <div className="max-w-6xl mx-auto p-4">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="title text-3xl font-bold">🗺️ Votre Monde</h1>
+            <button
+              onClick={() => setGameState('playing')}
+              className="px-4 py-2 bg-white/60 hover:bg-white rounded-lg font-bold"
+            >
+              ← Retour
+            </button>
+          </div>
 
-      if(!email || !password){ alert('Veuillez remplir tous les champs'); return; }
-      if(!isValidEmailFormat(email)){ alert('Format de l’e-mail invalide.'); return; }
+          {/* MAP AVEC DESIGN RÉEL */}
+          <div className="bg-white/70 backdrop-blur rounded-3xl p-8 mb-6 shadow-2xl">
+            <div className="grid gap-2 mb-4" style={{ gridTemplateColumns: 'repeat(10, 1fr)', gridTemplateRows: 'repeat(8, 1fr)' }}>
+              {mapTiles.map(tile => {
+                const isSelected = selectedTile?.id === tile.id;
+                const tileColor = {
+                  grass: 'bg-gradient-to-b from-green-400 to-green-500',
+                  forest: 'bg-gradient-to-b from-green-700 to-green-800',
+                  water: 'bg-gradient-to-b from-blue-400 to-blue-500',
+                  hill: 'bg-gradient-to-b from-yellow-600 to-yellow-700',
+                }[tile.type] || 'bg-green-400';
 
-      const key = email.toLowerCase();
-      const user = users[key];
-      if(!user){ alert('Adresse non reconnue. Inscrivez-vous d’abord.'); return; }
+                return (
+                  <div
+                    key={tile.id}
+                    onClick={() => setSelectedTile(tile)}
+                    className={`aspect-square rounded-lg cursor-pointer transition-all transform hover:scale-110 flex flex-col items-center justify-center font-bold shadow-lg ${tileColor} ${
+                      isSelected ? 'ring-4 ring-yellow-400 scale-110' : 'hover:shadow-xl'
+                    }`}
+                  >
+                    {/* Population indicator */}
+                    {tile.population > 0 && (
+                      <div className="text-white drop-shadow-lg">
+                        <div className="text-sm">👥</div>
+                        <div className="text-xs font-bold">{Math.floor(tile.population)}</div>
+                      </div>
+                    )}
+                    {tile.population === 0 && (
+                      <div className="text-white/50 text-xl drop-shadow">
+                        {tile.type === 'forest' ? '🌲' : tile.type === 'water' ? '💧' : tile.type === 'hill' ? '⛰️' : '🌱'}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
 
-      const passHash = await hashPassword(password);
-      if(user.passHash !== passHash){ alert('Mot de passe incorrect.'); return; }
+            {/* Légende */}
+            <div className="flex gap-4 justify-center flex-wrap text-sm mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded bg-gradient-to-b from-green-400 to-green-500"></div>
+                <span>Herbe</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded bg-gradient-to-b from-green-700 to-green-800"></div>
+                <span>Forêt</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded bg-gradient-to-b from-yellow-600 to-yellow-700"></div>
+                <span>Montagne</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded bg-gradient-to-b from-blue-400 to-blue-500"></div>
+                <span>Eau</span>
+              </div>
+            </div>
+          </div>
 
-      // 🔁 MODIFICATION DEMANDÉE : prénom uniquement (ou email en secours)
-      currentUserName = user.prenom ? user.prenom : email;
+          {/* STATS DÉTAILLÉES */}
+          {selectedTile && (
+            <div className="bg-white/70 backdrop-blur rounded-3xl p-6 mb-6 shadow-2xl">
+              <h2 className="title text-2xl font-bold mb-4">📍 Tuile ({selectedTile.x}, {selectedTile.y})</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl p-4">
+                  <p className="text-xs text-gray-600 font-bold">👥 Population</p>
+                  <p className="title text-2xl font-bold text-purple-700">{Math.floor(selectedTile.population)}</p>
+                </div>
+                <div className="bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-xl p-4">
+                  <p className="text-xs text-gray-600 font-bold">😊 Bonheur</p>
+                  <p className="title text-2xl font-bold text-yellow-700">{Math.floor(selectedTile.happiness)}%</p>
+                </div>
+                <div className="bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl p-4">
+                  <p className="text-xs text-gray-600 font-bold">🏗️ Bâtiments</p>
+                  <p className="title text-2xl font-bold text-blue-700">{selectedTile.buildings.length}</p>
+                </div>
+                <div className="bg-gradient-to-br from-green-100 to-green-200 rounded-xl p-4">
+                  <p className="text-xs text-gray-600 font-bold">🌍 Type</p>
+                  <p className="title text-lg font-bold text-green-700">
+                    {selectedTile.type === 'grass' ? '🌱 Herbe' : selectedTile.type === 'forest' ? '🌲 Forêt' : selectedTile.type === 'water' ? '💧 Eau' : '⛰️ Montagne'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
-      logged = true;
-      updateUserUI();
-      fermerAuth();
-      document.getElementById('loginEmail').value = '';
-      document.getElementById('loginPassword').value = '';
-      updatePanierUI();
-    });
+          {/* STATS GLOBALES */}
+          <div className="bg-white/70 backdrop-blur rounded-3xl p-6 shadow-2xl">
+            <h2 className="title text-2xl font-bold mb-4">🌍 Statistiques Mondiales</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl p-4">
+                <p className="text-xs text-gray-600 font-bold">👥 Population</p>
+                <p className="title text-3xl font-bold text-blue-700">{Math.floor(population)}</p>
+                <div className="bg-white rounded-full h-2 mt-2">
+                  <div className="bg-blue-500 h-full rounded-full" style={{ width: `${Math.min(100, (population / (5 + upgrades.houses * 15)) * 100)}%` }}></div>
+                </div>
+              </div>
 
-    document.getElementById('registerBtn').addEventListener('click', async ()=>{
-      const prenom = document.getElementById('regPrenom').value.trim();
-      const nom = document.getElementById('regNom').value.trim();
-      const adresse = document.getElementById('regAdresse').value.trim();
-      const codepostal = document.getElementById('regCodepostal').value.trim();
-      const email = document.getElementById('regEmail').value.trim();
-      const emailConfirm = document.getElementById('regEmailConfirm').value.trim();
-      const password = document.getElementById('regPassword').value;
+              <div className="bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-xl p-4">
+                <p className="text-xs text-gray-600 font-bold">😊 Bonheur</p>
+                <p className="title text-3xl font-bold text-yellow-700">{Math.floor(happiness)}%</p>
+                <div className="bg-white rounded-full h-2 mt-2">
+                  <div className="bg-yellow-400 h-full rounded-full" style={{ width: `${happiness}%` }}></div>
+                </div>
+              </div>
 
-      if(!prenom || !nom || !adresse || !codepostal || !email || !emailConfirm || !password){
-        alert('Veuillez remplir tous les champs');
-        return;
-      }
-      if(email !== emailConfirm){ alert('Les deux adresses e-mail ne correspondent pas.'); return; }
-      if(!isValidEmailFormat(email)){ alert('Format de l’e-mail invalide.'); return; }
-      if(!/^[0-9]{5}$/.test(codepostal)){ alert('Code postal invalide (5 chiffres).'); return; }
-      if(containsBannedWords(email)){ alert('Adresse e-mail refusée.'); return; }
-      if(!isStrongPassword(password)){ alert('Mot de passe trop faible. Min. 8 caractères avec lettres et chiffres.'); return; }
+              <div className="bg-gradient-to-br from-red-100 to-red-200 rounded-xl p-4">
+                <p className="text-xs text-gray-600 font-bold">💚 Santé</p>
+                <p className="title text-3xl font-bold text-red-700">{Math.floor(health)}%</p>
+                <div className="bg-white rounded-full h-2 mt-2">
+                  <div className="bg-red-400 h-full rounded-full" style={{ width: `${health}%` }}></div>
+                </div>
+              </div>
 
-      const key = email.toLowerCase();
-      if(users[key]){ alert('Cette adresse e-mail est déjà utilisée.'); return; }
+              <div className="bg-gradient-to-br from-green-100 to-green-200 rounded-xl p-4">
+                <p className="text-xs text-gray-600 font-bold">🌱 Environnement</p>
+                <p className="title text-3xl font-bold text-green-700">{Math.floor(environment)}%</p>
+                <div className="bg-white rounded-full h-2 mt-2">
+                  <div className="bg-green-500 h-full rounded-full" style={{ width: `${environment}%` }}></div>
+                </div>
+              </div>
 
-      const passHash = await hashPassword(password);
-      users[key] = { prenom, nom, adresse, codepostal, passHash };
-      saveUsers(users);
+              <div className="bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl p-4">
+                <p className="text-xs text-gray-600 font-bold">🍎 Nourriture</p>
+                <p className="title text-3xl font-bold text-orange-700">{Math.floor(food)}</p>
+                <div className="bg-white rounded-full h-2 mt-2">
+                  <div className="bg-orange-400 h-full rounded-full" style={{ width: `${Math.min(100, (food / 300) * 100)}%` }}></div>
+                </div>
+              </div>
 
-      // 🔔 Notification d’inscription via Web3Forms (Option A)
-      try{
-        const fd = new FormData();
-        fd.append('access_key','867b9f7b-a375-47c5-a0c0-ec184b69f529');
-        fd.append('email_to','objet.3d.axel.et.noah@gmail.com');
-        fd.append('subject','Nouvelle inscription');
-        fd.append('from_name', `${prenom} ${nom}`);
-        fd.append('message', `Un nouvel utilisateur s'est inscrit.\nNom: ${prenom} ${nom}\nEmail: ${email}\nCode postal: ${codepostal}`);
-        await fetch('https://api.web3forms.com/submit', { method:'POST', body:fd });
-      }catch(err){
-        console.warn('Notification inscription non envoyée (réseau) :', err);
-      }
+              <div className="bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl p-4">
+                <p className="text-xs text-gray-600 font-bold">🏘️ Logement</p>
+                <p className="title text-3xl font-bold text-purple-700">{5 + upgrades.houses * 15}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-      alert(`✅ Inscription réussie ! Bienvenue ${prenom} ${nom}`);
+  // MAIN GAME
+  return (
+    <div className={`min-h-screen bg-gradient-to-b ${currentPhase.color} overflow-y-auto pb-20`}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Fredoka:wght@600;700&display=swap');
+        .title { font-family: 'Fredoka', sans-serif; }
+        @keyframes float { 0%, 100% { opacity: 1; } 100% { opacity: 0; transform: translateY(-60px); } }
+        .float-text { animation: float 1s ease-out forwards; }
+      `}</style>
 
-      // 🔁 MODIFICATION DEMANDÉE : prénom uniquement
-      currentUserName = prenom;
+      {/* Particules */}
+      {particles.map(p => (
+        <div key={p.id} className="fixed pointer-events-none text-2xl" style={{ left: p.x, top: p.y, opacity: p.life, transform: `translate(${p.vx}px, ${p.vy}px)` }}>
+          ✨
+        </div>
+      ))}
 
-      logged = true;
-      updateUserUI();
-      fermerAuth();
+      {/* Textes flottants */}
+      {floatingTexts.map(ft => (
+        <div key={ft.id} className="float-text fixed font-bold text-green-700 pointer-events-none" style={{ left: ft.x, top: ft.y, fontSize: ft.text.includes('CRIT') ? '24px' : '16px' }}>
+          {ft.text}
+        </div>
+      ))}
 
-      // Reset
-      document.getElementById('regPrenom').value = '';
-      document.getElementById('regNom').value = '';
-      document.getElementById('regAdresse').value = '';
-      document.getElementById('regCodepostal').value = '';
-      document.getElementById('regEmail').value = '';
-      document.getElementById('regEmailConfirm').value = '';
-      document.getElementById('regPassword').value = '';
-      updatePanierUI();
-    });
+      {/* HEADER STICKY */}
+      <div className="sticky top-0 z-50 bg-white/40 backdrop-blur border-b border-white/50 p-4 shadow-lg">
+        <div className="max-w-6xl mx-auto flex justify-between items-center">
+          <div className="flex gap-3 flex-wrap">
+            <div className="bg-white/70 rounded-xl px-4 py-2 shadow">
+              <p className="text-xs text-gray-700 font-bold">Phase</p>
+              <p className="title text-xl font-bold">{currentPhase.emoji} {currentPhase.name}</p>
+            </div>
+            <div className="bg-white/70 rounded-xl px-4 py-2 shadow">
+              <p className="text-xs text-gray-700 font-bold">Points</p>
+              <p className="title text-xl font-bold">{Math.floor(totalPoints).toLocaleString()}</p>
+            </div>
+            <div className="bg-white/70 rounded-xl px-4 py-2 shadow">
+              <p className="text-xs text-gray-700 font-bold">Passif</p>
+              <p className="title text-xl font-bold">+{totalPassive.toFixed(1)}/s</p>
+            </div>
+            <div className="bg-white/70 rounded-xl px-4 py-2 shadow">
+              <p className="text-xs text-gray-700 font-bold">Population</p>
+              <p className="title text-xl font-bold">👥 {Math.floor(population)}</p>
+            </div>
+          </div>
 
-    function updateUserUI(){
-      const notLogged = document.getElementById('notLogged');
-      const loggedDiv = document.getElementById('logged');
-      const userStatus = document.getElementById('userStatus');
-      const badgeUser = document.getElementById('badgeUser');
-      if(logged){
-        notLogged.style.display = 'none';
-        loggedDiv.style.display = 'flex';
-        badgeUser.textContent = currentUserName;
-        userStatus.textContent = currentUserName;
-      } else {
-        notLogged.style.display = 'flex';
-        loggedDiv.style.display = 'none';
-        userStatus.textContent = 'Invité';
-      }
-    }
+          {/* BOUTON CARTE */}
+          <button
+            onClick={() => setGameState('map')}
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-bold rounded-xl transition-all transform hover:scale-105 shadow-lg"
+          >
+            <MapIcon size={24} />
+            Carte
+          </button>
+        </div>
+      </div>
 
-    /* ====================
-       BACK BUTTON
-       ==================== */
-    const backBtn = document.getElementById('backBtn');
-    let sectionHistory = [];
-    const originalShowSection = showSection;
+      <div className="flex flex-col items-center p-6 min-h-screen max-w-6xl mx-auto">
+        {/* Météo */}
+        <div className="flex gap-3 justify-center mb-6 flex-wrap">
+          <span className="text-4xl">{weather === 'rain' ? '🌧️' : weather === 'rainbow' ? '🌈' : '☀️'}</span>
+          {boostActive && (
+            <div className="bg-yellow-300/80 rounded-xl px-4 py-2 animate-pulse font-bold">
+              🚀 Boost x{boostActive.multiplier} ({boostActive.duration}s)
+            </div>
+          )}
+        </div>
 
-    showSection = function(sec){
-      if(sectionHistory[sectionHistory.length - 1] !== sec){
-        sectionHistory.push(sec);
-      }
-      Object.values(sections).forEach(s => s.style.display = 'none');
-      sec.style.display = 'block';
-      backBtn.style.display = sectionHistory.length > 1 ? 'block' : 'none';
-    };
+        {/* Zone de clic */}
+        <div onClick={handleClick} className="mb-8 cursor-pointer select-none transition-all active:scale-95">
+          <div className="text-9xl animate-bounce" style={{ animationDuration: '3s' }}>
+            {currentPhase.emoji}
+          </div>
+        </div>
 
-    backBtn.addEventListener('click', () => {
-      if(sectionHistory.length > 1){
-        sectionHistory.pop();
-        const prev = sectionHistory[sectionHistory.length - 1];
-        Object.values(sections).forEach(s => s.style.display = 'none');
-        prev.style.display = 'block';
-      }
-      backBtn.style.display = sectionHistory.length > 1 ? 'block' : 'none';
-    });
+        {/* Compteur */}
+        <div className="mb-8 text-center max-w-md w-full bg-white/60 rounded-3xl p-6 shadow-lg">
+          <p className="title text-5xl font-bold text-gray-800 mb-4">
+            {Math.floor(totalPoints).toLocaleString()}
+          </p>
+          <div className="bg-white rounded-full h-4 overflow-hidden mb-2">
+            <div
+              className="bg-gradient-to-r from-green-500 to-emerald-600 h-full transition-all"
+              style={{ width: `${Math.min(100, (totalPoints % phases[Math.min(phase + 1, phases.length - 1)].minPoints) / phases[Math.min(phase + 1, phases.length - 1)].minPoints * 100)}%` }}
+            ></div>
+          </div>
+          <p className="text-xs text-gray-700">Prochaine phase: {phases[Math.min(phase + 1, phases.length - 1)].minPoints.toLocaleString()} points</p>
+        </div>
 
-    /* ====================
-       INIT
-       ==================== */
-    updateUserUI();
-    showSection(sections.accueil);
-  </script>
-</body>
-</html>
+        {/* UPGRADES - BEAUCOUP PLUS! */}
+        <div className="w-full mb-8">
+          <h2 className="title text-3xl font-bold text-center mb-6">✨ Améliorations</h2>
+
+          {/* Catégories */}
+          {['basique', 'nature', 'infra', 'population', 'culture', 'commerce', 'tech', 'défense'].map(category => {
+            const categoryUpgrades = Object.entries(upgradeData).filter(([_, data]) => data.category === category);
+            if (categoryUpgrades.length === 0) return null;
+
+            return (
+              <div key={category} className="mb-6">
+                <p className="text-sm font-bold text-gray-700 mb-3 ml-2 uppercase">
+                  {category === 'basique' && '⭐ Basique'}
+                  {category === 'nature' && '🌿 Nature'}
+                  {category === 'infra' && '🏗️ Infrastructure'}
+                  {category === 'population' && '👥 Population'}
+                  {category === 'culture' && '🎨 Culture'}
+                  {category === 'commerce' && '💰 Commerce'}
+                  {category === 'tech' && '🔬 Technologie'}
+                  {category === 'défense' && '👁️ Défense'}
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                  {categoryUpgrades.map(([key, data]) => {
+                    const cost = calculateCost(data.base, upgrades[key]);
+                    const canBuy = totalPoints >= cost;
+
+                    return (
+                      <button
+                        key={key}
+                        onClick={() => buyUpgrade(key)}
+                        className={`p-3 rounded-xl font-bold transition-all transform hover:scale-105 text-xs ${
+                          canBuy
+                            ? 'bg-white hover:bg-green-50 border-2 border-green-400 shadow-md active:scale-95'
+                            : 'bg-white/40 opacity-50 border-2 border-gray-300'
+                        }`}
+                      >
+                        <div className="text-2xl mb-1">{data.name}</div>
+                        <p className="text-gray-700 text-xs font-bold mb-1">{data.desc}</p>
+                        <p className={`font-bold text-xs mb-1 ${canBuy ? 'text-green-600' : 'text-gray-500'}`}>
+                          {cost.toLocaleString()}
+                        </p>
+                        {upgrades[key] > 0 && <p className="text-lg text-green-600 font-bold">×{upgrades[key]}</p>}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Prestige Button */}
+        {phase >= 8 && totalPoints >= 2500000 && (
+          <button
+            onClick={() => setGameState('prestige')}
+            className="px-10 py-4 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 hover:from-purple-400 hover:via-pink-400 hover:to-red-400 text-white font-bold text-lg rounded-2xl transition-all transform hover:scale-105 shadow-xl animate-pulse"
+          >
+            ✨ Renaître ({Math.floor(Math.sqrt(totalPoints / 1000))} Essence)
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default TinyProgressV3;
