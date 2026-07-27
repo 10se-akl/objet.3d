@@ -1,1173 +1,345 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Saint-Valentin - Trouve ta Moitié</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Proxima — L'assistant IA pour artisans du bâtiment</title>
+<meta name="description" content="Proxima transforme vos demandes clients en devis professionnels. Rejoignez le programme test." />
+
+<!-- Tailwind (aucune installation nécessaire) -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Polices -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
-* {margin:0;padding:0;box-sizing:border-box}
-body {font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
-.container {background:white;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-width:600px;width:100%;padding:40px;animation:slideIn 0.5s ease}
-.container h1 {text-align:center;color:#764ba2;margin-bottom:10px;font-size:2.5em}
-@keyframes slideIn {from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
-.subtitle {text-align:center;color:#666;margin-bottom:30px;font-size:0.95em}
-.form-group {margin-bottom:20px}
-.form-group label {display:block;color:#333;font-weight:600;margin-bottom:8px;font-size:0.95em}
-.form-group label .optional {color:#999;font-weight:400;font-size:0.85em}
-.form-group input {width:100%;padding:12px;border:2px solid #ddd;border-radius:10px;font-size:1em;transition:all 0.3s;font-family:inherit}
-.form-group input:focus {outline:none;border-color:#667eea;box-shadow:0 0 0 3px rgba(102, 126, 234, 0.1)}
-.form-row {display:grid;grid-template-columns:1fr 1fr;gap:15px}
-@media(max-width:500px) {.form-row {grid-template-columns:1fr}}
-.search-box {display:flex;gap:10px;margin-bottom:20px}
-.search-box input {flex:1;padding:12px;border:2px solid #667eea;border-radius:10px;font-size:1em;font-family:inherit}
-.search-box button {background:#667eea;color:white;border:none;padding:12px 20px;border-radius:10px;cursor:pointer;font-weight:600;transition:all 0.3s}
-.search-box button:hover {background:#764ba2;transform:translateY(-2px);box-shadow:0 4px 12px rgba(102,126,234,0.4)}
-.btn {background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;border:none;padding:14px 30px;border-radius:10px;font-size:1.1em;font-weight:600;cursor:pointer;width:100%;transition:all 0.3s;margin-top:10px}
-.btn:hover {transform:translateY(-2px);box-shadow:0 10px 25px rgba(102, 126, 234, 0.4)}
-.btn:disabled {opacity:0.6;cursor:not-allowed}
-.success-message {background:#4caf50;color:white;padding:15px;border-radius:10px;text-align:center;margin-top:20px;display:none;animation:slideIn 0.3s ease}
-.match-message {background:#2196F3;color:white;padding:20px;border-radius:10px;text-align:center;margin-top:20px;display:none;animation:slideIn 0.3s ease;font-weight:600;font-size:1.1em;line-height:1.6}
-.error-message {background:#f44336;color:white;padding:15px;border-radius:10px;text-align:center;margin-top:20px;display:none}
-.info-box {background:#f0f0f0;padding:15px;border-radius:10px;margin-bottom:25px;text-align:center;color:#555;font-size:0.95em;border-left:4px solid #667eea}
-.footer {text-align:center;color:#999;margin-top:30px;font-size:0.85em;padding-top:20px;border-top:1px solid #eee}
-.donation-btn {position:fixed;top:20px;left:20px;background:#FFD700;color:#333;border:none;padding:0;border-radius:50%;width:50px;height:50px;cursor:pointer;font-size:24px;box-shadow:0 4px 12px rgba(0,0,0,0.2);transition:all 0.3s;z-index:1000;display:flex;align-items:center;justify-content:center}
-.donation-btn:hover {transform:scale(1.1);box-shadow:0 6px 16px rgba(0,0,0,0.3)}
-.donation-label {position:fixed;top:80px;left:20px;font-size:0.85em;color:#333;font-weight:600;text-align:center;width:50px;z-index:1000}
-.modal {display:none;position:fixed;z-index:2000;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.5)}
-.modal-content {background-color:white;margin:10% auto;padding:30px;border-radius:15px;width:90%;max-width:600px;box-shadow:0 10px 40px rgba(0,0,0,0.3);max-height:70vh;overflow-y:auto}
-.modal-close {color:#aaa;float:right;font-size:28px;font-weight:bold;cursor:pointer}
-.result-item {background:#f5f5f5;padding:15px;border-radius:10px;margin-bottom:15px;border-left:4px solid #667eea}
+  body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+  .font-display { font-family: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; }
+  .font-mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+  .bg-grid {
+    background-image: linear-gradient(#1C2A33 1px, transparent 1px), linear-gradient(90deg, #1C2A33 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
 </style>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Objets 3D — Axel & Noah</title>
-  <meta name="description" content="Petite boutique locale d'objets imprimés en 3D — faits main, personnalisables, paiement simple." />
-
-  <!-- Google Fonts -->
-  https://fonts.googleapis.com
-  https://fonts.gstatic.com
-  https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap
-
-  <!-- PayPal SDK (optionnel, simulation) -->
-  <!-- https://www.paypal.com/sdk/js?client-id=7HSHKVRHRLSDJ&currency=EUR</script> -->
-
-  <style>
-    :root{
-      --accent:#ff6600;
-      --bg:#fafafa;
-      --card:#ffffff;
-      --dark:#222;
-      --muted:#666;
-      --maxw:980px;
-      --error:#d32f2f;
-      --success:#2e7d32;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif;
-      background:var(--bg);
-      color:#111;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-    }
-    a{color:inherit;text-decoration:none}
-    button{font-family:inherit}
-
-    /* HEADER */
-    header{
-      position:fixed; top:0; left:0; right:0;
-      height:64px;
-      background:linear-gradient(180deg,#111 0%, #1a1a1a 100%);
-      color:#fff;
-      display:flex; align-items:center; justify-content:space-between;
-      padding:0 12px; gap:8px;
-      z-index:2000; box-shadow:0 4px 18px rgba(0,0,0,.25);
-    }
-    .brand{display:flex;gap:10px;align-items:center;min-width:0}
-    .logo{width:44px;height:44px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
-    .brand h1{margin:0;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    nav.main{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .icon-btn{background:transparent;border:none;color:#fff;cursor:pointer;font-size:14px;padding:8px 10px;border-radius:8px}
-    .icon-btn:hover{background:rgba(255,255,255,.08)}
-
-    /* Bouton retour */
-    .back-btn{
-      position:fixed; top:76px; left:16px; z-index:2500;
-      background:#000; color:#fff; border:none; border-radius:50%;
-      width:42px; height:42px; font-size:20px; cursor:pointer; display:none;
-    }
-    .back-btn:hover{opacity:.85}
-
-    /* MAIN */
-    main{padding-top:84px;max-width:var(--maxw);margin:24px auto;padding-left:16px;padding-right:16px}
-
-    /* HERO */
-    .hero{
-      display:flex; flex-wrap:wrap; gap:16px;
-      background:linear-gradient(90deg,#fff 0%, #fffaf0 100%);
-      padding:20px; border-radius:12px; box-shadow:0 6px 30px rgba(0,0,0,.05);
-    }
-    .hero .card{flex:1 1 100%}
-    .hero .left{flex:1 1 100%}
-    .hero .stats{flex:1 1 100%;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-    .hero .stats .box{background:#fff;padding:8px 12px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.06);min-width:120px}
-
-    /* GRID PRODUITS */
-    .grid{margin-top:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:18px}
-    .card{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:10px}
-    .card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
-    .card h3{margin:0;font-size:16px;color:var(--dark)}
-    .card p{margin:0;color:var(--muted);font-size:14px;min-height:40px}
-    .card .meta{display:flex;align-items:center;justify-content:space-between;gap:8px}
-    .price{font-weight:700;color:var(--accent)}
-    .stock-status{font-size:13px;color:var(--error);font-weight:700}
-
-    /* DETAILS */
-    .details-wrap{display:flex;gap:18px;align-items:flex-start}
-    .details-left{flex:1;min-width:0}
-    .details-right{width:320px;background:var(--card);padding:14px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.06)}
-    .carousel-main{width:100%;height:300px;border-radius:10px;overflow:hidden;background:#eee;display:flex;align-items:center;justify-content:center}
-    .carousel-main img{width:100%;height:100%;object-fit:cover}
-    .thumbnails{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-    .thumbnails img{height:56px;width:75px;object-fit:cover;border-radius:6px;cursor:pointer;opacity:.75;border:2px solid transparent}
-    .thumbnails img.active{opacity:1;border-color:var(--accent)}
-    .error-msg{color:var(--error);font-size:13px;margin-top:4px}
-    .success-msg{color:var(--success);font-size:13px;margin-top:4px}
-
-    /* PANIER */
-    table.cart{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.06)}
-    table.cart th,table.cart td{padding:12px 14px;text-align:left;border-bottom:1px solid #f0f0f0;font-size:14px}
-    table.cart thead{background:#fafafa}
-    .btn-primary{background:var(--accent);color:#fff;border:none;padding:12px;border-radius:8px;cursor:pointer;font-weight:700}
-    .btn-primary:disabled{opacity:.5;cursor:not-allowed}
-    .btn-ghost{background:#f5f5f5;border:1px solid #eee;padding:10px;border-radius:8px;cursor:pointer}
-    .small-muted{font-size:13px;color:var(--muted)}
-
-    /* MODAL */
-    .modal-backdrop{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.5);z-index:3000;display:none;padding:16px}
-    .modal-backdrop.active{display:flex}
-    .modal{width:100%;max-width:520px;background:#fff;padding:18px;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.25)}
-    .modal h3{margin:0 0 12px 0;color:var(--accent)}
-    .modal label{font-weight:600;margin-top:8px;display:block}
-    .modal input,.modal select{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;margin-top:4px;font-size:14px}
-    .modal-toggle{text-align:center;margin-top:12px;font-size:13px}
-    .modal-toggle a{color:var(--accent);cursor:pointer;text-decoration:underline}
-    .modal-actions{display:flex;gap:8px;margin-top:12px}
-    .modal-actions button{flex:1}
-
-    /* FOOTER */
-    footer.site-footer{
-      margin-top:28px;background:#0f0f0f;color:#ddd;padding:16px;border-radius:10px;
-      max-width:var(--maxw);margin-left:auto;margin-right:auto;
-      display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;
-    }
-    .footer-left{font-size:14px}
-    .footer-contact{font-size:13px;color:#aaa}
-    .footer-contact ul{margin:6px 0 0 18px;color:#ccc}
-    .footer-social{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .footer-social a{display:inline-flex;align-items:center;gap:8px;background:#161616;border:1px solid #222;padding:6px 10px;border-radius:8px;color:#eee}
-    .footer-social a img{height:18px;width:18px;border-radius:4px;display:block}
-
-    /* RESPONSIVE */
-    @media (max-width:860px){
-      header{height:auto;padding:10px;gap:8px}
-      nav.main{width:100%;justify-content:space-between}
-      .details-wrap{flex-direction:column}
-      .details-right{width:100%}
-      .hero{padding:16px}
-      footer.site-footer{flex-direction:column;gap:10px;text-align:center;align-items:center}
-      .footer-contact{text-align:center}
-    }
-    @media (max-width:600px){
-      .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
-      .card img{height:120px}
-      .carousel-main{height:240px}
-    }
-    @media (max-width:480px){
-      .grid{grid-template-columns:repeat(2,1fr);gap:12px}
-      .thumbnails img{width:56px;height:40px}
-      .brand h1{font-size:16px}
-    }
-  </style>
 </head>
-<body>
-<button class="donation-btn" onclick="document.querySelector('.donation-form').submit()">💝</button>
-<div class="donation-label">Donation</div>
-<form class="donation-form" action="https://www.paypal.com/donate" method="post" target="_top" style="display:none">
-<input type="hidden" name="hosted_button_id" value="65CGQXCZJQP4N" />
-<input type="hidden" name="item_name" value="Aider-moi à acheter un cadeau pour ma copine !" />
-</form>
-<div class="container">
-<h1>💕 Saint-Valentin 💕</h1>
-<p class="subtitle">Trouve ta moitié !</p>
-<div class="info-box">Rentre tes coordonnées avec ton numéro de cœur. Quand ton duo aura rentré les siennes, tu verras ses infos ! Et faites tourner le site entre vous plus il y a de gens connectés plus il y a  de chances de trouver sa moitié.</div>
-<div class="search-box">
-<input type="number" id="searchCoeur" placeholder="Cherche un numéro de cœur..." min="1">
-<button onclick="searchCoeur()">🔍 Chercher</button>
-</div>
-<form id="form">
-<div class="form-row">
-<div class="form-group"><label for="nom">Nom</label><input type="text" id="nom" name="nom" required></div>
-<div class="form-group"><label for="prenom">Prénom</label><input type="text" id="prenom" name="prenom" required></div>
-</div>
-<div class="form-row">
-<div class="form-group"><label for="classe">Classe</label><input type="text" id="classe" name="classe" placeholder="Ex: Seconde 9" required></div>
-<div class="form-group"><label for="coeur">Numéro de Cœur</label><input type="number" id="coeur" name="coeur" min="1" required></div>
-</div>
-<div class="form-group"><label for="telephone">Numéro de Téléphone <span class="optional">(facultatif)</span></label><input type="tel" id="telephone" name="telephone" pattern="[0-9\s\-\+\(\)]+" placeholder="06 XX XX XX XX"></div>
-<div class="form-group"><label for="email">Adresse Email <span class="optional">(facultatif)</span></label><input type="email" id="email" name="email" placeholder="exemple@mail.com"></div>
-<div class="form-group"><label for="snap">Snapchat <span class="optional">(facultatif)</span></label><input type="text" id="snap" name="snap" placeholder="Ton pseudo Snap"></div>
-<div class="form-group"><label for="insta">Instagram <span class="optional">(facultatif)</span></label><input type="text" id="insta" name="insta" placeholder="Ton @insta"></div>
-<button type="submit" class="btn" id="submitBtn">Envoyer mes coordonnées 📬</button>
-<div class="success-message" id="successMsg">✅ Tes coordonnées ont été enregistrées ! Ton duo t'appellera quand il se sera connecté.</div>
-<div class="match-message" id="matchMsg"></div>
-<div class="error-message" id="errorMsg"></div>
-</form>
-<div class="footer">Développeur: Axel.T Seconde 9</div>
-</div>
-<div id="searchModal" class="modal">
-<div class="modal-content">
-<span class="modal-close" onclick="closeSearchModal()">&times;</span>
-<h2 id="searchTitle" style="color:#667eea;margin-bottom:20px">Résultats de recherche</h2>
-<div id="searchResults"></div>
-</div>
-</div>
-<script>
-const bannedWords = ['adolf', 'hitler', 'staline', 'chibre', 'trou', 'ducul', 'caillou', 'baton'];
 
-function isBanned(text) {
-  const lower = text.toLowerCase().trim();
-  return bannedWords.some(word => lower.includes(word));
-}
+<body class="bg-[#F3F0E8] text-[#1C2A33] antialiased">
 
-function getAllParticipants() {
-  const data = localStorage.getItem('valentine_participants');
-  return data ? JSON.parse(data) : [];
-}
-
-function saveParticipant(participant) {
-  const participants = getAllParticipants();
-  participants.push(participant);
-  localStorage.setItem('valentine_participants', JSON.stringify(participants));
-}
-
-function findMatches(coeur) {
-  const participants = getAllParticipants();
-  return participants.filter(p => p.coeur === coeur);
-}
-
-function searchCoeur() {
-  const coeur = parseInt(document.getElementById('searchCoeur').value);
-  if (!coeur || coeur < 1) {
-    alert('Rentre un numéro de cœur valide !');
-    return;
-  }
-  const matches = findMatches(coeur);
-  const modal = document.getElementById('searchModal');
-  const results = document.getElementById('searchResults');
-  const title = document.getElementById('searchTitle');
-  
-  if (matches.length === 0) {
-    title.textContent = `Aucune personne avec le cœur ${coeur}`;
-    results.innerHTML = '<p style="text-align:center;color:#999">Personne ne s\'est encore inscrit avec ce numéro. Sois le premier ! Et faites tourner le site entre vous pour avoir plus de chances de trouver votre moitié.💕</p>';
-  } else {
-    title.textContent = `${matches.length} personne(s) avec le cœur ${coeur}`;
-    results.innerHTML = '';
-    matches.forEach(m => {
-      let html = `<div class="result-item"><strong>${m.prenom} ${m.nom}</strong><br>Classe: ${m.classe}`;
-      if (m.telephone) html += `<br>📱 <strong>${m.telephone}</strong>`;
-      if (m.email) html += `<br>📧 ${m.email}`;
-      if (m.snap) html += `<br>👻 ${m.snap}`;
-      if (m.insta) html += `<br>📷 ${m.insta}`;
-      html += `</div>`;
-      results.innerHTML += html;
-
-  <button class="back-btn" id="backBtn" aria-label="Retour">←</button>
-
-  <header role="banner">
-    <div class="brand">
-      <div class="logo" aria-hidden="true">3D</div>
-      <div>
-        <h1>Objets 3D — Axel &amp; Noah</h1>
-        <div style="font-size:12px;color:#e6e6e6">Impression &amp; Création locale</div>
-      </div>
-    </div>
-
-    <nav class="main" aria-label="Navigation principale">
-      <button class="icon-btn" id="navAccueil" aria-controls="accueilSection">Accueil</button>
-      <button class="icon-btn" id="navBoutique" aria-controls="boutiqueSection">Boutique</button>
-      <button class="icon-btn" id="navPanier" aria-controls="panierSection">🛒 <span id="nbPanier">0</span></button>
-      <div id="authArea" style="display:flex; align-items:center; gap:8px">
-        <div id="notLogged" style="display:flex; gap:8px;">
-          <button class="icon-btn" id="openLoginBtn">Connexion</button>
-          <button class="icon-btn" id="openRegisterBtn">Inscription</button>
-        </div>
-        <div id="logged" style="display:none; align-items:center; gap:8px">
-          <div class="user-bubble" id="badgeUser" style="color:white;font-size:14px;">Utilisateur</div>
-          <button class="icon-btn" id="logoutBtn">Déconnexion</button>
-        </div>
-      </div>
+<!-- ============ HEADER ============ -->
+<header class="sticky top-0 z-40 bg-[#F3F0E8]/95 backdrop-blur border-b border-[#1C2A33]/10">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-2.5">
+      <span class="grid place-items-center w-8 h-8 bg-[#1C2A33] text-[#F3F0E8] font-semibold text-sm">P</span>
+      <span class="font-semibold tracking-tight">Proxima</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-8">
+      <a href="#probleme" class="text-sm text-[#1C2A33]/70 hover:text-[#1C2A33] transition-colors">Le problème</a>
+      <a href="#solution" class="text-sm text-[#1C2A33]/70 hover:text-[#1C2A33] transition-colors">La solution</a>
+      <a href="#demo" class="text-sm text-[#1C2A33]/70 hover:text-[#1C2A33] transition-colors">Démo</a>
     </nav>
-  </header>
+    <a href="#programme" class="hidden sm:inline-flex items-center gap-1.5 bg-[#1C2A33] text-[#F3F0E8] text-sm font-medium px-4 py-2 hover:bg-[#D9631A] transition-colors">
+      Rejoindre le test
+    </a>
+  </div>
+</header>
 
-  <main>
-    <!-- HERO -->
-    <section class="hero" id="accueilSection" aria-label="Accueil">
-      <div class="card">
-        <h2>Bienvenue sur notre boutique d'objets 3D</h2>
-        <p>
-          Nous sommes Axel et Noah, deux adolescents passionnés par la création et l'impression 3D.
-          Nous avons lancé cette petite boutique locale pour montrer que la créativité et l’entrepreneuriat
-          sont accessibles à tous. Chaque objet est imaginé, fabriqué et emballé avec soin dans notre atelier.
-          Merci de soutenir notre aventure !
-        </p>
+<!-- ============ HERO ============ -->
+<section id="top" class="relative overflow-hidden">
+  <div class="absolute inset-0 opacity-[0.05] pointer-events-none bg-grid" aria-hidden="true"></div>
+  <div class="relative max-w-6xl mx-auto px-5 sm:px-8 pt-16 pb-20 sm:pt-24 sm:pb-28">
+    <p class="font-mono text-[11px] tracking-[0.2em] uppercase text-[#5C7080] mb-3">Programme test — accès limité</p>
+    <h1 class="font-display text-[2rem] leading-[1.12] sm:text-5xl sm:leading-[1.1] font-semibold max-w-3xl tracking-tight">
+      L'assistant qui transforme vos demandes clients en devis prêts à envoyer.
+    </h1>
+    <p class="mt-6 text-lg text-[#1C2A33]/70 max-w-xl leading-relaxed">
+      Proxima automatise vos devis, vos réponses clients et vos relances, pour que vos soirées redeviennent des soirées.
+    </p>
+
+    <div class="mt-9 flex flex-col sm:flex-row sm:items-center gap-4">
+      <a href="#programme" class="inline-flex items-center justify-center gap-2 bg-[#D9631A] text-white font-medium px-6 py-3.5 hover:bg-[#c15815] transition-colors">
+        Participer au programme test →
+      </a>
+      <p class="text-sm text-[#1C2A33]/55">Accès gratuit pendant la phase pilote. Aucune carte bancaire requise.</p>
+    </div>
+
+    <div class="mt-16 flex flex-col sm:flex-row items-stretch gap-3 max-w-2xl">
+      <div class="flex-1 bg-white border border-[#1C2A33]/10 p-4">
+        <p class="font-mono text-[10px] uppercase tracking-wider text-[#5C7080] mb-2">Message client</p>
+        <p class="text-sm text-[#1C2A33]/80">« Bonjour, je voudrais refaire ma salle de bain. Vous seriez disponible pour un devis ? »</p>
       </div>
-
-      <div class="left">
-        <h2>Objets 3D faits main — Petite boutique</h2>
-        <p>Produits imprimés localement, personnalisables. Paiement PayPal / CB (simulation) / à la livraison.</p>
+      <div class="flex items-center justify-center text-[#5C7080] py-1">→</div>
+      <div class="flex-1 bg-[#1C2A33] text-[#F3F0E8] p-4">
+        <p class="font-mono text-[10px] uppercase tracking-wider text-[#F3F0E8]/50 mb-2">Devis Proxima</p>
+        <p class="text-sm">Rénovation salle de bain — 6 lignes, prêt à envoyer.</p>
       </div>
+    </div>
+  </div>
+</section>
 
-      <div class="stats">
-        <div style="text-align:right;">
-          <div style="font-size:12px;color:var(--muted)">Connecté en tant que :</div>
-          <div id="userStatus" style="font-weight:700;color:var(--accent)">Invité</div>
+<!-- ============ PROBLÈME ============ -->
+<section id="probleme" class="bg-white">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-20 sm:py-28">
+    <p class="font-mono text-[11px] tracking-[0.2em] uppercase text-[#5C7080] mb-3">Le constat</p>
+    <h2 class="font-display text-2xl sm:text-3xl font-semibold max-w-xl tracking-tight">
+      L'administratif vole du temps à votre métier.
+    </h2>
+
+    <div class="mt-12 grid sm:grid-cols-2 gap-x-10 gap-y-10">
+      <div class="flex gap-4">
+        <span class="text-[#D9631A] mt-1 shrink-0">⏱</span>
+        <div>
+          <h3 class="font-semibold">Un devis prend souvent une heure</h3>
+          <p class="mt-1.5 text-[#1C2A33]/65 text-sm leading-relaxed">Entre le calcul des quantités, la mise en forme et la relecture, ce qui devrait prendre dix minutes en prend soixante.</p>
         </div>
-        <div class="box">
-          <div style="font-size:13px; color:var(--muted)">Panier</div>
-          <div style="font-weight:700; font-size:18px" id="nbPanierLarge">0</div>
+      </div>
+      <div class="flex gap-4">
+        <span class="text-[#D9631A] mt-1 shrink-0">📥</span>
+        <div>
+          <h3 class="font-semibold">Les demandes arrivent de partout</h3>
+          <p class="mt-1.5 text-[#1C2A33]/65 text-sm leading-relaxed">SMS, appels, WhatsApp, Facebook, bouche-à-oreille : impossible de tout suivre sans en perdre au passage.</p>
         </div>
       </div>
-    </section>
+      <div class="flex gap-4">
+        <span class="text-[#D9631A] mt-1 shrink-0">🌙</span>
+        <div>
+          <h3 class="font-semibold">L'administratif prend les soirées</h3>
+          <p class="mt-1.5 text-[#1C2A33]/65 text-sm leading-relaxed">Après une journée de chantier, il reste encore les devis, les factures et les mails à faire, souvent tard.</p>
+        </div>
+      </div>
+      <div class="flex gap-4">
+        <span class="text-[#D9631A] mt-1 shrink-0">🔕</span>
+        <div>
+          <h3 class="font-semibold">Les relances sont oubliées</h3>
+          <p class="mt-1.5 text-[#1C2A33]/65 text-sm leading-relaxed">Sans système pour s'en souvenir, un devis non relancé, c'est un chantier qui part chez le concurrent.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- BOUTIQUE -->
-    <section id="boutiqueSection" style="display:none;" aria-label="Boutique">
-      <h3>Nos produits</h3>
-      <div class="grid" id="gridProduits" aria-live="polite"></div>
-    </section>
+<!-- ============ SOLUTION ============ -->
+<section id="solution" class="bg-[#EDE7D9]">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-20 sm:py-28">
+    <p class="font-mono text-[11px] tracking-[0.2em] uppercase text-[#5C7080] mb-3">La solution</p>
+    <h2 class="font-display text-2xl sm:text-3xl font-semibold max-w-xl tracking-tight">
+      Proxima s'occupe du papier, vous vous occupez du chantier.
+    </h2>
 
-    <!-- DETAILS -->
-    <section id="detailsSection" style="display:none;" aria-label="Détails du produit">
-      <div class="details-wrap">
-        <div class="details-left">
-          <div class="card">
-            <div class="carousel-main" id="mainImageContainer">
-              <img id="mainImage" src="" alt="Image du produit" />
+    <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="bg-[#F3F0E8] border border-[#1C2A33]/10 p-6">
+        <span class="text-lg">⚡</span>
+        <h3 class="mt-4 font-semibold text-sm">Un devis en quelques minutes</h3>
+        <p class="mt-2 text-sm text-[#1C2A33]/65 leading-relaxed">Décrivez la demande en une phrase, Proxima structure le devis avec vos prix et vos habitudes.</p>
+      </div>
+      <div class="bg-[#F3F0E8] border border-[#1C2A33]/10 p-6">
+        <span class="text-lg">📥</span>
+        <h3 class="mt-4 font-semibold text-sm">Toutes les demandes au même endroit</h3>
+        <p class="mt-2 text-sm text-[#1C2A33]/65 leading-relaxed">Centralisez ce qui arrive par SMS, mail ou téléphone. Plus rien ne se perd dans les conversations.</p>
+      </div>
+      <div class="bg-[#F3F0E8] border border-[#1C2A33]/10 p-6">
+        <span class="text-lg">💬</span>
+        <h3 class="mt-4 font-semibold text-sm">Une aide pour répondre aux clients</h3>
+        <p class="mt-2 text-sm text-[#1C2A33]/65 leading-relaxed">Proxima propose une réponse claire et professionnelle, que vous ajustez avant de l'envoyer.</p>
+      </div>
+      <div class="bg-[#F3F0E8] border border-[#1C2A33]/10 p-6">
+        <span class="text-lg">📄</span>
+        <h3 class="mt-4 font-semibold text-sm">Des documents propres et pro</h3>
+        <p class="mt-2 text-sm text-[#1C2A33]/65 leading-relaxed">Devis, factures, relances : une mise en page soignée, cohérente, prête à envoyer ou à imprimer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DEMO ============ -->
+<section id="demo" class="bg-white">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-20 sm:py-28">
+    <p class="font-mono text-[11px] tracking-[0.2em] uppercase text-[#5C7080] mb-3">Aperçu</p>
+    <h2 class="font-display text-2xl sm:text-3xl font-semibold max-w-xl tracking-tight">
+      De la demande client au devis, en direct.
+    </h2>
+    <p class="mt-4 text-[#1C2A33]/65 max-w-lg text-sm">Maquette du produit en cours de développement. Cliquez sur le bouton pour voir le principe.</p>
+
+    <div class="mt-12 border border-[#1C2A33]/10 bg-[#F3F0E8]">
+      <div class="flex items-center gap-2 px-4 py-3 border-b border-[#1C2A33]/10">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#1C2A33]/15"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-[#1C2A33]/15"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-[#1C2A33]/15"></span>
+        <span class="ml-3 font-mono text-[11px] text-[#1C2A33]/50">Proxima — tableau de bord</span>
+      </div>
+
+      <div class="grid lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-[#1C2A33]/10">
+        <div class="p-6 sm:p-8">
+          <p class="font-mono text-[10px] uppercase tracking-wider text-[#5C7080] mb-4">Nouvelle demande</p>
+          <div class="bg-white border border-[#1C2A33]/10 p-4">
+            <p class="text-sm text-[#1C2A33]/80 leading-relaxed">« Bonjour, je voudrais refaire ma salle de bain. Douche à l'italienne si possible. Vous seriez disponible pour un devis ? »</p>
+            <p class="mt-3 text-xs text-[#1C2A33]/45">Reçu par SMS · il y a 4 min</p>
+          </div>
+
+          <button id="generateBtn" onclick="generateDevis()" class="mt-6 w-full inline-flex items-center justify-center gap-2 bg-[#1C2A33] text-[#F3F0E8] text-sm font-medium px-5 py-3 hover:bg-[#D9631A] transition-colors disabled:opacity-70">
+            Générer un devis avec l'IA
+          </button>
+        </div>
+
+        <div class="p-6 sm:p-8 bg-white">
+          <p class="font-mono text-[10px] uppercase tracking-wider text-[#5C7080] mb-4">Aperçu du document</p>
+
+          <div id="devisEmpty" class="h-full min-h-[220px] flex items-center justify-center border border-dashed border-[#1C2A33]/15 text-sm text-[#1C2A33]/40 text-center px-6">
+            Le devis apparaîtra ici une fois généré.
+          </div>
+
+          <div id="devisResult" class="hidden border border-[#1C2A33]/10">
+            <div class="flex items-start justify-between px-4 py-3 border-b border-[#1C2A33]/10">
+              <div>
+                <p class="font-semibold text-sm">Proxima</p>
+                <p class="font-mono text-[10px] text-[#1C2A33]/50 mt-0.5">DEVIS N° 2026-0143</p>
+              </div>
+              <p class="font-mono text-[10px] text-[#1C2A33]/50">27/07/2026</p>
             </div>
-            <div class="thumbnails" id="thumbs" aria-label="Vignettes"></div>
-          </div>
-          <div class="card">
-            <h3 id="detailTitre">Titre</h3>
-            <p id="detailDescription" class="small-muted">Description...</p>
-            <p class="small-muted" id="detailFab">Fabriqué à ...</p>
-          </div>
-        </div>
-
-        <aside class="details-right" aria-label="Options et achat">
-          <div style="display:flex; justify-content:space-between; align-items:center">
-            <div style="font-weight:700" id="detailPrix">€0.00</div>
-            <div style="color:var(--muted); font-size:13px" id="detailQty">Stock : —</div>
-          </div>
-          <div style="margin-top:12px">
-            <label for="detailQuantiteInput">Quantité</label>
-            <input type="number" id="detailQuantiteInput" min="1" value="1" />
-            <div id="stockError" class="error-msg" role="alert" aria-live="polite"></div>
-          </div>
-          <div style="margin-top:12px; display:flex; gap:8px; flex-direction:column;">
-            <button class="btn-primary" id="btnAddToCart">Ajouter au panier</button>
-            <button class="btn-ghost" id="btnOrderSingle">Commander</button>
-          </div>
-          <div style="margin-top:16px; font-size:13px; color:var(--muted)">
-            <strong>Détails techniques</strong>
-            <div id="detailTech" style="margin-top:8px">PLA recyclé • Impression FDM</div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <!-- PANIER -->
-    <section id="panierSection" style="display:none;" aria-label="Panier">
-      <h3>Panier</h3>
-      <div style="overflow:auto;">
-        <table class="cart" aria-live="polite">
-          <thead><tr><th>Produit</th><th>Quantité</th><th>Prix</th><th>Actions</th></tr></thead>
-          <tbody id="panierTable"></tbody>
-        </table>
-      </div>
-      <div style="display:flex; justify-content:space-between; margin-top:12px; align-items:center; gap:12px; flex-wrap:wrap;">
-        <button class="btn-ghost" id="viderPanierBtn">Vider le panier</button>
-        <div style="text-align:right">
-          <div class="small-muted">Total :</div>
-          <div style="font-weight:700; font-size:18px" id="totalPanier">€0.00</div>
-          <button class="btn-primary" id="commanderPanierBtn" style="margin-top:8px">Commander le panier</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- FORM COMMANDE -->
-    <section id="formSection" style="display:none;" aria-label="Formulaire de commande">
-      <h3>Commander</h3>
-      <div class="card">
-        <form id="orderForm" novalidate>
-          <!-- Clé Web3Forms -->
-          <input type="hidden" name="access_key" value="867b9f7b-a375-47c5-a0c0-ec184b69f529" />
-          <!-- Email destinataire propriétaire -->
-          <input type="hidden" name="email_to" value="objet.3d.axel.et.noah@gmail.com" />
-          <!-- Honeypot anti-bot -->
-          <input type="text" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" />
-
-          <label for="prenom">Prénom</label>
-          <input id="prenom" name="prenom" type="text" required />
-          <label for="nom">Nom</label>
-          <input id="nom" name="nom" type="text" required />
-          <label for="adresse">Adresse</label>
-          <input id="adresse" name="adresse" type="text" required />
-          <label for="codepostal">Code postal</label>
-          <input id="codepostal" name="codepostal" type="text" pattern="[0-9]{5}" required />
-          <label for="emailField">Email</label>
-          <input id="emailField" name="email" type="email" required />
-
-          <label for="quantite">Quantité totale</label>
-          <input id="quantite" name="quantite" type="number" min="1" value="1" readonly />
-
-          <label for="moyenPaiement">Moyen de paiement</label>
-          <select id="moyenPaiement" name="moyenPaiement" required>
-            <option value="">-- Choisir un moyen de paiement --</option>
-            <option value="paypal">PayPal</option>
-            <option value="paypalme">PayPal.me</option>
-            <option value="virement">Virement bancaire</option>
-            <option value="cb_simule">Carte bancaire (simulation)</option>
-            <option value="cash">Paiement à la livraison</option>
-          </select>
-
-          <div id="formStatus" class="small-muted" style="margin-top:8px;" aria-live="polite"></div>
-
-          <div style="display:flex; gap:8px; margin-top:8px">
-            <button class="btn-primary" type="submit" id="btnSubmit">Envoyer la commande</button>
-            <button type="button" class="btn-ghost" id="btnCancelOrder">Annuler</button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- MODAL AUTH -->
-    <div class="modal-backdrop" id="authModalOverlay" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-      <div class="modal">
-        <h3 id="authTitle">Connexion</h3>
-
-        <div id="loginForm">
-          <label for="loginEmail">Email</label>
-          <input type="email" id="loginEmail" autocomplete="email" required />
-          <label for="loginPassword">Mot de passe</label>
-          <input type="password" id="loginPassword" autocomplete="current-password" required />
-          <div class="modal-actions">
-            <button type="button" class="btn-primary" id="loginBtn">Se connecter</button>
-            <button type="button" class="btn-ghost" onclick="fermerAuth()">Fermer</button>
-          </div>
-          <div class="modal-toggle">
-            Pas encore inscrit ? <a onclick="changerForm('register')">S'inscrire</a>
-          </div>
-        </div>
-
-        <div id="registerForm" style="display:none;">
-          <label for="regPrenom">Prénom</label>
-          <input type="text" id="regPrenom" required />
-          <label for="regNom">Nom</label>
-          <input type="text" id="regNom" required />
-          <label for="regAdresse">Adresse</label>
-          <input type="text" id="regAdresse" required />
-          <label for="regCodepostal">Code Postal</label>
-          <input type="text" id="regCodepostal" pattern="[0-9]{5}" required />
-          <label for="regEmail">Email</label>
-          <input type="email" id="regEmail" autocomplete="email" required />
-          <label for="regEmailConfirm">Confirmer l'Email</label>
-          <input type="email" id="regEmailConfirm" autocomplete="email" required />
-          <label for="regPassword">Mot de passe</label>
-          <input type="password" id="regPassword" autocomplete="new-password" required />
-          <div class="small-muted">⚙️ Min. 8 caractères, dont 1 lettre et 1 chiffre.</div>
-          <div class="modal-actions">
-            <button type="button" class="btn-primary" id="registerBtn">S'inscrire</button>
-            <button type="button" class="btn-ghost" onclick="fermerAuth()">Fermer</button>
-          </div>
-          <div class="modal-toggle">
-            Déjà inscrit ? <a onclick="changerForm('login')">Se connecter</a>
+            <div class="divide-y divide-[#1C2A33]/5">
+              <div class="flex items-center justify-between px-4 py-2.5 text-xs">
+                <span class="text-[#1C2A33]/75 pr-3">Dépose ancien carrelage sol et mur</span>
+                <span class="font-mono whitespace-nowrap">480 €</span>
+              </div>
+              <div class="flex items-center justify-between px-4 py-2.5 text-xs">
+                <span class="text-[#1C2A33]/75 pr-3">Fourniture et pose faïence murale</span>
+                <span class="font-mono whitespace-nowrap">1 260 €</span>
+              </div>
+              <div class="flex items-center justify-between px-4 py-2.5 text-xs">
+                <span class="text-[#1C2A33]/75 pr-3">Remplacement receveur de douche</span>
+                <span class="font-mono whitespace-nowrap">540 €</span>
+              </div>
+              <div class="flex items-center justify-between px-4 py-2.5 text-xs">
+                <span class="text-[#1C2A33]/75 pr-3">Raccordement plomberie</span>
+                <span class="font-mono whitespace-nowrap">310 €</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between px-4 py-3 border-t border-[#1C2A33]/10 bg-[#F3F0E8]">
+              <span class="text-sm font-semibold">Total TTC</span>
+              <span class="font-mono text-sm font-semibold">2 590 €</span>
+            </div>
+            <p class="px-4 py-2 font-mono text-[10px] text-[#1C2A33]/40">Généré par Proxima — à relire avant envoi</p>
           </div>
         </div>
       </div>
     </div>
-  </main>
+  </div>
+</section>
 
-  <footer class="site-footer" role="contentinfo">
-    <div class="footer-left">
-      <strong>Contact rapide</strong><br />
-      mailto:objet.3d.axel.et.noah@gmail.comobjet.3d.axel.et.noah@gmail.com</a>
-    </div>
-    <div class="footer-contact">
-      <div><strong>Quand connecté :</strong></div>
-      <ul>
-        <li>Voir le panier et commander</li>
-        <li>Enregistrer vos moyens de paiement</li>
-        <li>Recevoir des notifications par e-mail</li>
-      </ul>
-      <div class="footer-social" style="margin-top:8px">
-        <a href="https://www.instagram.com/objet_3d_a_et_n/
-          https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg">
-          <span>Instagram</span>
-        </a>
-        <a href="https://www.tiktok.com/@objet_3d
-          https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg">
-          <span>TikTok</span>
-        </a>
+<!-- ============ CONFIANCE ============ -->
+<section class="bg-[#1C2A33]">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-16 sm:py-20 text-center">
+    <p class="text-2xl mb-5">📋</p>
+    <p class="font-display text-xl sm:text-2xl text-[#F3F0E8] font-medium max-w-xl mx-auto leading-snug">
+      Conçu avec les retours d'artisans du bâtiment.
+    </p>
+    <p class="mt-4 text-sm text-[#F3F0E8]/55 max-w-md mx-auto">
+      Proxima est construit en échangeant directement avec des maçons, plombiers, électriciens et couvreurs, pour coller à la réalité du métier plutôt qu'à une idée de bureau.
+    </p>
+  </div>
+</section>
+
+<!-- ============ FORMULAIRE ============ -->
+<section id="programme" class="bg-[#F3F0E8]">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-20 sm:py-28">
+    <div class="grid lg:grid-cols-[0.9fr,1.1fr] gap-12">
+      <div>
+        <p class="font-mono text-[11px] tracking-[0.2em] uppercase text-[#5C7080] mb-3">Programme test</p>
+        <h2 class="font-display text-2xl sm:text-3xl font-semibold tracking-tight">Rejoignez les premiers artisans testeurs.</h2>
+        <p class="mt-4 text-[#1C2A33]/65 text-sm leading-relaxed max-w-sm">
+          Proxima est encore en phase de construction. Les artisans qui rejoignent le programme test façonnent directement le produit et y accèdent en priorité.
+        </p>
+        <div class="flex items-center gap-3 my-4">
+          <span class="h-px w-4 bg-[#5C7080]/40"></span>
+          <span class="h-1.5 w-1.5 rotate-45 border border-[#5C7080]/50"></span>
+          <span class="h-px flex-1 bg-[#5C7080]/20"></span>
+        </div>
+        <p class="text-xs text-[#1C2A33]/45 font-mono">Réponse sous quelques jours ouvrés — contact@proxima.fr</p>
+      </div>
+
+      <form id="testForm" onsubmit="handleSubmit(event)" class="bg-white border border-[#1C2A33]/10 p-6 sm:p-8">
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label class="block text-xs font-medium text-[#1C2A33]/70 mb-1.5">Nom <span class="text-[#D9631A]">*</span></label>
+            <input required type="text" class="w-full border border-[#1C2A33]/15 bg-[#F3F0E8] px-3 py-2.5 text-sm focus:outline-none focus:border-[#1C2A33]" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-[#1C2A33]/70 mb-1.5">Entreprise</label>
+            <input type="text" class="w-full border border-[#1C2A33]/15 bg-[#F3F0E8] px-3 py-2.5 text-sm focus:outline-none focus:border-[#1C2A33]" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-[#1C2A33]/70 mb-1.5">Métier <span class="text-[#D9631A]">*</span></label>
+            <select required class="w-full border border-[#1C2A33]/15 bg-[#F3F0E8] px-3 py-2.5 text-sm focus:outline-none focus:border-[#1C2A33]">
+              <option value="">Sélectionner…</option>
+              <option>Maçon</option>
+              <option>Plombier</option>
+              <option>Électricien</option>
+              <option>Couvreur</option>
+              <option>Menuisier</option>
+              <option>Peintre</option>
+              <option>Carreleur</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-[#1C2A33]/70 mb-1.5">Téléphone</label>
+            <input type="tel" class="w-full border border-[#1C2A33]/15 bg-[#F3F0E8] px-3 py-2.5 text-sm focus:outline-none focus:border-[#1C2A33]" />
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-medium text-[#1C2A33]/70 mb-1.5">Email <span class="text-[#D9631A]">*</span></label>
+            <input required type="email" class="w-full border border-[#1C2A33]/15 bg-[#F3F0E8] px-3 py-2.5 text-sm focus:outline-none focus:border-[#1C2A33]" />
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-medium text-[#1C2A33]/70 mb-1.5">Quelle tâche administrative vous prend le plus de temps ?</label>
+            <textarea rows="3" placeholder="Les devis, les relances, le suivi des demandes…" class="w-full border border-[#1C2A33]/15 bg-[#F3F0E8] px-3 py-2.5 text-sm focus:outline-none focus:border-[#1C2A33] resize-none"></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="mt-6 w-full inline-flex items-center justify-center gap-2 bg-[#D9631A] text-white font-medium px-5 py-3.5 hover:bg-[#c15815] transition-colors">
+          Rejoindre le programme test →
+        </button>
+      </form>
+
+      <div id="formSuccess" class="hidden lg:col-span-2 max-w-md mx-auto text-center border border-[#1C2A33]/10 bg-white p-10">
+        <p class="text-2xl mb-4">✓</p>
+        <h2 class="font-display text-xl font-semibold">Merci, c'est enregistré.</h2>
+        <p class="mt-3 text-sm text-[#1C2A33]/65">On revient vers vous par email pour vous faire rejoindre le programme test de Proxima.</p>
       </div>
     </div>
-  </footer>
+  </div>
+</section>
 
-  <script>
-    /* ====================
-       PRODUITS (neutres)
-       ==================== */
-    const produits = {
-      objet1:{
-        id:'objet1',
-        titre:'Porte-stylo — bientôt dispo',
-        description:'Porte-stylo élégant imprimé en PLA recyclé. Dimensions : 8×8×10 cm.',
-        images:[
-          'https://via.placeholder.com/800x600?text=Porte-stylo+1',
-          'https://via.placeholder.com/800x600?text=Porte-stylo+2'
-        ],
-        fabrication:'Atelier local, PLA recyclé',
-        prix:12.99,
-        stock:15,
-        tech:'PLA recyclé • Impression FDM'
-      },
-      objet2:{
-        id:'objet2',
-        titre:'Figurine résine — bientôt dispo',
-        description:'Figurine détaillée, imprimée en résine durable.',
-        images:[
-          'https://via.placeholder.com/800x600?text=Figurine+1',
-          'https://via.placeholder.com/800x600?text=Figurine+2'
-        ],
-        fabrication:'Résine haute qualité',
-        prix:24.50,
-        stock:8,
-        tech:'Résine SLA • Détails fins'
-      },
-      objet3:{
-        id:'objet3',
-        titre:'Vase géométrique — preview',
-        description:'Vase aux formes géométriques, idéal pour la déco.',
-        images:[
-          'https://via.placeholder.com/800x600?text=Vase+1',
-          'https://via.placeholder.com/800x600?text=Vase+2'
-        ],
-        fabrication:'PLA • Impression FDM',
-        prix:18.75,
-        stock:12,
-        tech:'PLA • Impression FDM'
-      },
-    };
+<!-- ============ FOOTER ============ -->
+<footer class="bg-[#1C2A33] border-t border-white/10">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-2.5">
+      <span class="grid place-items-center w-7 h-7 bg-[#F3F0E8] text-[#1C2A33] font-semibold text-xs">P</span>
+      <span class="text-sm text-[#F3F0E8]/70">Proxima — projet en cours de validation</span>
+    </div>
+    <p class="font-mono text-xs text-[#F3F0E8]/40">contact@proxima.fr</p>
+  </div>
+</footer>
 
-    /* ====================
-       ÉTAT
-       ==================== */
-    let panier = [];
-    let logged = false;
-    let currentUserName = '';
-    let currentDetailId = null;
-
-    /* ====================
-       DOM
-       ==================== */
-    const nbPanierEl = document.getElementById('nbPanier');
-    const nbPanierLarge = document.getElementById('nbPanierLarge');
-    const panierTable = document.getElementById('panierTable');
-    const totalPanierEl = document.getElementById('totalPanier');
-    const orderForm = document.getElementById('orderForm');
-    const formStatus = document.getElementById('formStatus');
-    const btnSubmit = document.getElementById('btnSubmit');
-
-    const sections = {
-      accueil: document.getElementById('accueilSection'),
-      boutique: document.getElementById('boutiqueSection'),
-      details: document.getElementById('detailsSection'),
-      panier: document.getElementById('panierSection'),
-      form: document.getElementById('formSection')
-    };
-
-    function showSection(sec){
-      Object.values(sections).forEach(s=>s.style.display='none');
-      sec.style.display='block';
-    }
-
-    /* ====================
-       NAVIGATION
-       ==================== */
-    document.getElementById('navAccueil').addEventListener('click',()=>showSection(sections.accueil));
-    document.getElementById('navBoutique').addEventListener('click',()=>afficherBoutique());
-    document.getElementById('navPanier').addEventListener('click',()=>{
-      updatePanierUI();
-      showSection(sections.panier);
-    });
-
-    function afficherBoutique(){
-      showSection(sections.boutique);
-      const grid = document.getElementById('gridProduits');
-      grid.innerHTML = '';
-      Object.values(produits).forEach(prod=>{
-        const card = document.createElement('div');
-        card.className = 'card';
-        const isRupture = prod.stock === 0;
-        card.innerHTML = `
-          ${prod.images[0]}
-          <h3>${prod.titre}</h3>
-          <p>${prod.description}</p>
-          <div class="meta">
-            ${isRupture ? '<div class="stock-status">AUCUN STOCK (pour le moment)</div>' : `<div class="price">€${prod.prix.toFixed(2)}</div>`}
-            <button class="btn-ghost voirBtn" data-id="${prod.id}" ${isRupture ? 'disabled' : ''}>Voir</button>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-      document.querySelectorAll('.voirBtn').forEach(btn=>{
-        btn.addEventListener('click',()=>showDetails(btn.dataset.id));
-      });
-    }
-
-    function showDetails(id){
-      const prod = produits[id];
-      if(!prod || prod.stock === 0) return;
-      currentDetailId = id;
-
-      document.getElementById('mainImage').src = prod.images[0];
-      document.getElementById('mainImage').alt = `Image du produit : ${prod.titre}`;
-      document.getElementById('detailTitre').textContent = prod.titre;
-      document.getElementById('detailDescription').textContent = prod.description;
-      document.getElementById('detailFab').textContent = prod.fabrication;
-      document.getElementById('detailPrix').textContent = `€${prod.prix.toFixed(2)}`;
-      document.getElementById('detailQty').textContent = prod.stock === 0 ? 'AUCUN STOCK (pour le moment)' : `Stock : ${prod.stock}`;
-      document.getElementById('detailTech').textContent = prod.tech;
-      document.getElementById('detailQuantiteInput').value = 1;
-      document.getElementById('detailQuantiteInput').max = prod.stock;
-      const msg = document.getElementById('stockError');
-      msg.className = 'error-msg';
-      msg.textContent = '';
-
-      const thumbs = document.getElementById('thumbs');
-      thumbs.innerHTML = '';
-      prod.images.forEach((img,i)=>{
-        const t = document.createElement('img');
-        t.src = img;
-        t.alt = `Vignette ${i+1} du produit`;
-        if(i===0) t.classList.add('active');
-        t.addEventListener('click',()=>{
-          document.getElementById('mainImage').src = img;
-          thumbs.querySelectorAll('img').forEach(x=>x.classList.remove('active'));
-          t.classList.add('active');
-        });
-        thumbs.appendChild(t);
-      });
-
-      showSection(sections.details);
-    }
-
-    document.getElementById('detailQuantiteInput').addEventListener('input',()=>{
-      const prod = produits[currentDetailId];
-      if(!prod) return;
-      const input = document.getElementById('detailQuantiteInput');
-      let val = parseInt(input.value) || 1;
-      const error = document.getElementById('stockError');
-      if(val > prod.stock){
-        val = prod.stock;
-        error.textContent = `⚠️ Stock limité à ${prod.stock} articles`;
-      } else if (val < 1) {
-        val = 1;
-        error.textContent = '';
-      } else {
-        error.textContent = '';
-      }
-      input.value = val;
-    });
+<script>
+  function generateDevis() {
+    var btn = document.getElementById('generateBtn');
+    if (btn.disabled) return;
+    btn.disabled = true;
+    btn.textContent = 'Génération en cours…';
+    setTimeout(function () {
+      document.getElementById('devisEmpty').classList.add('hidden');
+      document.getElementById('devisResult').classList.remove('hidden');
+      btn.textContent = '✓ Devis généré';
+    }, 900);
   }
-  modal.style.display = 'block';
-}
 
-function closeSearchModal() {
-  document.getElementById('searchModal').style.display = 'none';
-}
-
-window.onclick = function(event) {
-  const modal = document.getElementById('searchModal');
-  if (event.target == modal) {
-    modal.style.display = 'none';
+  function handleSubmit(e) {
+    e.preventDefault();
+    // Intégration réelle à brancher ici (API, Airtable, CRM, email...)
+    document.getElementById('testForm').classList.add('hidden');
+    document.getElementById('formSuccess').classList.remove('hidden');
   }
-}
-
-function sendToWeb3Forms(participant) {
-  const formData = new FormData();
-  formData.append('access_key', '867b9f7b-a375-47c5-a0c0-ec184b69f529');
-  formData.append('Nom', participant.nom);
-  formData.append('Prénom', participant.prenom);
-  formData.append('Classe', participant.classe);
-  formData.append('Numéro de Cœur', participant.coeur);
-  if (participant.telephone) formData.append('Téléphone', participant.telephone);
-  if (participant.email) formData.append('Email', participant.email);
-  if (participant.snap) formData.append('Snapchat', participant.snap);
-  if (participant.insta) formData.append('Instagram', participant.insta);
-  formData.append('subject', `Nouvelle inscription Valentine - ${participant.prenom} ${participant.nom} - Cœur ${participant.coeur}`);
-  
-  fetch('https://api.web3forms.com/submit', {method: 'POST', body: formData})
-    .catch(error => console.error('Erreur:', error));
-}
-
-document.getElementById('form').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const nom = document.getElementById('nom').value;
-  const prenom = document.getElementById('prenom').value;
-  
-  if (isBanned(nom) || isBanned(prenom)) {
-    document.getElementById('errorMsg').textContent = '❌ Ce nom ou prénom n\'est pas autorisé.';
-    document.getElementById('errorMsg').style.display = 'block';
-    return;
-  }
-  
-  const telephone = document.getElementById('telephone').value;
-  const email = document.getElementById('email').value;
-  const snap = document.getElementById('snap').value;
-  const insta = document.getElementById('insta').value;
-  
-  if (!telephone && !email && !snap && !insta) {
-    document.getElementById('errorMsg').textContent = '❌ Tu dois remplir au moins un moyen de contact (téléphone, email, Snap ou Instagram) !';
-    document.getElementById('errorMsg').style.display = 'block';
-    return;
-  }
-  
-  const submitBtn = document.getElementById('submitBtn');
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Envoi en cours...';
-  
-  const participant = {
-    nom: nom,
-    prenom: prenom,
-    classe: document.getElementById('classe').value,
-    coeur: parseInt(document.getElementById('coeur').value),
-    telephone: telephone || '',
-    email: email || '',
-    snap: snap || '',
-    insta: insta || '',
-    timestamp: new Date().toLocaleString('fr-FR')
-  };
-  
-  sendToWeb3Forms(participant);
-  saveParticipant(participant);
-  const allMatches = findMatches(participant.coeur);
-  
-  if (allMatches.length > 1) {
-    let matchText = `🎉 <strong>Félicitations !</strong><br>Ton duo a été trouvé !<br><br>`;
-    allMatches.forEach((m, index) => {
-      if (m.telephone !== participant.telephone || m.email !== participant.email) {
-        matchText += `<strong>${m.prenom} ${m.nom}</strong><br>Classe: ${m.classe}`;
-        if (m.telephone) matchText += `<br>📱 Téléphone: <strong>${m.telephone}</strong>`;
-        if (m.email) matchText += `<br>📧 Email: ${m.email}`;
-        if (m.snap) matchText += `<br>👻 Snap: ${m.snap}`;
-        if (m.insta) matchText += `<br>📷 Insta: ${m.insta}`;
-        if (index < allMatches.length - 1) matchText += `<br><br>--- Autre possibilité ---<br><br>`;
-
-    document.getElementById('btnAddToCart').addEventListener('click',()=>{
-      if(!currentDetailId) return;
-      const prod = produits[currentDetailId];
-      let quantite = parseInt(document.getElementById('detailQuantiteInput').value)||1;
-
-      if(quantite > prod.stock){
-        document.getElementById('stockError').textContent = `❌ Plus de stock ! Limité à ${prod.stock}`;
-        return;
-      }
-
-      const exist = panier.find(p=>p.id===currentDetailId);
-      const qtyEnPanier = exist ? exist.quantite : 0;
-      if(qtyEnPanier + quantite > prod.stock){
-        document.getElementById('stockError').textContent = `❌ Seulement ${prod.stock - qtyEnPanier} articles restants`;
-        return;
-      }
-
-      if(exist) exist.quantite += quantite;
-      else panier.push({id:currentDetailId,quantite});
-
-      const msg = document.getElementById('stockError');
-      msg.className = 'success-msg';
-      msg.textContent = '✅ Produit ajouté au panier !';
-      updatePanierUI();
-      setTimeout(()=>{ msg.className='error-msg'; msg.textContent=''; }, 2000);
-    });
-    matchText += `<br><br>Appelez-vous maintenant ! 💕`;
-    document.getElementById('matchMsg').innerHTML = matchText;
-    document.getElementById('matchMsg').style.display = 'block';
-    document.getElementById('successMsg').style.display = 'none';
-  } else {
-    document.getElementById('successMsg').style.display = 'block';
-    document.getElementById('matchMsg').style.display = 'none';
-  }
-  
-  document.getElementById('errorMsg').style.display = 'none';
-  submitBtn.disabled = false;
-  submitBtn.textContent = 'Envoyer mes coordonnées 📬';
-  document.getElementById('form').reset();
-});
 </script>
 
-    function setOrderTotalQuantityField(){
-      const totalQty = panier.reduce((acc,p)=>acc + p.quantite, 0);
-      const qtyField = document.getElementById('quantite');
-      if(qtyField){
-        qtyField.value = Math.max(1, totalQty || 1); // empêche la valeur “1” forcée si panier vide lors de tests
-      }
-    }
-
-    function updatePanierUI(){
-      const total = panier.reduce((acc,p)=>acc+p.quantite,0);
-      nbPanierEl.textContent = total;
-      nbPanierLarge.textContent = total;
-
-      // maj champ quantité totale
-      setOrderTotalQuantityField();
-
-      panierTable.innerHTML = '';
-      let montant = 0;
-      panier.forEach(item=>{
-        const prod = produits[item.id];
-        const prixTotal = prod.prix * item.quantite;
-        montant += prixTotal;
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${prod.titre}</td>
-          <td><input type="number" min="1" max="${prod.stock}" value="${item.quantite}" data-id="${item.id}" class="qtyInput" /></td>
-          <td>€${prixTotal.toFixed(2)}</td>
-          <td><button class="btn-ghost removeBtn" data-id="${item.id}">Supprimer</button></td>
-        `;
-        panierTable.appendChild(row);
-      });
-      totalPanierEl.textContent = `€${montant.toFixed(2)}`;
-
-      document.querySelectorAll('.qtyInput').forEach(input=>{
-        input.addEventListener('change',e=>{
-          const id = e.target.dataset.id;
-          const val = Math.max(1, Math.min(parseInt(e.target.value) || 1, produits[id].stock));
-          e.target.value = val;
-          const p = panier.find(x=>x.id===id);
-          if(p) p.quantite = val;
-          updatePanierUI();
-        });
-      });
-      document.querySelectorAll('.removeBtn').forEach(btn=>{
-        btn.addEventListener('click',e=>{
-          panier = panier.filter(x=>x.id!==e.target.dataset.id);
-          updatePanierUI();
-        });
-      });
-
-      // Désactiver "Commander le panier" si non connecté ou panier vide
-      const commanderBtn = document.getElementById('commanderPanierBtn');
-      commanderBtn.disabled = !logged || panier.length===0;
-    }
-
-    document.getElementById('viderPanierBtn').addEventListener('click',()=>{
-      if(confirm('Vider le panier ?')){
-        panier=[];
-        updatePanierUI();
-      }
-    });
-
-    document.getElementById('commanderPanierBtn').addEventListener('click',()=>{
-      if(!logged){
-        alert('Vous devez être connecté pour commander !');
-        ouvrirAuth('login');
-        return;
-      }
-      if(panier.length===0){ alert('Panier vide !'); return; }
-      setOrderTotalQuantityField(); // force la bonne valeur juste avant l’affichage
-      showSection(sections.form);
-    });
-
-    document.getElementById('btnOrderSingle').addEventListener('click',()=>{
-      if(!logged){
-        alert('Vous devez être connecté pour commander !');
-        ouvrirAuth('login');
-        return;
-      }
-      if(!currentDetailId) return;
-      if(!panier.find(p=>p.id===currentDetailId)){
-        panier.push({id:currentDetailId, quantite: parseInt(document.getElementById('detailQuantiteInput').value)||1});
-        updatePanierUI();
-      }
-      setOrderTotalQuantityField();
-      showSection(sections.form);
-    });
-
-    document.getElementById('btnCancelOrder').addEventListener('click',()=>showSection(sections.accueil));
-
-    /* ===========================
-       COMMANDE → WEB3FORMS
-       =========================== */
-    orderForm.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-
-      // champs requis
-      const prenom = document.getElementById('prenom').value.trim();
-      const nom = document.getElementById('nom').value.trim();
-      const email = document.getElementById('emailField').value.trim();
-      const codepostal = document.getElementById('codepostal').value.trim();
-      if(!prenom || !nom || !email){
-        alert('Veuillez remplir au minimum prénom, nom et email.');
-        return;
-      }
-      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-        alert('Adresse e-mail invalide.');
-        return;
-      }
-      if(!/^[0-9]{5}$/.test(codepostal)){
-        alert('Code postal invalide (5 chiffres).');
-        return;
-      }
-
-      // Récap panier
-      const items = panier.map(item=>{
-        const prod = produits[item.id];
-        return {
-          id: item.id,
-          titre: prod.titre,
-          quantite: item.quantite,
-          prix_unitaire: prod.prix,
-          prix_total: +(prod.prix * item.quantite).toFixed(2)
-        };
-      });
-      const totalPanier = items.reduce((acc, it)=>acc + it.prix_total, 0).toFixed(2);
-
-      // Met à jour la quantité totale (fix principal)
-      const totalQty = panier.reduce((acc,p)=>acc + p.quantite, 0);
-      document.getElementById('quantite').value = Math.max(1, totalQty || 1);
-
-      const data = new FormData(orderForm);
-      data.append('subject', `Nouvelle commande — ${prenom} ${nom}`);
-      data.append('from_name', `${prenom} ${nom}`);
-      data.append('cart_total_eur', `€${totalPanier}`);
-      data.append('cart_items_json', JSON.stringify(items));
-      data.append('logged_user', currentUserName || 'Invité');
-      data.append('site', 'Objets 3D — Axel & Noah');
-
-      btnSubmit.disabled = true;
-      formStatus.textContent = '⏳ Envoi en cours...';
-
-      try {
-        const res = await fetch('https://api.web3forms.com/submit', { method:'POST', body:data });
-        const result = await res.json();
-        if(result.success){
-          formStatus.textContent = '✅ Commande envoyée ! Merci 🙏';
-          alert('Commande envoyée ! Un e-mail de confirmation vous sera envoyé.');
-          panier = [];
-          updatePanierUI();
-          orderForm.reset();
-          showSection(sections.accueil);
-        }else{
-          console.error('Web3Forms error:', result);
-          formStatus.textContent = '❌ Erreur lors de l’envoi. Réessaie plus tard.';
-          alert('Une erreur est survenue : ' + (result.message || 'Envoi impossible'));
-        }
-      } catch(err){
-        console.error('Network error:', err);
-        formStatus.textContent = '❌ Erreur réseau. Vérifie ta connexion.';
-        alert('Erreur réseau pendant l’envoi. Réessaie.');
-      } finally {
-        btnSubmit.disabled = false;
-        setTimeout(()=>{ formStatus.textContent=''; }, 3500);
-      }
-    });
-
-    /* ====================
-       AUTH / EMAIL HELPERS
-       ==================== */
-    function ouvrirAuth(type){
-      document.getElementById('authModalOverlay').classList.add('active');
-      changerForm(type);
-    }
-    function fermerAuth(){
-      document.getElementById('authModalOverlay').classList.remove('active');
-    }
-    function changerForm(type){
-      const loginForm = document.getElementById('loginForm');
-      const registerForm = document.getElementById('registerForm');
-      const title = document.getElementById('authTitle');
-      if(type === 'login'){
-        loginForm.style.display = 'block';
-        registerForm.style.display = 'none';
-        title.textContent = 'Connexion';
-      } else {
-        loginForm.style.display = 'none';
-        registerForm.style.display = 'block';
-        title.textContent = 'Inscription';
-      }
-    }
-
-    // stockage utilisateurs (local)
-    function loadUsers(){
-      try{ const raw = localStorage.getItem('users'); return raw ? JSON.parse(raw) : {}; }
-      catch(e){ return {}; }
-    }
-    function saveUsers(users){ localStorage.setItem('users', JSON.stringify(users)); }
-    let users = loadUsers();
-
-    async function hashPassword(pass){
-      const enc = new TextEncoder().encode(pass);
-      const buf = await crypto.subtle.digest('SHA-256', enc);
-      const arr = Array.from(new Uint8Array(buf));
-      return arr.map(b=>b.toString(16).padStart(2,'0')).join('');
-    }
-    function isStrongPassword(pwd){ return typeof pwd==='string' && pwd.length>=8 && /[A-Za-z]/.test(pwd) && /[0-9]/.test(pwd); }
-
-    function isValidEmailFormat(email){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
-    const bannedWords = ['example','test','no-reply','noreply'];
-    function containsBannedWords(email){ const lower=email.toLowerCase(); return bannedWords.some(w=>lower.includes(w)); }
-
-    document.getElementById('openLoginBtn').addEventListener('click',()=>ouvrirAuth('login'));
-    document.getElementById('openRegisterBtn').addEventListener('click',()=>ouvrirAuth('register'));
-
-    document.getElementById('logoutBtn').addEventListener('click',()=>{
-      logged=false; currentUserName=''; updateUserUI(); updatePanierUI();
-    });
-
-    document.getElementById('loginBtn').addEventListener('click', async ()=>{
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPassword').value;
-
-      if(!email || !password){ alert('Veuillez remplir tous les champs'); return; }
-      if(!isValidEmailFormat(email)){ alert('Format de l’e-mail invalide.'); return; }
-
-      const key = email.toLowerCase();
-      const user = users[key];
-      if(!user){ alert('Adresse non reconnue. Inscrivez-vous d’abord.'); return; }
-
-      const passHash = await hashPassword(password);
-      if(user.passHash !== passHash){ alert('Mot de passe incorrect.'); return; }
-
-      // 🔁 MODIFICATION DEMANDÉE : prénom uniquement (ou email en secours)
-      currentUserName = user.prenom ? user.prenom : email;
-
-      logged = true;
-      updateUserUI();
-      fermerAuth();
-      document.getElementById('loginEmail').value = '';
-      document.getElementById('loginPassword').value = '';
-      updatePanierUI();
-    });
-
-    document.getElementById('registerBtn').addEventListener('click', async ()=>{
-      const prenom = document.getElementById('regPrenom').value.trim();
-      const nom = document.getElementById('regNom').value.trim();
-      const adresse = document.getElementById('regAdresse').value.trim();
-      const codepostal = document.getElementById('regCodepostal').value.trim();
-      const email = document.getElementById('regEmail').value.trim();
-      const emailConfirm = document.getElementById('regEmailConfirm').value.trim();
-      const password = document.getElementById('regPassword').value;
-
-      if(!prenom || !nom || !adresse || !codepostal || !email || !emailConfirm || !password){
-        alert('Veuillez remplir tous les champs');
-        return;
-      }
-      if(email !== emailConfirm){ alert('Les deux adresses e-mail ne correspondent pas.'); return; }
-      if(!isValidEmailFormat(email)){ alert('Format de l’e-mail invalide.'); return; }
-      if(!/^[0-9]{5}$/.test(codepostal)){ alert('Code postal invalide (5 chiffres).'); return; }
-      if(containsBannedWords(email)){ alert('Adresse e-mail refusée.'); return; }
-      if(!isStrongPassword(password)){ alert('Mot de passe trop faible. Min. 8 caractères avec lettres et chiffres.'); return; }
-
-      const key = email.toLowerCase();
-      if(users[key]){ alert('Cette adresse e-mail est déjà utilisée.'); return; }
-
-      const passHash = await hashPassword(password);
-      users[key] = { prenom, nom, adresse, codepostal, passHash };
-      saveUsers(users);
-
-      // 🔔 Notification d’inscription via Web3Forms (Option A)
-      try{
-        const fd = new FormData();
-        fd.append('access_key','867b9f7b-a375-47c5-a0c0-ec184b69f529');
-        fd.append('email_to','objet.3d.axel.et.noah@gmail.com');
-        fd.append('subject','Nouvelle inscription');
-        fd.append('from_name', `${prenom} ${nom}`);
-        fd.append('message', `Un nouvel utilisateur s'est inscrit.\nNom: ${prenom} ${nom}\nEmail: ${email}\nCode postal: ${codepostal}`);
-        await fetch('https://api.web3forms.com/submit', { method:'POST', body:fd });
-      }catch(err){
-        console.warn('Notification inscription non envoyée (réseau) :', err);
-      }
-
-      alert(`✅ Inscription réussie ! Bienvenue ${prenom} ${nom}`);
-
-      // 🔁 MODIFICATION DEMANDÉE : prénom uniquement
-      currentUserName = prenom;
-
-      logged = true;
-      updateUserUI();
-      fermerAuth();
-
-      // Reset
-      document.getElementById('regPrenom').value = '';
-      document.getElementById('regNom').value = '';
-      document.getElementById('regAdresse').value = '';
-      document.getElementById('regCodepostal').value = '';
-      document.getElementById('regEmail').value = '';
-      document.getElementById('regEmailConfirm').value = '';
-      document.getElementById('regPassword').value = '';
-      updatePanierUI();
-    });
-
-    function updateUserUI(){
-      const notLogged = document.getElementById('notLogged');
-      const loggedDiv = document.getElementById('logged');
-      const userStatus = document.getElementById('userStatus');
-      const badgeUser = document.getElementById('badgeUser');
-      if(logged){
-        notLogged.style.display = 'none';
-        loggedDiv.style.display = 'flex';
-        badgeUser.textContent = currentUserName;
-        userStatus.textContent = currentUserName;
-      } else {
-        notLogged.style.display = 'flex';
-        loggedDiv.style.display = 'none';
-        userStatus.textContent = 'Invité';
-      }
-    }
-
-    /* ====================
-       BACK BUTTON
-       ==================== */
-    const backBtn = document.getElementById('backBtn');
-    let sectionHistory = [];
-    const originalShowSection = showSection;
-
-    showSection = function(sec){
-      if(sectionHistory[sectionHistory.length - 1] !== sec){
-        sectionHistory.push(sec);
-      }
-      Object.values(sections).forEach(s => s.style.display = 'none');
-      sec.style.display = 'block';
-      backBtn.style.display = sectionHistory.length > 1 ? 'block' : 'none';
-    };
-
-    backBtn.addEventListener('click', () => {
-      if(sectionHistory.length > 1){
-        sectionHistory.pop();
-        const prev = sectionHistory[sectionHistory.length - 1];
-        Object.values(sections).forEach(s => s.style.display = 'none');
-        prev.style.display = 'block';
-      }
-      backBtn.style.display = sectionHistory.length > 1 ? 'block' : 'none';
-    });
-
-    /* ====================
-       INIT
-       ==================== */
-    updateUserUI();
-    showSection(sections.accueil);
-  </script>
 </body>
 </html>
